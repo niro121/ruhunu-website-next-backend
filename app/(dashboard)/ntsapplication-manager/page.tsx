@@ -13,7 +13,7 @@ type SearchParams = {
         keyword?: string;
     }>
 }
-
+// function //
 export default async function Page( {searchParams} : SearchParams ) {
 
     const resolvedSearchParams = await searchParams;
