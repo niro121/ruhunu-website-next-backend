@@ -18,7 +18,6 @@ model User {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   name     String
   email    String @unique()
-  code     String @unique()
   role     String
   password String
   status   Int

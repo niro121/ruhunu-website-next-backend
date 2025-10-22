@@ -55,10 +55,7 @@ export const authOptions: NextAuthOptions = {
               throw new Error("Invalid credentials");
             }
 
-            
-            //const isCorrectPassword = await argon2.verify("Arch321#", credentials?.password);
-
-            const isCorrectPassword = "Arch321#" === credentials?.password;
+            const isCorrectPassword = await argon2.verify(user.password, credentials?.password);
 
             if (!isCorrectPassword) {
               throw new Error("Invalid credentials");

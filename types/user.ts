@@ -7,8 +7,6 @@ export type User = {
     confirmPassword?: string
     role: string
     status: number //0 -> inactive, 1 ->  active
-    createdAt?: Date
-    updatedAt?: Date
 }
 
 export type GetUsersParams = {

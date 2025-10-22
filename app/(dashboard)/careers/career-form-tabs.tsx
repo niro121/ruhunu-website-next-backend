@@ -109,10 +109,11 @@ export default function CareerFormTabs({ career, sessionRole, order}: CareerForm
             <TabsContent value="menuitems" className="mt-0">
                 <Card className="border shadow-sm">
                     <CardContent className="pt-6">
-                        <ApplicationTable
+                        {/* <ApplicationTable
                             sessionRole={undefined}
                             currentMenuId={undefined}
-                        />
+                        /> */}
+                        <></>
                     </CardContent>
                 </Card>
             </TabsContent>
