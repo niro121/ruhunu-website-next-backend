@@ -106,6 +106,13 @@ async function DesktopNav({ session }: { session: Session | null }) {
           icon={<UserGroup className="h-5 w-5" />}
         />
 
+        {/* // =========================== NTS Application =========================== */}
+        <NavLink
+          href={hasAccess("/nts-application") ? "/nts-application" : "unauthorized-access"}
+          label="NTS Application"
+          icon={<UserGroup className="h-5 w-5" />}
+        />
+
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
         <p className="text-white">
