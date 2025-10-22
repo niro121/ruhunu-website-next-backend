@@ -9,11 +9,8 @@ import CustomSelectField from "@/components/common/custom-select-field";
 import { FormActionsBtns } from "@/components/common/form-actions-btns";
 import { useToast } from "@/components/hooks/use-toast";
 import { NtsApplicationManager } from "@/types/ntsapplication-manager";
-import {
-  createNewApplication,
-  updateApplication,
-} from "../app/actions/ntsapplication.actions";
 import { useRouter } from "next/navigation";
+import { createNewApplication, updateApplication } from "@/app/actions/ntsapplication.actions";
 
 type NtsApplicationFormProps = {
   application: NtsApplicationManager | null;

@@ -6,16 +6,17 @@ import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import CustomAlertDialog from "@/components/common/custom-alert-dialog"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { Docter } from "@/types/docter"
 import { deleteDocter } from "@/app/actions/docter.actions"
+import { NtsApplicationManager } from "@/types/ntsapplication-manager"
 
-interface DocterActionsProps<TData extends Docter> {
+
+interface NtsApplicationProps<TData extends NtsApplicationManager> {
     row: Row<TData>
 }
 
-const DocterRecordActions = <TData extends Docter>({
+const NtsApplicationManagerRecordActions = <TData extends NtsApplicationManager>({
     row,
-}: DocterActionsProps<TData>) => {
+}: NtsApplicationProps<TData>) => {
     const [showDeleteConfirmation, setShowDelConfirmation] = useState(false)
     const [loading, setLoading] = useState(false)
     const { toast } = useToast()
@@ -82,4 +83,4 @@ const DocterRecordActions = <TData extends Docter>({
     )
 }
 
-export default DocterRecordActions
+export default NtsApplicationManagerRecordActions;

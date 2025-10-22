@@ -23,7 +23,7 @@ export default async function Page( {searchParams} : SearchParams ) {
         page: resolvedSearchParams?.page,
         limit: resolvedSearchParams?.limit,
         keyword: resolvedSearchParams?.keyword,
-        role: session?.user?.role ?? ""
+        // role: session?.user?.role ?? ""
     })
 
     return (
