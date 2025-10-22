@@ -1,9 +1,9 @@
-import Link from "next/link"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Profile } from "./profile"
-import Providers from "./providers"
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Profile } from "./profile";
+import Providers from "./providers";
 import {
   BadgeCheck,
   BadgePercent,
@@ -20,7 +20,7 @@ import {
   RectangleHorizontal,
   TheaterIcon,
   Utensils,
-} from "lucide-react"
+} from "lucide-react";
 import { Session } from "next-auth";
 import {
   UserGroup,
@@ -33,30 +33,28 @@ import {
   SettingIcon,
   AnalyticsIcon,
   StockIcon,
-  UserAnalyticsIcon
-} from "@/components/icons"
-import DashboardBreadcrumb from "./breadcrumbs"
-import { fetchServerSession } from "@/lib/session"
-import { ALL_ROLES } from "@/lib/roles"
-import Logo from "@/public/logo.png"
-import { NavLink } from "@/components/common/nav-link"
+  UserAnalyticsIcon,
+} from "@/components/icons";
+import DashboardBreadcrumb from "./breadcrumbs";
+import { fetchServerSession } from "@/lib/session";
+import { ALL_ROLES } from "@/lib/roles";
+import Logo from "@/public/logo.png";
+import { NavLink } from "@/components/common/nav-link";
 
 async function DesktopNav({ session }: { session: Session | null }) {
-
-  const role = session?.user?.role
+  const role = session?.user?.role;
 
   const hasAccess = (path: string) => {
     if (role !== undefined) {
-      return ALL_ROLES[role]?.includes(path)
+      return ALL_ROLES[role]?.includes(path);
     }
 
-    return
-  }
+    return;
+  };
 
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-56 flex-col border-r bg-[#18CE67] sm:flex">
       <nav className="flex flex-col items-stretch gap-2 px-3 sm:py-5">
-
         {/* // =========================== LOGO =========================== */}
         <div className="mb-1 bg-white p-2 rounded-[10px]">
           <Link
@@ -87,7 +85,9 @@ async function DesktopNav({ session }: { session: Session | null }) {
 
         {/* // =========================== MENU MANAGER =========================== */}
         <NavLink
-          href={hasAccess("/menu-manager") ? "/menu-manager" : "unauthorized-access"}
+          href={
+            hasAccess("/menu-manager") ? "/menu-manager" : "unauthorized-access"
+          }
           label="Menu Manager"
           icon={<UserGroup className="h-5 w-5" />}
         />
@@ -99,33 +99,41 @@ async function DesktopNav({ session }: { session: Session | null }) {
           icon={<BriefcaseIcon className="h-5 w-5" />}
         />
 
+        {/* // =========================== NTS APPLICATION MANAGER =========================== */}
+        <NavLink
+          href={
+            hasAccess("/ntsapplication-manager")
+              ? "/ntsapplication-manager"
+              : "unauthorized-access"
+          }
+          label="NTS Applications"
+          icon={<UserGroup className="h-5 w-5" />}
+        />
+
         {/* // =========================== USERS =========================== */}
         <NavLink
           href={hasAccess("/users") ? "/users" : "unauthorized-access"}
           label="Users"
           icon={<UserGroup className="h-5 w-5" />}
         />
-
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
-        <p className="text-white">
-          {process.env.APP_VERSION}
-        </p>
+        <p className="text-white">{process.env.APP_VERSION}</p>
       </nav>
     </aside>
-  )
+  );
 }
 
 async function MobileNav({ session }: { session: Session | null }) {
-  const role = session?.user?.role
+  const role = session?.user?.role;
 
   const hasAccess = (path: string) => {
     if (role !== undefined) {
-      return ALL_ROLES[role]?.includes(path)
+      return ALL_ROLES[role]?.includes(path);
     }
 
-    return
-  }
+    return;
+  };
 
   return (
     <Sheet>
@@ -137,7 +145,6 @@ async function MobileNav({ session }: { session: Session | null }) {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="sm:max-w-xs bg-black">
-
         {/* // =========================== LOGO =========================== */}
         <nav className="grid gap-6 text-lg font-medium">
           <Link
@@ -163,7 +170,11 @@ async function MobileNav({ session }: { session: Session | null }) {
 
           {/* // =========================== MENU MANAGER =========================== */}
           <NavLink
-            href={hasAccess("/menu-manager") ? "/menu-manager" : "unauthorized-access"}
+            href={
+              hasAccess("/menu-manager")
+                ? "/menu-manager"
+                : "unauthorized-access"
+            }
             label="Menu Manager"
             icon={<UserGroup className="h-5 w-5" />}
           />
@@ -175,25 +186,34 @@ async function MobileNav({ session }: { session: Session | null }) {
             icon={<BriefcaseIcon className="h-5 w-5" />}
           />
 
+          {/* // =========================== NTS APPLICATION MANAGER =========================== */}
+          <NavLink
+            href={
+              hasAccess("/ntsapplication-manager")
+                ? "/ntsapplication-manager"
+                : "unauthorized-access"
+            }
+            label="NTS Applications"
+            icon={<UserGroup className="h-5 w-5" />}
+          />
+
           {/* // =========================== USERS =========================== */}
           <NavLink
             href={hasAccess("/users") ? "/users" : "unauthorized-access"}
             label="Users"
             icon={<UserGroup className="h-5 w-5" />}
           />
-
         </nav>
       </SheetContent>
     </Sheet>
-  )
+  );
 }
 
 export default async function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-
   const session = await fetchServerSession();
 
   return (
@@ -221,5 +241,5 @@ export default async function DashboardLayout({
         </div>
       </main>
     </Providers>
-  )
+  );
 }
