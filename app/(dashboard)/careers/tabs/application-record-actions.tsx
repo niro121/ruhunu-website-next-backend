@@ -10,6 +10,7 @@ import { CareerApplication } from "@/types/careerapplication";
 import { Row } from "@tanstack/react-table";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import CareerApplicationForm from "./application-form";
 
 interface CareerApplicationRecordActionsProps<TData extends CareerApplication> {
     row: Row<TData>;
@@ -20,6 +21,8 @@ interface CareerApplicationRecordActionsProps<TData extends CareerApplication> {
 
 const CareerApplicationRecordActions = <TData extends CareerApplication> ({
     row,
+    currentCareerId,
+    sessionRole,
     onChange
 }: CareerApplicationRecordActionsProps<TData>) => {
     const [showDeleteConfirmation, setShowDelConfirmation] = useState(false);
@@ -66,7 +69,12 @@ const CareerApplicationRecordActions = <TData extends CareerApplication> ({
             />
 
             <CustomDialog open={showViewDialog} setOpen={setShowViewDialog} title="Edit Career Application" width="800px">
-                <></>
+                <CareerApplicationForm 
+                    careerApplication={application} 
+                    sessionRole={sessionRole} 
+                    currentCareerId={currentCareerId || ""}
+                    onChange={onChange}
+                />
             </CustomDialog>
         </>
     );

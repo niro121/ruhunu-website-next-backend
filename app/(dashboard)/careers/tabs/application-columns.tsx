@@ -5,6 +5,9 @@ import CareerApplicationRecordActions from "./application-record-actions";
 import { CustomDialog } from "@/components/common/custom-dialog";
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import CareerApplicationForm from "./application-form";
+import { CircleX, Eye } from "lucide-react";
+import { CircleCorrect } from "@/components/icons";
 
 // ✅ Small helper component to handle hooks safely
 function CareerApplicationNameCell({
@@ -31,7 +34,12 @@ function CareerApplicationNameCell({
             </button>
 
             <CustomDialog open={open} setOpen={setOpen} title="Edit Career Application" width="800px">
-                <></>
+                <CareerApplicationForm 
+                    careerApplication={careerApplication} 
+                    sessionRole={sessionRole} 
+                    currentCareerId={currentCareerId || ""}
+                    onChange={onChange}
+                />
             </CustomDialog>
         </>
     );
@@ -87,6 +95,19 @@ export const careerApplicationColumns = (props?: {
     {
         accessorKey: "status",
         header: "Status",
+        cell: ({ row }) => {
+            const statusMap = row.getValue('status')
+            switch (statusMap) {
+                case 1:
+                    return <Eye className="text-yellow-500 w-6 h-6" />;
+                case 2:
+                    return <CircleCorrect className="text-green-500 w-6 h-6" />;
+                case 3:
+                    return <CircleX className="text-red-500 w-6 h-6" />;
+                default:
+                    return null;
+            }
+        },
     },
     {
         id: "actions",
