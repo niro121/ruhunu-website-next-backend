@@ -76,8 +76,8 @@ const LoginForm = () => {
 
     return (
         <div className="min-h-screen flex justify-center items-start md:items-center p-8">
-            <Card className="w-full max-w-sm">
-                <CardHeader>
+            <Card className="w-full max-w-sm bg-white">
+                <CardHeader className=''>
                     <CardTitle className="text-2xl">Login</CardTitle>
                     <CardDescription>
                         Sign into your account
@@ -105,8 +105,8 @@ const LoginForm = () => {
                                     placeholder="Email" />
                                 <ErrorMessage name="email" component="div" className="invalid-feedback text-red-600" />
 
-                                <div className='relative'>
-                                    <Input className="mb-4 p-2 border rounded"
+                                <div className='relative mb-4'>
+                                    <Input className="p-2 border rounded"
                                         type={showPassword ? "text" : "password"}
                                         id='password'
                                         value={formik.values.password}
@@ -131,7 +131,7 @@ const LoginForm = () => {
 
                             <CardFooter>
                                 <div className="w-full">
-                                    <Button className="mb-4 w-full" type='submit' disabled={formik.isSubmitting}>Login</Button>
+                                    <Button className="mb-4 w-full border border-black hover:bg-black text-black hover:text-white" type='submit' disabled={formik.isSubmitting}>Login</Button>
 
                                     {/* <Link className="mb-4 small text-gray-600 underline underline-offset-1" href="forgot-password">Forgot password?</Link> */}
                                 </div>

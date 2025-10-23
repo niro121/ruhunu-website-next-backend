@@ -6,6 +6,7 @@ import { Suspense, useEffect, useState } from "react";
 import Loading from "../../loading";
 import { CustomDataTable } from "@/components/common/custom-data-table";
 import { bulkDeleteCareerApplications, getAllCareerApplications } from "@/app/actions/career-application.actions";
+import { careerApplicationColumns } from "./application-columns";
 
 type ApplicationTableProps = {
   currentCareerId: string | undefined;
@@ -57,14 +58,13 @@ export default function ApplicationTable({
             <div className="overflow-hidden">
                 <Suspense fallback={<Loading />}>
                     <CustomDataTable
-                        heading="Menu Items"
-                        subHeading="Manage your menu items here."
-                        // columns={careerApplicationColumns({
-                        //   onChange: fetchData,
-                        //   sessionRole: sessionRole,
-                        //   currentCareerId: currentCareerId
-                        // })}
-                        columns={[]}
+                        heading="Career Application"
+                        subHeading="Manage your career application here."
+                        columns={careerApplicationColumns({
+                          onChange: fetchData,
+                          sessionRole: sessionRole,
+                          currentCareerId: currentCareerId
+                        })}
                         data={data}
                         rowCount={totalRecords}
                         deleteServerAction={bulkDeleteCareerApplications}
