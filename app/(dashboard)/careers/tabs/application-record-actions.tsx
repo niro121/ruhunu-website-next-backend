@@ -1,50 +1,47 @@
 "use client";
 
+import { deleteCareerApplication } from "@/app/actions/career-application.actions";
 import CustomAlertDialog from "@/components/common/custom-alert-dialog";
 import { CustomDialog } from "@/components/common/custom-dialog";
 import { DataTableRowActions } from "@/components/common/custom-table-row-actions";
 import { useToast } from "@/components/hooks/use-toast";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { CareerApplication } from "@/types/careerapplication";
 import { Row } from "@tanstack/react-table";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { MenuItem } from "@/types/menu-items";
-import { deleteMenuItem } from "@/app/actions/menuitem.actions";
-import MenuItemForm from "./menu-item-form";
+import CareerApplicationForm from "./application-form";
 
-interface MenuItemProps<TData extends MenuItem> {
+interface CareerApplicationRecordActionsProps<TData extends CareerApplication> {
     row: Row<TData>;
     onChange?: () => void;
-    currentMenuId: string,
+    currentCareerId: string | undefined,
     sessionRole: string | undefined,
 }
 
-const MenuItemRecordActions = <TData extends MenuItem>({
+const CareerApplicationRecordActions = <TData extends CareerApplication> ({
     row,
-    onChange,
-    currentMenuId,
-    sessionRole
-}: MenuItemProps<TData>) => {
+    currentCareerId,
+    sessionRole,
+    onChange
+}: CareerApplicationRecordActionsProps<TData>) => {
     const [showDeleteConfirmation, setShowDelConfirmation] = useState(false);
     const [showViewDialog, setShowViewDialog] = useState(false);
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
     const { data: session } = useSession();
 
-
-    
-
-    const menuitem = row.original;
+    const application = row.original;
 
     const showHideDeleteModal = (value: boolean) => {
         setShowDelConfirmation(value);
     };
 
     const onDeleteConfirmation = async () => {
-        if (!menuitem.id) return;
+        if (!application.id) return;
         try {
             setLoading(true);
-            await deleteMenuItem(menuitem.id);
+            await deleteCareerApplication(application.id);
             toast({ variant: "success", title: "Deleted", description: "Menu Item deleted successfully" });
             if (onChange) onChange();
         } catch (err: any) {
@@ -71,16 +68,16 @@ const MenuItemRecordActions = <TData extends MenuItem>({
                 handleContinue={onDeleteConfirmation}
             />
 
-            <CustomDialog open={showViewDialog} setOpen={setShowViewDialog} title="Edit Application" width="800px">
-                <MenuItemForm
-                    menuItem={menuitem}
-                    sessionRole={sessionRole}
-                    currentMenuId={currentMenuId || ""}
+            <CustomDialog open={showViewDialog} setOpen={setShowViewDialog} title="Edit Career Application" width="800px">
+                <CareerApplicationForm 
+                    careerApplication={application} 
+                    sessionRole={sessionRole} 
+                    currentCareerId={currentCareerId || ""}
                     onChange={onChange}
                 />
             </CustomDialog>
         </>
     );
-};
+}
 
-export default MenuItemRecordActions;
+export default CareerApplicationRecordActions;

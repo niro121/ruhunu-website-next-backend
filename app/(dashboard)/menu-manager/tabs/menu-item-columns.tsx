@@ -39,6 +39,7 @@ function MenuItemNameCell({
           menuItem={menu}
           sessionRole={sessionRole}
           currentMenuId={currentMenuId || ""}
+          onChange={onChange}
         />
       </CustomDialog>
     </>

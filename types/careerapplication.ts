@@ -1,6 +1,6 @@
 export type CareerApplication = {
     id?: string
-    careerId?: string
+    careerId: string
     full_name: string
     email: string
     mobile_number: string
