@@ -87,7 +87,7 @@ export default function MenuItemTable({
             menuItem={null}
             sessionRole={sessionRole}
             currentMenuId={currentMenuId || ""}
-
+            onChange={fetchData}
           />
         </CustomDialog>
       </div>

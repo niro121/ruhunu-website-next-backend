@@ -106,14 +106,13 @@ export default function CareerFormTabs({ career, sessionRole, order}: CareerForm
                 </Card>
             </TabsContent>
 
-            <TabsContent value="menuitems" className="mt-0">
+            <TabsContent value="application" className="mt-0">
                 <Card className="border shadow-sm">
                     <CardContent className="pt-6">
-                        {/* <ApplicationTable
-                            sessionRole={undefined}
-                            currentMenuId={undefined}
-                        /> */}
-                        <></>
+                        <ApplicationTable
+                            sessionRole={sessionRole}
+                            currentCareerId={currentCareer?.id}
+                        />
                     </CardContent>
                 </Card>
             </TabsContent>
