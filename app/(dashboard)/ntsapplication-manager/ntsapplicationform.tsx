@@ -49,15 +49,7 @@ const NtsApplicationForm = ({
   );
 
   const validationSchema = Yup.object({
-    title: Yup.string().required("Title is required"),
-    full_name: Yup.string().required("Full name is required"),
-    date_of_birth: Yup.date().required("Date of birth is required"),
-    age: Yup.number().required("Age is required").positive().integer(),
-    gender: Yup.string().required("Gender is required"),
-    address1: Yup.string().required("Address is required"),
-    phone: Yup.string().required("Phone number is required"),
-    nic: Yup.string().required("NIC is required"),
-    email: Yup.string().email("Invalid email").required("Email is required"),
+    status: Yup.number().required("Status is required"),
   });
 
   const handleSubmit = async (
@@ -69,7 +61,6 @@ const NtsApplicationForm = ({
     try {
       const payload: NtsApplicationManager = {
         ...values,
-        status: 1,
       };
 
       let resp: any;
@@ -119,7 +110,7 @@ const NtsApplicationForm = ({
 
   const styleClasses = {
     parentDiv: "grid grid-cols-1 items-center gap-4 sm:grid-cols-4 mb-2 px-3",
-    labelClassName: "text-sm text-black font-semibold capitalize",
+    labelClassName: "text-sm text-black font-semibold capitalize text-black",
     inputClassName: "col-span-full sm:col-span-3 mb-2 w-full",
   };
 
@@ -136,17 +127,13 @@ const NtsApplicationForm = ({
         values,
         errors,
         touched,
-        handleChange,
         handleBlur,
         setFieldValue,
         submitForm,
       }) => (
         <Card className="border shadow-sm">
           <Form className="w-full">
-            <div className="grid gap-4 py-6 px-4 bg-[#f5fbff] rounded-xl">
-              <h2 className="text-center text-2xl font-bold text-gray-800 mb-6">
-                Application Form
-              </h2>
+            <div className="grid gap-4 py-6 px-4 rounded-xl">
 
               {/* Title */}
               <CustomSelectField
@@ -154,7 +141,7 @@ const NtsApplicationForm = ({
                 placeholder="Title"
                 required
                 value={values.title}
-                onChange={(v) => setFieldValue("title", v)}
+                onChange={() => {}}
                 onBlur={handleBlur}
                 options={[
                   { label: "Mr.", value: "Mr" },
@@ -163,8 +150,7 @@ const NtsApplicationForm = ({
                   { label: "Dr.", value: "Dr" },
                 ]}
                 styleClasses={styleClasses}
-                error={errors.title}
-                touched={touched.title}
+                disabled
               />
 
               {/* Full Name */}
@@ -173,16 +159,15 @@ const NtsApplicationForm = ({
                 id="full_name"
                 placeholder="Name"
                 value={values.full_name}
-                onChange={handleChange}
+                onChange={() => {}}
                 onBlur={handleBlur}
                 required
                 styleClasses={styleClasses}
-                error={errors.full_name}
-                touched={touched.full_name}
+                disabled
               />
 
               {/* Date of Birth */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 px-3">
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 px-3">
                 <CustomFormField
                   type="text"
                   id="dob_day"
@@ -192,11 +177,11 @@ const NtsApplicationForm = ({
                       ? String(new Date(values.date_of_birth).getDate())
                       : ""
                   }
-                  onChange={handleChange}
+                  onChange={() => {}}
                   onBlur={handleBlur}
                   required={false}
+                  disabled
                 />
-
                 <CustomFormField
                   type="text"
                   id="dob_month"
@@ -206,11 +191,11 @@ const NtsApplicationForm = ({
                       ? String(new Date(values.date_of_birth).getMonth() + 1)
                       : ""
                   }
-                  onChange={handleChange}
+                  onChange={() => {}}
                   onBlur={handleBlur}
                   required={false}
+                  disabled
                 />
-
                 <CustomFormField
                   type="text"
                   id="dob_year"
@@ -220,9 +205,10 @@ const NtsApplicationForm = ({
                       ? String(new Date(values.date_of_birth).getFullYear())
                       : ""
                   }
-                  onChange={handleChange}
+                  onChange={() => {}}
                   onBlur={handleBlur}
                   required={false}
+                  disabled
                 />
               </div>
 
@@ -232,12 +218,11 @@ const NtsApplicationForm = ({
                 id="age"
                 placeholder="Age"
                 value={values.age}
-                onChange={handleChange}
+                onChange={() => {}}
                 onBlur={handleBlur}
                 required
                 styleClasses={styleClasses}
-                error={errors.age}
-                touched={touched.age}
+                disabled
               />
 
               {/* Gender */}
@@ -246,7 +231,7 @@ const NtsApplicationForm = ({
                 placeholder="Gender"
                 required
                 value={values.gender}
-                onChange={(v) => setFieldValue("gender", v)}
+                onChange={() => {}}
                 onBlur={handleBlur}
                 options={[
                   { label: "Male", value: "Male" },
@@ -254,8 +239,7 @@ const NtsApplicationForm = ({
                   { label: "Other", value: "Other" },
                 ]}
                 styleClasses={styleClasses}
-                error={errors.gender}
-                touched={touched.gender}
+                disabled
               />
 
               {/* Address */}
@@ -264,43 +248,23 @@ const NtsApplicationForm = ({
                 id="address1"
                 placeholder="Address Line 1"
                 value={values.address1}
-                onChange={handleChange}
+                onChange={() => {}}
                 onBlur={handleBlur}
                 required
                 styleClasses={styleClasses}
-                error={errors.address1}
-                touched={touched.address1}
+                disabled
               />
               <CustomFormField
                 type="text"
                 id="address2"
                 placeholder="Address Line 2"
                 value={values.address2}
-                onChange={handleChange}
+                onChange={() => {}}
                 onBlur={handleBlur}
                 styleClasses={styleClasses}
                 required={false}
+                disabled
               />
-              <div className="grid grid-cols-2 gap-4 px-3">
-                <CustomFormField
-                  type="text"
-                  id="city"
-                  placeholder="City"
-                  value={""}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  required={false}
-                />
-                <CustomFormField
-                  type="text"
-                  id="country"
-                  placeholder="Country"
-                  value={""}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  required={false}
-                />
-              </div>
 
               {/* Phone */}
               <CustomFormField
@@ -308,12 +272,11 @@ const NtsApplicationForm = ({
                 id="phone"
                 placeholder="Phone"
                 value={values.phone}
-                onChange={handleChange}
+                onChange={() => {}}
                 onBlur={handleBlur}
                 required
                 styleClasses={styleClasses}
-                error={errors.phone}
-                touched={touched.phone}
+                disabled
               />
 
               {/* NIC */}
@@ -322,12 +285,11 @@ const NtsApplicationForm = ({
                 id="nic"
                 placeholder="NIC"
                 value={values.nic}
-                onChange={handleChange}
+                onChange={() => {}}
                 onBlur={handleBlur}
                 required
                 styleClasses={styleClasses}
-                error={errors.nic}
-                touched={touched.nic}
+                disabled
               />
 
               {/* Email */}
@@ -336,12 +298,29 @@ const NtsApplicationForm = ({
                 id="email"
                 placeholder="Email"
                 value={values.email}
-                onChange={handleChange}
+                onChange={() => {}}
                 onBlur={handleBlur}
                 required
                 styleClasses={styleClasses}
-                error={errors.email}
-                touched={touched.email}
+                disabled
+              />
+
+              {/* Status */}
+              <CustomSelectField
+                id="status"
+                placeholder="Status"
+                required
+                value={values.status}
+                onChange={(v) => setFieldValue("status", Number(v))}
+                onBlur={handleBlur}
+                options={[
+                  { label: "Accepted", value: 1 },
+                  { label: "Pending", value: 2 },
+                  { label: "Rejected", value: 3 },
+                ]}
+                styleClasses={styleClasses}
+                error={errors.status}
+                touched={touched.status}
               />
 
               {/* Buttons */}

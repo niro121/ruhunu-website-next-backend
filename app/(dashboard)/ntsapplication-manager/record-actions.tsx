@@ -39,13 +39,13 @@ const NtsApplicationManagerRecordActions = <TData extends NtsApplicationManager>
                 toast({
                     variant: "success",
                     title: "Success",
-                    description: "Career was deleted successfully",
+                    description: "Nts Application deleted successfully",
                 })
             } catch (error: any) {
                 toast({
                     variant: "destructive",
                     title: "Error",
-                    description: error.message ?? "Career deletion unsuccessful",
+                    description: error.message ?? "Nts Application unsuccessful",
                 })
             } finally {
                 setLoading(false)
@@ -55,7 +55,7 @@ const NtsApplicationManagerRecordActions = <TData extends NtsApplicationManager>
             toast({
                 variant: "destructive",
                 title: "Error",
-                description: "Career id not found.",
+                description: "Application id not found.",
             })
         }
     }
@@ -77,7 +77,7 @@ const NtsApplicationManagerRecordActions = <TData extends NtsApplicationManager>
                 loading={loading}
                 title="Are you absolutely sure?"
                 description="This action cannot be undone. This will permanently delete this
-                            career and remove the data from our servers."
+                            application and remove the data from our servers."
                 handleContinue={onDeleteConfirmation}
             />
         </>
