@@ -5,14 +5,14 @@ export type NtsApplication = {
     title: string;
     full_name: string;
     date_of_birth: Date;
-    age: Number;
+    age: number;
     gender: string;
     address1: string;
     address2: string | null;
     phone: string;
     nic: string;
     email: string;
-    status: Number;
+    status: number;
     createdAt?: Date
     updatedAt?: Date
 }

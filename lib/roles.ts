@@ -4,7 +4,7 @@ export const ALL_ROLES: Record<string, string[]> = {
         "/menu-manager",
         "/careers",
         "/users",
-        "/nts-application"
+        "/nts"
     ],
     dataOfficer: [
         

@@ -108,7 +108,7 @@ async function DesktopNav({ session }: { session: Session | null }) {
 
         {/* // =========================== NTS Application =========================== */}
         <NavLink
-          href={hasAccess("/nts-application") ? "/nts-application" : "unauthorized-access"}
+          href={hasAccess("/nts") ? "/nts" : "unauthorized-access"}
           label="NTS Application"
           icon={<UserGroup className="h-5 w-5" />}
         />
