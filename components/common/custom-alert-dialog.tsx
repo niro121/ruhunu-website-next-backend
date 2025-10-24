@@ -41,10 +41,11 @@ const CustomAlertDialog = ({
           <AlertDialogCancel
             onClick={() => handleVisibilityChange(false)}
             disabled={loading}
+            className="bg-white text-black hover:bg-black hover:text-white"
           >
             Cancel
           </AlertDialogCancel>
-          <AlertDialogAction onClick={handleContinue} disabled={loading}>
+          <AlertDialogAction onClick={handleContinue} disabled={loading} className="bg-black text-white border border-black hover:text-black hover:bg-white">
             Continue {loading && <Spinner />}
           </AlertDialogAction>
         </AlertDialogFooter>

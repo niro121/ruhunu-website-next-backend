@@ -99,6 +99,13 @@ async function DesktopNav({ session }: { session: Session | null }) {
           icon={<BriefcaseIcon className="h-5 w-5" />}
         />
 
+        {/* // =========================== SERVICES =========================== */}
+        <NavLink
+          href={hasAccess("/services") ? "/services" : "unauthorized-access"}
+          label="Services Manager"
+          icon={<BriefcaseIcon className="h-5 w-5" />}
+        />
+
         {/* // =========================== USERS =========================== */}
         <NavLink
           href={hasAccess("/users") ? "/users" : "unauthorized-access"}
@@ -172,6 +179,13 @@ async function MobileNav({ session }: { session: Session | null }) {
           <NavLink
             href={hasAccess("/careers") ? "/careers" : "unauthorized-access"}
             label="Careers Manager"
+            icon={<BriefcaseIcon className="h-5 w-5" />}
+          />
+
+          {/* // =========================== SERVICES =========================== */}
+          <NavLink
+            href={hasAccess("/services") ? "/services" : "unauthorized-access"}
+            label="Services Manager"
             icon={<BriefcaseIcon className="h-5 w-5" />}
           />
 
