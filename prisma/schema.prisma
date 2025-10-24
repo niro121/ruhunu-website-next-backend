@@ -159,3 +159,20 @@ model NtsApplication {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Service {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  image      String
+  content    String
+  phone      String[]
+  email      String[]
+  slug       String
+  featured   Boolean  @default(false)
+  visibility Boolean  @default(false)
+
+  createdBy String?  @db.ObjectId
+  updatedBy String?  @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

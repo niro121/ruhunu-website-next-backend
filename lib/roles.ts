@@ -3,6 +3,7 @@ export const ALL_ROLES: Record<string, string[]> = {
         "/docters",
         "/menu-manager",
         "/careers",
+        "/services",
         "/users",
         
     ],

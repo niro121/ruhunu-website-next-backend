@@ -5,6 +5,7 @@ import CustomCheckedField from "@/components/common/custom-checked-field";
 import CustomSelectField from "@/components/common/custom-select-field";
 import { FormActionsBtns } from "@/components/common/form-actions-btns";
 import CustomFormField from "@/components/common/form-field";
+import ImageInput from "@/components/common/image-input/ImageInput";
 import { useToast } from "@/components/hooks/use-toast";
 import { Card } from "@/components/ui/card";
 import { Docter } from "@/types/docter";
@@ -82,7 +83,7 @@ const DocterForm = ({docter,sessionRole,order}: DocterFormProps) => {
                 city: values.city,
                 regNumber: values.regNumber,
                 qualification: values.qualification,
-                referralCharge: 0,
+                referralCharge: values.referralCharge,
                 sessionNoPrefix: values.sessionNoPrefix,
                 featured: values.featured,
                 laboratory: values.laboratory,
@@ -201,17 +202,16 @@ const DocterForm = ({docter,sessionRole,order}: DocterFormProps) => {
                                 />
 
                                 {/* Image */}
-                                <CustomFormField
-                                    type="text"
+                                <ImageInput
                                     id="image"
                                     placeholder="Image"
-                                    value={values.image}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    required
+                                    url={values.image || ''}
+                                    setFieldValue={setFieldValue}
+                                    fieldName={'image'}
                                     styleClasses={styleClasses}
                                     error={errors.image}
                                     touched={touched.image}
+                                    required={false}
                                 />
 
                                 {/* visibility */}
