@@ -18,7 +18,7 @@ import {
 
 import { revalidatePath } from "next/cache";
 
-// ========== Get all Applications with pagination/search ==========
+// Get all Applications with pagination/search //
 export const getAllApplications = async (filter: GetNtsApplicationManagerParams) => {
   try {
     const newFilter: GetNtsApplicationManagerQuery = {
@@ -35,10 +35,10 @@ export const getAllApplications = async (filter: GetNtsApplicationManagerParams)
   }
 };
 
-// ========== Create Application ==========
+// Create Application //
 export const createNewApplication = async (payload: NtsApplicationManager) => {
   try {
-    // required validations
+    // required validations //
     if (!payload.full_name) {
       throw new Error("Full Name is required");
     }
@@ -47,10 +47,8 @@ export const createNewApplication = async (payload: NtsApplicationManager) => {
     delete (payload as any).createdAt;
     delete (payload as any).updatedAt;
 
-    // Default values
     if (payload.status === undefined) payload.status = 1;
 
-    // Call Service
     const savedData = await saveApplication(payload);
 
     revalidatePath("/ntsapplication");
@@ -66,7 +64,7 @@ export const createNewApplication = async (payload: NtsApplicationManager) => {
   }
 };
 
-// ========== Update Application ==========
+// Update Application //
 export const updateApplication = async (id: string, payload: NtsApplicationManagerPartial) => {
   try {
     const updatedData = await updateOneApplication(id, payload);
@@ -81,7 +79,7 @@ export const updateApplication = async (id: string, payload: NtsApplicationManag
   }
 };
 
-// ========== Get single Application by ID ==========
+// Get single Application by ID
 export const fetchApplicationById = async (id: string) => {
   try {
     if (!id) {

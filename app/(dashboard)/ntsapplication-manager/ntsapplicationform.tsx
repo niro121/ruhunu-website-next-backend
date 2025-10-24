@@ -10,7 +10,10 @@ import { FormActionsBtns } from "@/components/common/form-actions-btns";
 import { useToast } from "@/components/hooks/use-toast";
 import { NtsApplicationManager } from "@/types/ntsapplication-manager";
 import { useRouter } from "next/navigation";
-import { createNewApplication, updateApplication } from "@/app/actions/ntsapplication.actions";
+import {
+  createNewApplication,
+  updateApplication,
+} from "@/app/actions/ntsapplication.actions";
 
 type NtsApplicationFormProps = {
   application: NtsApplicationManager | null;
@@ -184,29 +187,39 @@ const NtsApplicationForm = ({
                   type="text"
                   id="dob_day"
                   placeholder="Date"
-                  value={new Date(values.date_of_birth).getDate().toString()}
+                  value={
+                    values.date_of_birth
+                      ? String(new Date(values.date_of_birth).getDate())
+                      : ""
+                  }
                   onChange={handleChange}
                   onBlur={handleBlur}
                   required={false}
                 />
+
                 <CustomFormField
                   type="text"
-                  id=""
+                  id="dob_month"
                   placeholder="Month"
-                  value={(
-                    new Date(values.date_of_birth).getMonth() + 1
-                  ).toString()}
+                  value={
+                    values.date_of_birth
+                      ? String(new Date(values.date_of_birth).getMonth() + 1)
+                      : ""
+                  }
                   onChange={handleChange}
                   onBlur={handleBlur}
                   required={false}
                 />
+
                 <CustomFormField
                   type="text"
                   id="dob_year"
                   placeholder="Year"
-                  value={new Date(values.date_of_birth)
-                    .getFullYear()
-                    .toString()}
+                  value={
+                    values.date_of_birth
+                      ? String(new Date(values.date_of_birth).getFullYear())
+                      : ""
+                  }
                   onChange={handleChange}
                   onBlur={handleBlur}
                   required={false}
@@ -330,23 +343,6 @@ const NtsApplicationForm = ({
                 error={errors.email}
                 touched={touched.email}
               />
-
-              {/* reCAPTCHA Placeholder */}
-              <div className="text-sm text-gray-500 px-3">
-                <p>Recaptcha requires verification.</p>
-                <div className="mt-2 border p-3 rounded-md bg-white text-center text-gray-600">
-                  I’m not a robot ☐
-                </div>
-                <p className="mt-1 text-xs">
-                  <a href="#" className="text-blue-500 underline">
-                    Privacy
-                  </a>{" "}
-                  ·{" "}
-                  <a href="#" className="text-blue-500 underline">
-                    Terms
-                  </a>
-                </p>
-              </div>
 
               {/* Buttons */}
               <FormActionsBtns

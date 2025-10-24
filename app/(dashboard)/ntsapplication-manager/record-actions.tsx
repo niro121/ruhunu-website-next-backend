@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react"
 import { Row } from "@tanstack/react-table"
 import { useToast } from "@/components/hooks/use-toast"
@@ -5,9 +6,9 @@ import { DataTableRowActions } from "@/components/common/custom-table-row-action
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import CustomAlertDialog from "@/components/common/custom-alert-dialog"
 import { useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
 import { deleteDocter } from "@/app/actions/docter.actions"
 import { NtsApplicationManager } from "@/types/ntsapplication-manager"
+import { useRouter } from "next/navigation"
 
 
 interface NtsApplicationProps<TData extends NtsApplicationManager> {
@@ -23,17 +24,17 @@ const NtsApplicationManagerRecordActions = <TData extends NtsApplicationManager>
     const { data: session } = useSession()
     const router = useRouter();
 
-    const docter = row.original
+    const application = row.original
 
     const showHideDeleteModal = (value: boolean) => {
         setShowDelConfirmation(value)
     }
 
     const onDeleteConfirmation = async () => {
-        if (docter.id) {
+        if (application.id) {
             try {
                 setLoading(true)
-                await deleteDocter(docter.id)
+                await deleteDocter(application.id)
 
                 toast({
                     variant: "success",
@@ -62,7 +63,7 @@ const NtsApplicationManagerRecordActions = <TData extends NtsApplicationManager>
     return (
         <>
             <DataTableRowActions >
-                <DropdownMenuItem onClick={() => router.push(`/docters/${docter.id}`)}>
+                <DropdownMenuItem onClick={() => router.push(`/ntsapplication-manager/${application.id}`)}>
                     Edit
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => showHideDeleteModal(true)}>
