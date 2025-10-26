@@ -33,6 +33,11 @@ export const createNewNewsAndEvent = async (payload: NewsAndEvent) => {
             throw new Error("NewsAndEvent name is required")
         }
 
+        // Set slug (if not provided)
+        if (!payload.slug || payload.slug.trim() === "") {
+            payload.slug = slugify(payload.name)
+        }
+
         delete (payload as any).id
         delete (payload as any).createdAt
         delete (payload as any).updatedAt
@@ -122,4 +127,14 @@ export const deleteNewsAndEvent = async (id: string) => {
         console.log('delete NewsAndEvent error ==>', error);
         throw new Error(error.message ?? "Error deleting data. please try again later")
     }
+}
+
+// util
+function slugify(input: string) {
+    return input
+        .toLowerCase()
+        .trim()
+        .replace(/['"]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
 }
