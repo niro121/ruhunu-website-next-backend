@@ -10,7 +10,7 @@ export default async function NewApplicationsPage() {
     
     const sessionRole = (session.user as any)?.role ?? undefined;
     
-    const docters: NtsApplication | null = null;
+    const applications: NtsApplication | null = null;
     
     const nextOrder = await getNextOrder("docter");
     
@@ -19,7 +19,7 @@ export default async function NewApplicationsPage() {
             <div className="flex items-center">
                 <h1 className="text-xl font-semibold">Create Application Data</h1>
             </div>
-            <ApplicationForm application={docters} sessionRole={sessionRole} order={nextOrder} />
+            <ApplicationForm application={applications} sessionRole={sessionRole} order={nextOrder} />
         </div>
     )
 }

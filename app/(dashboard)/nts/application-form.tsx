@@ -171,6 +171,7 @@ const ApplicationForm = ({ application, sessionRole, order }: ApplicationFormPro
                                 styleClasses={styleClasses}
                                 error={errors.title}
                                 touched={touched.title}
+                                disabled
                             />
 
                             {/* Full Name */}
@@ -185,6 +186,7 @@ const ApplicationForm = ({ application, sessionRole, order }: ApplicationFormPro
                                 styleClasses={styleClasses}
                                 error={errors.full_name}
                                 touched={touched.full_name}
+                                disabled
                             />
 
                             {/* Date of Birth */}
@@ -203,6 +205,7 @@ const ApplicationForm = ({ application, sessionRole, order }: ApplicationFormPro
                                 styleClasses={styleClasses}
                                 error={errors.date_of_birth as unknown as string}
                                 touched={touched.date_of_birth as unknown as boolean}
+                                disabled
                             />
 
                             {/* Age */}
@@ -217,6 +220,7 @@ const ApplicationForm = ({ application, sessionRole, order }: ApplicationFormPro
                                 styleClasses={styleClasses}
                                 error={errors.age}
                                 touched={touched.age}
+                                disabled
                             />
 
                             {/* Gender */}
@@ -235,6 +239,7 @@ const ApplicationForm = ({ application, sessionRole, order }: ApplicationFormPro
                                 styleClasses={styleClasses}
                                 error={errors.gender}
                                 touched={touched.gender}
+                                disabled
                             />
 
                             {/* Address 1 */}
@@ -249,6 +254,7 @@ const ApplicationForm = ({ application, sessionRole, order }: ApplicationFormPro
                                 styleClasses={styleClasses}
                                 error={errors.address1}
                                 touched={touched.address1}
+                                disabled
                             />
 
                             {/* Address 2 */}
@@ -263,6 +269,7 @@ const ApplicationForm = ({ application, sessionRole, order }: ApplicationFormPro
                                 styleClasses={styleClasses}
                                 error={errors.address2}
                                 touched={touched.address2}
+                                disabled
                             />
 
                             {/* Phone */}
@@ -277,6 +284,7 @@ const ApplicationForm = ({ application, sessionRole, order }: ApplicationFormPro
                                 styleClasses={styleClasses}
                                 error={errors.phone}
                                 touched={touched.phone}
+                                disabled
                             />
 
                             {/* NIC */}
@@ -291,6 +299,7 @@ const ApplicationForm = ({ application, sessionRole, order }: ApplicationFormPro
                                 styleClasses={styleClasses}
                                 error={errors.nic}
                                 touched={touched.nic}
+                                disabled
                             />
 
                             {/* Email */}
@@ -305,17 +314,22 @@ const ApplicationForm = ({ application, sessionRole, order }: ApplicationFormPro
                                 styleClasses={styleClasses}
                                 error={errors.email}
                                 touched={touched.email}
+                                disabled
                             />
 
                             {/* Status */}
-                            <CustomFormField
-                                type="number"
+                            <CustomSelectField
                                 id="status"
-                                placeholder="Status"
-                                value={values.status}
-                                onChange={handleChange}
+                                placeholder="status"
+                                required={false}
+                                value={values.status} 
+                                onChange={(v) => setFieldValue('status', v)}
                                 onBlur={handleBlur}
-                                required
+                                options={[
+                                    { label: "Pending", value: 1 },
+                                    { label: "Accepted", value: 2 },
+                                    { label: "Rejected", value: 3 },
+                                ]}
                                 styleClasses={styleClasses}
                                 error={errors.status}
                                 touched={touched.status}

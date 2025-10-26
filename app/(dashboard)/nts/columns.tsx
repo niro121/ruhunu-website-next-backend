@@ -2,10 +2,11 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { Checkbox } from "@/components/ui/checkbox"
-import { CircleCorrect, CircleX } from "@/components/icons"
 import Link from "next/link"
 import { NtsApplication } from "@/types/ntsapplication"
 import ApplicationRecordActions from "./record-actions"
+import { CircleX, Eye } from "lucide-react";
+import { CircleCorrect } from "@/components/icons";
 
 // DEFINE THE COLUMNS OF THE Application TABLE
 export const ApplicationColumns: ColumnDef<NtsApplication>[] = [
@@ -55,19 +56,24 @@ export const ApplicationColumns: ColumnDef<NtsApplication>[] = [
         header: "NIC",
     },
     {
-        accessorKey: "status",
-        header: "Status",
+        accessorKey: "email",
+        header: "E-mail",
     },
     {
-        accessorKey: "visibility",
-        header: "Visibility",
+        accessorKey: "status",
+        header: "Status",
         cell: ({ row }) => {
-            const show = row.getValue("visibility")
-            return show === true ? (
-                <CircleCorrect className="text-green-500 w-7 h-7" />
-            ) : (
-                <CircleX className="text-red-500 w-7 h-7" />
-            )
+            const statusMap = row.getValue('status')
+            switch (statusMap) {
+                case 1:
+                    return <Eye className="text-yellow-500 w-6 h-6" />;
+                case 2:
+                    return <CircleCorrect className="text-green-500 w-6 h-6" />;
+                case 3:
+                    return <CircleX className="text-red-500 w-6 h-6" />;
+                default:
+                    return null;
+            }
         },
     },
     {
