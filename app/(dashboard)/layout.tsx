@@ -127,6 +127,20 @@ async function DesktopNav({ session }: { session: Session | null }) {
           icon={<BriefcaseIcon className="h-5 w-5" />}
         />
 
+        {/* // =========================== ROOM =========================== */}
+        <NavLink
+          href={hasAccess("/rooms") ? "/rooms" : "unauthorized-access"}
+          label="Rooms Manager"
+          icon={<BriefcaseIcon className="h-5 w-5" />}
+        />
+
+        {/* // =========================== ROOM CATEGORYS =========================== */}
+        <NavLink
+          href={hasAccess("/room-categorys") ? "/room-categorys" : "unauthorized-access"}
+          label="Room Categorys"
+          icon={<BriefcaseIcon className="h-5 w-5" />}
+        />
+
         {/* // =========================== USERS =========================== */}
         <NavLink
           href={hasAccess("/users") ? "/users" : "unauthorized-access"}
@@ -228,6 +242,20 @@ async function MobileNav({ session }: { session: Session | null }) {
           <NavLink
             href={hasAccess("/news-letter-subcriptions") ? "/news-letter-subcriptions" : "unauthorized-access"}
             label="Subcription Manager"
+            icon={<BriefcaseIcon className="h-5 w-5" />}
+          />
+
+          {/* // =========================== ROOM =========================== */}
+          <NavLink
+            href={hasAccess("/rooms") ? "/rooms" : "unauthorized-access"}
+            label="Rooms Manager"
+            icon={<BriefcaseIcon className="h-5 w-5" />}
+          />
+
+          {/* // =========================== ROOM CATEGORYS =========================== */}
+          <NavLink
+            href={hasAccess("/room-categorys") ? "/room-categorys" : "unauthorized-access"}
+            label="Room Categorys"
             icon={<BriefcaseIcon className="h-5 w-5" />}
           />
 
