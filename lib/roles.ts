@@ -8,6 +8,8 @@ export const ALL_ROLES: Record<string, string[]> = {
         "/news-and-events",
         "/news-letter-subcriptions",
         "/ntsapplication-manager",
+        "/rooms",
+        "/room-categorys",
         "/users",
         
     ],
