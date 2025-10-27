@@ -127,6 +127,17 @@ async function DesktopNav({ session }: { session: Session | null }) {
           icon={<BriefcaseIcon className="h-5 w-5" />}
         />
 
+        {/* // =========================== NTS APPLICATION MANAGER =========================== */}
+          <NavLink
+            href={
+              hasAccess("/ntsapplication-manager")
+                ? "/ntsapplication-manager"
+                : "unauthorized-access"
+            }
+            label="NTS Applications"
+            icon={<UserGroup className="h-5 w-5" />}
+          />
+
         {/* // =========================== USERS =========================== */}
         <NavLink
           href={hasAccess("/users") ? "/users" : "unauthorized-access"}
@@ -229,6 +240,17 @@ async function MobileNav({ session }: { session: Session | null }) {
             href={hasAccess("/news-letter-subcriptions") ? "/news-letter-subcriptions" : "unauthorized-access"}
             label="Subcription Manager"
             icon={<BriefcaseIcon className="h-5 w-5" />}
+          />
+
+          {/* // =========================== NTS APPLICATION MANAGER =========================== */}
+          <NavLink
+            href={
+              hasAccess("/ntsapplication-manager")
+                ? "/ntsapplication-manager"
+                : "unauthorized-access"
+            }
+            label="NTS Applications"
+            icon={<UserGroup className="h-5 w-5" />}
           />
 
           {/* // =========================== USERS =========================== */}
