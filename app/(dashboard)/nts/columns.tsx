@@ -66,11 +66,11 @@ export const ApplicationColumns: ColumnDef<NtsApplication>[] = [
             const statusMap = row.getValue('status')
             switch (statusMap) {
                 case 1:
-                    return <Eye className="text-yellow-500 w-6 h-6" />;
+                    return <Eye className="text-yellow-500 w-6 h-6 ml-2" />;
                 case 2:
-                    return <CircleCorrect className="text-green-500 w-6 h-6" />;
+                    return <CircleCorrect className="text-green-500 w-6 h-6 ml-2" />;
                 case 3:
-                    return <CircleX className="text-red-500 w-6 h-6" />;
+                    return <CircleX className="text-red-500 w-6 h-6 ml-2" />;
                 default:
                     return null;
             }
