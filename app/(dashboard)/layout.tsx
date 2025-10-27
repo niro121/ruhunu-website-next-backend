@@ -106,6 +106,27 @@ async function DesktopNav({ session }: { session: Session | null }) {
           icon={<BriefcaseIcon className="h-5 w-5" />}
         />
 
+        {/* // =========================== BRANCHES =========================== */}
+        <NavLink
+          href={hasAccess("/branches") ? "/branches" : "unauthorized-access"}
+          label="Branches Manager"
+          icon={<BriefcaseIcon className="h-5 w-5" />}
+        />
+
+        {/* // =========================== NEWS & EVENTS =========================== */}
+        <NavLink
+          href={hasAccess("/news-and-events") ? "/news-and-events" : "unauthorized-access"}
+          label="News & Events Manager"
+          icon={<BriefcaseIcon className="h-5 w-5" />}
+        />
+
+        {/* // =========================== NEWS LETTER SUBCRIPTION =========================== */}
+        <NavLink
+          href={hasAccess("/news-letter-subcriptions") ? "/news-letter-subcriptions" : "unauthorized-access"}
+          label="Subcription Manager"
+          icon={<BriefcaseIcon className="h-5 w-5" />}
+        />
+
         {/* // =========================== USERS =========================== */}
         <NavLink
           href={hasAccess("/users") ? "/users" : "unauthorized-access"}
@@ -193,6 +214,27 @@ async function MobileNav({ session }: { session: Session | null }) {
           <NavLink
             href={hasAccess("/services") ? "/services" : "unauthorized-access"}
             label="Services Manager"
+            icon={<BriefcaseIcon className="h-5 w-5" />}
+          />
+
+          {/* // =========================== BRANCHES =========================== */}
+          <NavLink
+            href={hasAccess("/branches") ? "/branches" : "unauthorized-access"}
+            label="Branches Manager"
+            icon={<BriefcaseIcon className="h-5 w-5" />}
+          />
+
+          {/* // =========================== NEWS & EVENTS =========================== */}
+          <NavLink
+            href={hasAccess("/news-and-events") ? "/news-and-events" : "unauthorized-access"}
+            label="News & Events Manager"
+            icon={<BriefcaseIcon className="h-5 w-5" />}
+          />
+
+          {/* // =========================== NEWS LETTER SUBCRIPTION =========================== */}
+          <NavLink
+            href={hasAccess("/news-letter-subcriptions") ? "/news-letter-subcriptions" : "unauthorized-access"}
+            label="Subcription Manager"
             icon={<BriefcaseIcon className="h-5 w-5" />}
           />
 

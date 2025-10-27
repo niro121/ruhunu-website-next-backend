@@ -6,6 +6,7 @@ import CustomRichTextEditor from "@/components/common/custom-rich-text-editor";
 import { FormActionsBtns } from "@/components/common/form-actions-btns";
 import CustomFormField from "@/components/common/form-field";
 import CustomMultiInputField from "@/components/common/form-multi-input-field";
+import ImageInput from "@/components/common/image-input/ImageInput";
 import { useToast } from "@/components/hooks/use-toast";
 import { Card } from "@/components/ui/card";
 import { Service } from "@/types/service";
@@ -161,20 +162,7 @@ const ServiceForm = ({service,sessionRole,order}: ServiceFormProps) => {
                                 />
 
                                 {/* Image */}
-                                <CustomFormField
-                                    type="text"
-                                    id="image"
-                                    placeholder="Image"
-                                    value={values.image}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    required
-                                    styleClasses={styleClasses}
-                                    error={errors.image}
-                                    touched={touched.image}
-                                />
-
-                                {/* <ImageInput
+                                <ImageInput
                                     id="image"
                                     placeholder="Image"
                                     url={values.image || ''}
@@ -184,7 +172,7 @@ const ServiceForm = ({service,sessionRole,order}: ServiceFormProps) => {
                                     error={errors.image}
                                     touched={touched.image}
                                     required={false}
-                                /> */}
+                                />
 
                                 {/* Content */}
                                 <CustomRichTextEditor

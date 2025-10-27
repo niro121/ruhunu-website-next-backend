@@ -223,6 +223,7 @@ const ImageInput: React.FC<ImageInputProps> = ({
                                 className="object-contain"
                                 style={{ width: previewSize, height: previewSize }}
                             />
+                            
                         </div>
                     ) : (
                         // --- else background & close button ---
@@ -257,6 +258,7 @@ const ImageInput: React.FC<ImageInputProps> = ({
                             </div>
 
                             <p className={styles.imageName}>{imgName}</p>
+                            
                         </div>
                     )
                 )}
@@ -269,6 +271,7 @@ const ImageInput: React.FC<ImageInputProps> = ({
                     className="invalid-feedback text-red-600 text-sm whitespace-pre-wrap pt-1 sm:pt-0 mt-2"
                 />
             </div>
+            
         </div>
     );
 };

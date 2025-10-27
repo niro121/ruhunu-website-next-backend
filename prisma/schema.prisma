@@ -176,3 +176,47 @@ model Service {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Branche {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  image       String
+  listImage   String[]
+  description String   @default("")
+  phone       String[]
+  latitude    String
+  longitude   String
+  slug        String
+  visibility  Boolean  @default(false)
+
+  createdBy String?  @db.ObjectId
+  updatedBy String?  @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model NewsAndEvents {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  name       String  @default("")
+  content    String
+  image      String
+  video      String?
+  facebook   String?
+  instagram  String?
+  twitter    String?
+  slug       String
+  featured   Boolean @default(false)
+  visibility Boolean @default(false)
+
+  createdBy String?  @db.ObjectId
+  updatedBy String?  @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model NewsLetter {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  email String @unique()
+
+  createdAt DateTime @default(now())
+}
