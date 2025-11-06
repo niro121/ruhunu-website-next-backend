@@ -92,6 +92,13 @@ async function DesktopNav({ session }: { session: Session | null }) {
           icon={<UserGroup className="h-5 w-5" />}
         />
 
+        {/* // =========================== CMS MANAGER =========================== */}
+        <NavLink
+          href={hasAccess("/cms-manager") ? "/cms-manager" : "unauthorized-access"}
+          label="CMS Manager"
+          icon={<UserGroup className="h-5 w-5" />}
+        />
+
         {/* // =========================== CAREERS =========================== */}
         <NavLink
           href={hasAccess("/careers") ? "/careers" : "unauthorized-access"}
@@ -207,6 +214,13 @@ async function MobileNav({ session }: { session: Session | null }) {
           <NavLink
             href={hasAccess("/menu-manager") ? "/menu-manager" : "unauthorized-access"}
             label="Menu Manager"
+            icon={<UserGroup className="h-5 w-5" />}
+          />
+
+          {/* // =========================== CMS MANAGER =========================== */}
+          <NavLink
+            href={hasAccess("/cms-manager") ? "/cms-manager" : "unauthorized-access"}
+            label="CMS Manager"
             icon={<UserGroup className="h-5 w-5" />}
           />
 
