@@ -208,8 +208,8 @@ const CareersForm = ({
                                     }}
                                     required
                                     styleClasses={styleClasses}
-                                    error={errors.image}
-                                    touched={touched.image}
+                                    error={errors.slug}
+                                    touched={touched.slug}
                                 />
 
                                 {/* ref nume */}
