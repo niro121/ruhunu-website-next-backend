@@ -1,3 +1,5 @@
+"use server"
+
 import { getLoggedInUser } from "@/lib/helpers/getLoggedInUser";
 import prisma from "@/lib/prisma";
 import { GetPagesQuery, GetPagesReturn, Page, UpdatePageDTO } from "@/types/page"
