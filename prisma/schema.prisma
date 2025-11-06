@@ -292,7 +292,7 @@ model ContactInquiries {
   name      String
   phone     String
   email     String
-  meaasage  String
+  message  String
   status    Boolean  @default(false)
   createdBy String?  @db.ObjectId
   updatedBy String?  @db.ObjectId
