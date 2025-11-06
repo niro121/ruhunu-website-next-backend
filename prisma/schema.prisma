@@ -247,3 +247,55 @@ model RoomsCategory {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Page {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  title           String    @default("")
+  metaTitle       String
+  metaKeyword     String
+  metaDescription String
+  metaImage       String
+  slug            String
+  sections        Section[]
+  visibility      Boolean   @default(false)
+
+  createdBy String?  @db.ObjectId
+  updatedBy String?  @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Section {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  type   String
+  data   Json
+  pageId String @db.ObjectId
+  page   Page   @relation(fields: [pageId], references: [id])
+}
+
+model Testimonial {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  designation String
+  testimonial String
+  rating      Int
+  visibility  Boolean @default(false)
+
+  createdBy String?  @db.ObjectId
+  updatedBy String?  @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ContactInquiries {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  phone     String
+  email     String
+  meaasage  String
+  status    Boolean  @default(false)
+  createdBy String?  @db.ObjectId
+  updatedBy String?  @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
