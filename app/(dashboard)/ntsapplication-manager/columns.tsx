@@ -114,7 +114,7 @@ export const ntsApplicationManagerColumns: ColumnDef<NtsApplicationManager>[] =
         }
       },
     },
-
+   
     {
       id: "actions",
       cell: ({ row }) => <NtsApplicationManagerRecordActions row={row} />,
