@@ -2,6 +2,7 @@ export const ALL_ROLES: Record<string, string[]> = {
     admin: [
         "/docters",
         "/menu-manager",
+        "/cms-manager",
         "/careers",
         "/services",
         "/branches",
