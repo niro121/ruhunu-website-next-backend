@@ -5,35 +5,21 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Profile } from "./profile"
 import Providers from "./providers"
 import {
-  BadgeCheck,
-  BadgePercent,
   BriefcaseIcon,
-  Building2Icon,
-  ClapperboardIcon,
-  Contact,
-  FolderSyncIcon,
-  GiftIcon,
-  Handshake,
-  Images,
-  Megaphone,
   PanelLeft,
-  RectangleHorizontal,
-  TheaterIcon,
-  Utensils,
+  Building,
+  Bed,
+  Stethoscope,
+  CalendarDays,
+  Hospital,
+  Menu,
+  Ambulance,
+  BedSingle,
+  Mail,
 } from "lucide-react"
 import { Session } from "next-auth";
 import {
   UserGroup,
-  FileUser,
-  DoubleArrow,
-  Earth,
-  Article,
-  DBIcon,
-  // FolderLock,
-  SettingIcon,
-  AnalyticsIcon,
-  StockIcon,
-  UserAnalyticsIcon
 } from "@/components/icons"
 import DashboardBreadcrumb from "./breadcrumbs"
 import { fetchServerSession } from "@/lib/session"
@@ -82,14 +68,14 @@ async function DesktopNav({ session }: { session: Session | null }) {
         <NavLink
           href={hasAccess("/docters") ? "/docters" : "unauthorized-access"}
           label="Docters"
-          icon={<UserGroup className="h-5 w-5" />}
+          icon={<Stethoscope className="h-5 w-5" />}
         />
 
         {/* // =========================== MENU MANAGER =========================== */}
         <NavLink
           href={hasAccess("/menu-manager") ? "/menu-manager" : "unauthorized-access"}
           label="Menu Manager"
-          icon={<UserGroup className="h-5 w-5" />}
+          icon={<Menu className="h-5 w-5" />}
         />
 
         {/* // =========================== CMS MANAGER =========================== */}
@@ -110,42 +96,49 @@ async function DesktopNav({ session }: { session: Session | null }) {
         <NavLink
           href={hasAccess("/services") ? "/services" : "unauthorized-access"}
           label="Services Manager"
-          icon={<BriefcaseIcon className="h-5 w-5" />}
+          icon={<Ambulance className="h-5 w-5" />}
         />
 
         {/* // =========================== BRANCHES =========================== */}
         <NavLink
           href={hasAccess("/branches") ? "/branches" : "unauthorized-access"}
           label="Branches Manager"
-          icon={<BriefcaseIcon className="h-5 w-5" />}
+          icon={<Hospital className="h-5 w-5" />}
         />
 
         {/* // =========================== NEWS & EVENTS =========================== */}
         <NavLink
           href={hasAccess("/news-and-events") ? "/news-and-events" : "unauthorized-access"}
           label="News & Events Manager"
-          icon={<BriefcaseIcon className="h-5 w-5" />}
+          icon={<CalendarDays className="h-5 w-5" />}
         />
 
         {/* // =========================== NEWS LETTER SUBCRIPTION =========================== */}
         <NavLink
           href={hasAccess("/news-letter-subcriptions") ? "/news-letter-subcriptions" : "unauthorized-access"}
           label="Subcription Manager"
-          icon={<BriefcaseIcon className="h-5 w-5" />}
+          icon={<Mail className="h-5 w-5" />}
         />
 
         {/* // =========================== ROOM =========================== */}
         <NavLink
           href={hasAccess("/rooms") ? "/rooms" : "unauthorized-access"}
           label="Rooms Manager"
-          icon={<BriefcaseIcon className="h-5 w-5" />}
+          icon={<Bed className="h-5 w-5" />}
         />
 
         {/* // =========================== ROOM CATEGORYS =========================== */}
         <NavLink
           href={hasAccess("/room-categorys") ? "/room-categorys" : "unauthorized-access"}
           label="Room Categorys"
-          icon={<BriefcaseIcon className="h-5 w-5" />}
+          icon={<BedSingle className="h-5 w-5" />}
+        />
+
+        {/* // =========================== COLLECTING CENTERS =========================== */}
+        <NavLink
+          href={hasAccess("/collecting-centers") ? "/collecting-centers" : "unauthorized-access"}
+          label="Collecting Centers"
+          icon={<Building className="h-5 w-5" />}
         />
 
         {/* // =========================== USERS =========================== */}
@@ -207,14 +200,14 @@ async function MobileNav({ session }: { session: Session | null }) {
           <NavLink
             href={hasAccess("/docters") ? "/docters" : "unauthorized-access"}
             label="Docters"
-            icon={<UserGroup className="h-5 w-5" />}
+            icon={<Stethoscope className="h-5 w-5" />}
           />
 
           {/* // =========================== MENU MANAGER =========================== */}
           <NavLink
             href={hasAccess("/menu-manager") ? "/menu-manager" : "unauthorized-access"}
             label="Menu Manager"
-            icon={<UserGroup className="h-5 w-5" />}
+            icon={<Menu className="h-5 w-5" />}
           />
 
           {/* // =========================== CMS MANAGER =========================== */}
@@ -242,35 +235,42 @@ async function MobileNav({ session }: { session: Session | null }) {
           <NavLink
             href={hasAccess("/branches") ? "/branches" : "unauthorized-access"}
             label="Branches Manager"
-            icon={<BriefcaseIcon className="h-5 w-5" />}
+            icon={<Hospital className="h-5 w-5" />}
           />
 
           {/* // =========================== NEWS & EVENTS =========================== */}
           <NavLink
             href={hasAccess("/news-and-events") ? "/news-and-events" : "unauthorized-access"}
             label="News & Events Manager"
-            icon={<BriefcaseIcon className="h-5 w-5" />}
+            icon={<CalendarDays className="h-5 w-5" />}
           />
 
           {/* // =========================== NEWS LETTER SUBCRIPTION =========================== */}
           <NavLink
             href={hasAccess("/news-letter-subcriptions") ? "/news-letter-subcriptions" : "unauthorized-access"}
             label="Subcription Manager"
-            icon={<BriefcaseIcon className="h-5 w-5" />}
+            icon={<Mail className="h-5 w-5" />}
           />
 
           {/* // =========================== ROOM =========================== */}
           <NavLink
             href={hasAccess("/rooms") ? "/rooms" : "unauthorized-access"}
             label="Rooms Manager"
-            icon={<BriefcaseIcon className="h-5 w-5" />}
+            icon={<Bed className="h-5 w-5" />}
           />
 
           {/* // =========================== ROOM CATEGORYS =========================== */}
           <NavLink
             href={hasAccess("/room-categorys") ? "/room-categorys" : "unauthorized-access"}
             label="Room Categorys"
-            icon={<BriefcaseIcon className="h-5 w-5" />}
+            icon={<BedSingle className="h-5 w-5" />}
+          />
+
+          {/* // =========================== COLLECTING CENTERS =========================== */}
+          <NavLink
+            href={hasAccess("/collecting-centers") ? "/collecting-centers" : "unauthorized-access"}
+            label="Collecting Centers"
+            icon={<Building className="h-5 w-5" />}
           />
 
           {/* // =========================== USERS =========================== */}
