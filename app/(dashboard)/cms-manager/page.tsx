@@ -4,6 +4,8 @@ import AddNewLinkButton from "@/components/common/add-new-link-btn";
 import { Suspense } from "react";
 import { CustomDataTable } from "@/components/common/custom-data-table";
 import Loading from "../loading";
+import { bulkDeletePages, getAllPages } from "@/app/actions/page.actions";
+import { pagesColumns } from "./columns";
 
 type SearchParams = {
     searchParams?: Promise<{
