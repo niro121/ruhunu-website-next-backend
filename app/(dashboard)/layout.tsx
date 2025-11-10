@@ -148,6 +148,13 @@ async function DesktopNav({ session }: { session: Session | null }) {
           icon={<BriefcaseIcon className="h-5 w-5" />}
         />
 
+         {/* // =========================== TESTIMONIALS =========================== */}
+         <NavLink
+          href={hasAccess("/testimonials") ? "/testimonials" : "unauthorized-access"}
+          label="Testimonials"
+          icon={<BriefcaseIcon className="h-5 w-5" />}
+        />
+
         {/* // =========================== USERS =========================== */}
         <NavLink
           href={hasAccess("/users") ? "/users" : "unauthorized-access"}
