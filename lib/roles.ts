@@ -11,6 +11,7 @@ export const ALL_ROLES: Record<string, string[]> = {
         "/ntsapplication-manager",
         "/rooms",
         "/room-categorys",
+        "/collecting-centers",
         "/users",
         
     ],
