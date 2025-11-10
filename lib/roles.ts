@@ -11,7 +11,7 @@ export const ALL_ROLES: Record<string, string[]> = {
         "/rooms",
         "/room-categorys",
         "/users",
-        
+        "/contact-inquiries",  
     ],
     dataOfficer: [
         
