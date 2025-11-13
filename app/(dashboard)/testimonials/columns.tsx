@@ -55,6 +55,10 @@ export const testimonialColumns: ColumnDef<Testimonial>[] = [
         header: "Designation",
     },
     {
+        accessorKey: "testimonial",
+        header: "Testimonial",
+    },
+    {
         id: "actions",
         cell: ({ row }) => <TestimonialRecordActions row={row} />,
     },
