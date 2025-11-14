@@ -2,10 +2,10 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { Checkbox } from "@/components/ui/checkbox"
-import { CircleCorrect, CircleX } from "@/components/icons"
 import Link from "next/link"
 import { Testimonial } from "@/types/testimonial"
 import TestimonialRecordActions from "./record-actions"
+import { Star } from "lucide-react"
 
 // DEFINE THE COLUMNS OF THE TESTIMONIAL TABLE
 export const testimonialColumns: ColumnDef<Testimonial>[] = [
@@ -51,16 +51,41 @@ export const testimonialColumns: ColumnDef<Testimonial>[] = [
         },
     },
     {
-        accessorKey:"name",
-        header:"Name",
-    },
-    {
         accessorKey: "testimonial",
         header: "Testimonial",
     },
     {
-        accessorKey:"rating",
-        header:"Rating",
+        accessorKey: "rating",
+        header: "Rating",
+        cell: ({ row }) => {
+            const rating = row.getValue("rating") as number
+            const id = row.original.id
+    
+            // You can call an update action here if needed
+            const handleRatingClick = (newRating: number) => {
+                // Update only the row's data inside the table
+                row.toggleSelected(false) // prevent row selection when clicking stars
+                row._valuesCache.rating = newRating
+    
+                // If you want to trigger a backend update, call it here:
+                // updateTestimonial(id, { rating: newRating })
+            }
+    
+            return (
+                <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                            key={star}
+                            size={18}
+                            className={`cursor-pointer ${
+                                star <= rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
+                            }`}
+                            onClick={() => handleRatingClick(star)}
+                        />
+                    ))}
+                </div>
+            )
+        },
     },
     {
         id: "actions",
