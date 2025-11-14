@@ -266,11 +266,19 @@ model Page {
 }
 
 model Section {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  type   String
-  data   Json
-  pageId String @db.ObjectId
-  page   Page   @relation(fields: [pageId], references: [id])
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  type       String
+  layout     Int
+  data       Json
+  order      Int
+  visibility Boolean @default(false)
+  pageId     String  @db.ObjectId
+  page       Page    @relation(fields: [pageId], references: [id])
+
+  createdBy String?  @db.ObjectId
+  updatedBy String?  @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Testimonial {
@@ -305,11 +313,11 @@ model CollectingCenter {
   area       String
   visibility Boolean @default(false)
 
-  centers CenterLocation[] 
-  createdBy String?  @db.ObjectId
-  updatedBy String?  @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  centers   CenterLocation[]
+  createdBy String?          @db.ObjectId
+  updatedBy String?          @db.ObjectId
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
 }
 
 model CenterLocation {
