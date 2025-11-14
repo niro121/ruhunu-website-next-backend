@@ -51,12 +51,16 @@ export const testimonialColumns: ColumnDef<Testimonial>[] = [
         },
     },
     {
-        accessorKey: "designation",
-        header: "Designation",
+        accessorKey:"name",
+        header:"Name",
     },
     {
         accessorKey: "testimonial",
         header: "Testimonial",
+    },
+    {
+        accessorKey:"rating",
+        header:"Rating",
     },
     {
         id: "actions",
