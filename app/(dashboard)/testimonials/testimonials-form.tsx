@@ -2,6 +2,7 @@
 
 import { createNewTestimonial, updateTestimonial } from "@/app/actions/testimonials.actions"
 import CustomCheckedField from "@/components/common/custom-checked-field"
+import CustomSelectField from "@/components/common/custom-select-field"
 import { FormActionsBtns } from "@/components/common/form-actions-btns"
 import CustomFormField from "@/components/common/form-field"
 import { useToast } from "@/components/hooks/use-toast"
@@ -188,14 +189,20 @@ const TestimonialForm = ({ testimonial, sessionRole }: TestimonialFormProps) => 
                             />
 
                             {/* Rating */}
-                            <CustomFormField
-                                type="select"
+                            <CustomSelectField
                                 id="rating"
                                 placeholder="Rating (1–5)"
-                                value={values.rating}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
                                 required
+                                value={values.rating}
+                                onChange={(v) => setFieldValue("rating", v)}
+                                onBlur={handleBlur}
+                                options={[
+                                    { label: "1", value: 1 },
+                                    { label: "2", value: 2 },
+                                    { label: "3", value: 3 },
+                                    { label: "4", value: 4 },
+                                    { label: "5", value: 5 },
+                                ]}
                                 styleClasses={styleClasses}
                                 error={errors.rating}
                                 touched={touched.rating}
