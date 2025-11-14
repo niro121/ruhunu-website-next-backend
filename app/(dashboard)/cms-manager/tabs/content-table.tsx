@@ -111,13 +111,15 @@ export default function ContentTable({
     // Different popup content based on selected type
     const renderFormContent = () => {
         switch (selectedType) {
-            case 'Text-Only':
+            case 'Text Only':
                 return <TextOnlyForm 
                     pageId={currentPageId || ''} 
                     sessionRole={sessionRole} 
                     styleClasses={styleClasses} 
                     onUpdated={function (page: any): void {}}
                 />;
+            case 'Text-Text':
+                return <></>
             case 'Text-Media':
                 return <TextMediaForm 
                     pageId={currentPageId || ''} 
@@ -125,14 +127,32 @@ export default function ContentTable({
                     styleClasses={styleClasses} 
                     onUpdated={function (page: any): void {}}
                 />;
-            case 'Doctors':
-                return <p>This is the <strong>Doctors</strong> section form.</p>;
-            case 'Services':
-                return <p>This is the <strong>Services</strong> section form.</p>;
-            case 'Testimonials':
-                return <p>This is the <strong>Testimonials</strong> section form.</p>;
-            case 'Contact':
-                return <p>This is the <strong>Contact</strong> section form.</p>;
+            case 'Media Only':
+                return <></>;
+            case 'Media-Media':
+                return <></>;
+            case 'Extra Large Text':
+                return <></>;
+            case 'Spacer':
+                return <></>;
+            case 'Award':
+                return <></>;
+            case 'Banner':
+                return <></>;
+            case 'Borad Of Directors':
+                return <></>;
+            case 'Caousel':
+                return <></>;
+            case 'Accordion':
+                return <></>;
+            case 'Documents':
+                return <></>;
+            case 'Media':
+                return <></>;
+            case 'PopUp':
+                return <></>;
+            case 'Map':
+                return <></>;
             default:
                 return null;
         }

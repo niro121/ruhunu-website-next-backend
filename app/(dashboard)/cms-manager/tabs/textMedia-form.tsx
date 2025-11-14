@@ -62,7 +62,7 @@ const TextMediaForm = ({
     
         setLoading(true);
         try {
-            // const res = await getHeroData(pageId);
+            // const res = await fetchSectionById(pageId);
             // if (res.data) {
             //     // Cast Prisma JSON field safely
             //     const sectionData = res.data.data as unknown as {
