@@ -189,7 +189,7 @@ const TestimonialForm = ({ testimonial, sessionRole }: TestimonialFormProps) => 
 
                             {/* Rating */}
                             <CustomFormField
-                                type="number"
+                                type="select"
                                 id="rating"
                                 placeholder="Rating (1–5)"
                                 value={values.rating}
@@ -200,6 +200,7 @@ const TestimonialForm = ({ testimonial, sessionRole }: TestimonialFormProps) => 
                                 error={errors.rating}
                                 touched={touched.rating}
                             />
+
 
                             {/* Visibility */}
                             <CustomCheckedField
