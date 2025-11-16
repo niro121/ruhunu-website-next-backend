@@ -26,6 +26,20 @@ import {
 import TextOnlyForm from './textOnly-form';
 import { CustomDialog } from '@/components/common/custom-dialog';
 import TextMediaForm from './textMedia-form';
+import TextTextForm from './text-text-form';
+import MediaOnlyForm from './mediaOnly-form';
+import MediaMediaForm from './media-media-form';
+import ExtraLargeTextForm from './extra-large-text-form';
+import SpacerForm from './spacer-form';
+import AwardForm from './award-form';
+import BannerForm from './banner-form';
+import BoradOfDirectorsForm from './borad-0f-directors-form';
+import CaouselForm from './caousel-form';
+import AccordionForm from './accordion-form';
+import DocumentsForm from './documents-form';
+import MediaForm from './media-form';
+import PopUpForm from './popup-form';
+import MapForm from './map-form';
 
 type ContentTableProps = {
     currentPageId: string | undefined;
@@ -119,7 +133,12 @@ export default function ContentTable({
                     onUpdated={function (page: any): void {}}
                 />;
             case 'Text-Text':
-                return <></>
+                return <TextTextForm 
+                    pageId={currentPageId || ''} 
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses} 
+                    onUpdated={function (page: any): void {}}
+                />
             case 'Text-Media':
                 return <TextMediaForm 
                     pageId={currentPageId || ''} 
@@ -128,31 +147,96 @@ export default function ContentTable({
                     onUpdated={function (page: any): void {}}
                 />;
             case 'Media Only':
-                return <></>;
+                return <MediaOnlyForm 
+                    pageId={currentPageId || ''} 
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses} 
+                    onUpdated={function (page: any): void {}}
+                />;
             case 'Media-Media':
-                return <></>;
+                return <MediaMediaForm 
+                    pageId={currentPageId || ''} 
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses} 
+                    onUpdated={function (page: any): void {}}
+                />;
             case 'Extra Large Text':
-                return <></>;
+                return <ExtraLargeTextForm 
+                    pageId={currentPageId || ''} 
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses} 
+                    onUpdated={function (page: any): void {}}
+                />;
             case 'Spacer':
-                return <></>;
+                return <SpacerForm
+                    pageId={currentPageId || ''} 
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses} 
+                    onUpdated={function (page: any): void {}}
+                />;
             case 'Award':
-                return <></>;
+                return <AwardForm
+                    pageId={currentPageId || ''} 
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses} 
+                    onUpdated={function (page: any): void {}}
+                />;
             case 'Banner':
-                return <></>;
+                return <BannerForm
+                    pageId={currentPageId || ''} 
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses} 
+                    onUpdated={function (page: any): void {}}
+                />;
             case 'Borad Of Directors':
-                return <></>;
+                return <BoradOfDirectorsForm
+                    pageId={currentPageId || ''} 
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses} 
+                    onUpdated={function (page: any): void {}}
+                />;
             case 'Caousel':
-                return <></>;
+                return <CaouselForm
+                    pageId={currentPageId || ''} 
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses} 
+                    onUpdated={function (page: any): void {}}
+                />;
             case 'Accordion':
-                return <></>;
+                return <AccordionForm
+                    pageId={currentPageId || ''} 
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses} 
+                    onUpdated={function (page: any): void {}}
+                />;
             case 'Documents':
-                return <></>;
+                return <DocumentsForm
+                    pageId={currentPageId || ''} 
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses} 
+                    onUpdated={function (page: any): void {}}
+                />;
             case 'Media':
-                return <></>;
+                return <MediaForm
+                    pageId={currentPageId || ''} 
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses} 
+                    onUpdated={function (page: any): void {}}
+                />;
             case 'PopUp':
-                return <></>;
+                return <PopUpForm
+                    pageId={currentPageId || ''} 
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses} 
+                    onUpdated={function (page: any): void {}}
+                />;
             case 'Map':
-                return <></>;
+                return <MapForm
+                    pageId={currentPageId || ''} 
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses} 
+                    onUpdated={function (page: any): void {}}
+                />;
             default:
                 return null;
         }
