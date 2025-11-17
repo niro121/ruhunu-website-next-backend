@@ -1,10 +1,14 @@
 "use client"
 
 import { createNewSection, updateSection } from "@/app/actions/section.actions";
+import CustomCheckedField from "@/components/common/custom-checked-field";
+import { FormActionsBtns } from "@/components/common/form-actions-btns";
+import CustomFormField from "@/components/common/form-field";
+import ImageInput from "@/components/common/image-input/ImageInput";
 import { useToast } from "@/components/hooks/use-toast";
 import { Card } from "@/components/ui/card";
 import { Section } from "@/types/section";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik, FormikHelpers, getIn } from "formik";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo } from "react";
 import { useState } from "react";
@@ -14,12 +18,14 @@ type MediaMediaSection = Omit<Section, ""> & {
     data: {
         title: string;
         subTitle: string;
-        content: string;
-        contentright: string;
-        buttontext: string;
-        buttonurl: string;
-        buttontextright: string;
-        buttonurlright: string;
+        image: string;
+        mobileImage: string;
+        imageright: string;
+        mobileImageright: string;
+        video: string;
+        videoright: string;
+        externalVideoUrl: string;
+        externalVideoUrlright: string;
         paddingtop: number;
         paddingbottom: number;
     }
@@ -97,12 +103,14 @@ const MediaMediaForm = ({
                 data: {
                     title:data?.data.title || "",
                     subTitle:data?.data.subTitle || "",
-                    content:data?.data.content || "",
-                    contentright:data?.data.contentright || "",
-                    buttontext:data?.data.buttontext || "",
-                    buttonurl:data?.data.buttonurl || "",
-                    buttontextright:data?.data.buttontextright || "",
-                    buttonurlright:data?.data.buttonurlright || "",
+                    image: data?.data.image || "",
+                    mobileImage: data?.data.mobileImage || "",
+                    imageright: data?.data.imageright || "",
+                    mobileImageright: data?.data.mobileImageright || "",
+                    video: data?.data.video || "",
+                    videoright: data?.data.videoright || "",
+                    externalVideoUrl: data?.data.externalVideoUrl || "",
+                    externalVideoUrlright: data?.data.externalVideoUrlright || "",
                     paddingtop:data?.data.paddingtop || 0,
                     paddingbottom:data?.data.paddingbottom || 0,
                 },
@@ -137,12 +145,14 @@ const MediaMediaForm = ({
                     data: {
                         title: values.data.title,
                         subTitle: values.data.subTitle,
-                        content: values.data.content,
-                        contentright: values.data.contentright,
-                        buttontext: values.data.buttontext,
-                        buttonurl: values.data.buttonurl,
-                        buttontextright: values.data.buttontextright,
-                        buttonurlright: values.data.buttonurlright,
+                        image: values.data.image,
+                        mobileImage: values.data.mobileImage,
+                        imageright: values.data.imageright,
+                        mobileImageright: values.data.mobileImageright,
+                        video: values.data.video,
+                        videoright: values.data.videoright,
+                        externalVideoUrl: values.data.externalVideoUrl,
+                        externalVideoUrlright: values.data.externalVideoUrlright,
                         paddingtop: values.data.paddingtop,
                         paddingbottem: values.data.paddingbottom,
                     },
@@ -223,7 +233,184 @@ const MediaMediaForm = ({
                 }) => (
                     <Card className="border shadow-sm">
                         <Form className="w-full">
-                            <div className="grid gap-4 py-4"></div>
+                            <div className="grid gap-4 py-4">
+                                {/* Title */}
+                                <CustomFormField
+                                    type="text"
+                                    id="data.title"
+                                    placeholder="Title"
+                                    value={values.data.title}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    required
+                                    styleClasses={styleClasses}
+                                    error={getIn(errors, "data.title")}
+                                    touched={getIn(touched, "data.title")}
+                                />
+
+                                {/* Sub Title */}
+                                <CustomFormField
+                                    type="text"
+                                    id="data.subtitle"
+                                    placeholder="Sub Title"
+                                    value={values.data.subtitle}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    required
+                                    styleClasses={styleClasses}
+                                    error={getIn(errors, "data.subtitle")}
+                                    touched={getIn(touched, "data.subtitle")}
+                                />
+
+                                {/* Image */}
+                                <ImageInput
+                                    id="data.image"
+                                    placeholder="Web Image"
+                                    url={values.data.image as string}
+                                    required={false} 
+                                    setFieldValue={setFieldValue}
+                                    fieldName={"data.image"}
+                                    styleClasses={styleClasses}
+                                    error={getIn(errors, "data.image")}
+                                    touched={getIn(touched, "data.image")}
+                                />
+
+                                {/* Mobile Image */}
+                                <ImageInput
+                                    id="data.mobileImage"
+                                    placeholder="Mobile Image"
+                                    url={values.data.mobileImage as string}
+                                    required={false} 
+                                    setFieldValue={setFieldValue}
+                                    fieldName={"data.mobileImage"}
+                                    styleClasses={styleClasses}
+                                    error={getIn(errors, "data.mobileImage")}
+                                    touched={getIn(touched, "data.mobileImage")}
+                                />
+
+                                {/* Image */}
+                                <ImageInput
+                                    id="data.imageright"
+                                    placeholder="Image right"
+                                    url={values.data.imageright as string}
+                                    required={false} 
+                                    setFieldValue={setFieldValue}
+                                    fieldName={"data.imageright"}
+                                    styleClasses={styleClasses}
+                                    error={getIn(errors, "data.imageright")}
+                                    touched={getIn(touched, "data.imageright")}
+                                />
+
+                                {/* Mobile Image */}
+                                <ImageInput
+                                    id="data.mobileImageright"
+                                    placeholder="Mobile Image right"
+                                    url={values.data.mobileImageright as string}
+                                    required={false} 
+                                    setFieldValue={setFieldValue}
+                                    fieldName={"data.mobileImageright"}
+                                    styleClasses={styleClasses}
+                                    error={getIn(errors, "data.mobileImageright")}
+                                    touched={getIn(touched, "data.mobileImageright")}
+                                />
+
+                                {/* External Video Url */}
+                                <CustomFormField
+                                    type="text"
+                                    id="data.externalVideoUrl"
+                                    placeholder="External Video Url"
+                                    value={values.data.externalVideoUrl}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    required
+                                    styleClasses={styleClasses}
+                                    error={getIn(errors, "data.externalVideoUrl")}
+                                    touched={getIn(touched, "data.externalVideoUrl")}
+                                />
+
+                                {/* External Video Url right */}
+                                <CustomFormField
+                                    type="text"
+                                    id="data.externalVideoUrlright"
+                                    placeholder="External Video Url right"
+                                    value={values.data.externalVideoUrlright}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    required
+                                    styleClasses={styleClasses}
+                                    error={getIn(errors, "data.externalVideoUrlright")}
+                                    touched={getIn(touched, "data.externalVideoUrlright")}
+                                />
+
+                                {/* Padding Top */}
+                                <CustomFormField
+                                    type="number"
+                                    id="data.paddingtop"
+                                    placeholder="Padding Top"
+                                    value={values.data.paddingtop}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    required
+                                    styleClasses={styleClasses}
+                                    error={getIn(errors, "data.paddingtop")}
+                                    touched={getIn(touched, "data.paddingtop")}
+                                />
+
+                                {/* Padding Bottom */}
+                                <CustomFormField
+                                    type="number"
+                                    id="data.paddingbottom"
+                                    placeholder="Padding Bottom"
+                                    value={values.data.paddingbottom}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    required
+                                    styleClasses={styleClasses}
+                                    error={getIn(errors, "data.paddingbottom")}
+                                    touched={getIn(touched, "data.paddingbottom")}
+                                />
+
+                                {/* Order */}
+                                <CustomFormField
+                                    type="number"
+                                    id="order"
+                                    placeholder="Order"
+                                    value={values.order}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    required
+                                    styleClasses={styleClasses}
+                                    error={errors.order}
+                                    touched={touched.order}
+                                />
+                                
+                                {/* Visibility */}
+                                <CustomCheckedField
+                                    id="visibility"
+                                    placeholder="Is Publish?"
+                                    required
+                                    mode="boolean"
+                                    value={values.visibility}
+                                    onChange={(val) => setFieldValue("visibility", val)}
+                                    onBlur={handleBlur}
+                                    error={errors.visibility as string}
+                                    touched={touched.visibility}
+                                    styleClasses={styleClasses}
+                                />
+                                
+                                {/* Actions */}
+                                <FormActionsBtns
+                                    onCancelHref="/cms-manager"
+                                    showSaveAndClose
+                                    loading={loading}
+                                    disabled={!sessionRole}
+                                    onBeforeSubmit={(t) => {
+                                        submitTypeRef.current = t;
+                                    }}
+                                    onSubmitClick={() => submitForm()}
+                                />
+
+                            </div>
                         </Form>
                     </Card>
                 )}

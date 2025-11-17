@@ -23,11 +23,11 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import TextOnlyForm from './textOnly-form';
+import TextOnlyForm from './text-only-form';
 import { CustomDialog } from '@/components/common/custom-dialog';
-import TextMediaForm from './textMedia-form';
+import TextMediaForm from './text-media-form';
 import TextTextForm from './text-text-form';
-import MediaOnlyForm from './mediaOnly-form';
+import MediaOnlyForm from './media-only-form';
 import MediaMediaForm from './media-media-form';
 import ExtraLargeTextForm from './extra-large-text-form';
 import SpacerForm from './spacer-form';
