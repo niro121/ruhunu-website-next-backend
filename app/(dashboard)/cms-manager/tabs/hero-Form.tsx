@@ -66,9 +66,9 @@ const HeroForm = ({
                 const heroData: HeroSection = {
                     ...res.data,
                     data: {
-                    title: sectionData.title ?? "",
-                    webImage: sectionData.webImage ?? "",
-                    mobileImage: sectionData.mobileImage ?? "",
+                        title: sectionData.title ?? "",
+                        webImage: sectionData.webImage ?? "",
+                        mobileImage: sectionData.mobileImage ?? "",
                     },
                 };
 
@@ -97,19 +97,19 @@ const HeroForm = ({
             data: {
                 title: data?.data.title || "",
                 webImage: Array.isArray(data?.data.webImage)
-                ? data?.data.webImage
-                : data?.layout === 2
-                ? data?.data.webImage
-                    ? [data.data.webImage]
-                    : []
-                : data?.data.webImage || "",
+                    ? data?.data.webImage
+                    : data?.layout === 2
+                    ? data?.data.webImage
+                        ? [data.data.webImage]
+                        : []
+                    : data?.data.webImage || "",
                 mobileImage: Array.isArray(data?.data.mobileImage)
-                ? data?.data.mobileImage
-                : data?.layout === 2
-                ? data?.data.mobileImage
-                    ? [data.data.mobileImage]
-                    : []
-                : data?.data.mobileImage || "",
+                    ? data?.data.mobileImage
+                    : data?.layout === 2
+                    ? data?.data.mobileImage
+                        ? [data.data.mobileImage]
+                        : []
+                    : data?.data.mobileImage || "",
             },
             pageId: pageId || "",
             visibility: data?.visibility || false,

@@ -1,10 +1,14 @@
 "use client"
 
 import { createNewSection, updateSection } from "@/app/actions/section.actions";
+import CustomCheckedField from "@/components/common/custom-checked-field";
+import CustomRichTextEditor from "@/components/common/custom-rich-text-editor";
+import { FormActionsBtns } from "@/components/common/form-actions-btns";
+import CustomFormField from "@/components/common/form-field";
 import { useToast } from "@/components/hooks/use-toast";
 import { Card } from "@/components/ui/card";
 import { Section } from "@/types/section";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik, FormikHelpers, getIn } from "formik";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo } from "react";
 import { useState } from "react";
@@ -12,14 +16,9 @@ import * as Yup from "yup";
 
 type ExtraLargeTextSection = Omit<Section, ""> & {
     data: {
-        title: string;
-        subTitle: string;
-        content: string;
-        contentright: string;
-        buttontext: string;
-        buttonurl: string;
-        buttontextright: string;
-        buttonurlright: string;
+        text: string;
+        ctaUrl: string;
+        ctaText: string;
         paddingtop: number;
         paddingbottom: number;
     }
@@ -91,18 +90,13 @@ const ExtraLargeTextForm = ({
     const initialValues: ExtraLargeTextSection = useMemo(
         () => ({
             id: data?.id || "",
-            type: "Text-Media",
+            type: "Extra Large Text",
             layout: data?.layout || 1,
             order: data?.order || 2,
             data: {
-                title:data?.data.title || "",
-                subTitle:data?.data.subTitle || "",
-                content:data?.data.content || "",
-                contentright:data?.data.contentright || "",
-                buttontext:data?.data.buttontext || "",
-                buttonurl:data?.data.buttonurl || "",
-                buttontextright:data?.data.buttontextright || "",
-                buttonurlright:data?.data.buttonurlright || "",
+                text: data?.data.text || "",
+                ctaUrl: data?.data.ctaUl || "",
+                ctaText: data?.data.ctaText || "",
                 paddingtop:data?.data.paddingtop || 0,
                 paddingbottom:data?.data.paddingbottom || 0,
             },
@@ -114,9 +108,8 @@ const ExtraLargeTextForm = ({
     // Validation Schema
     const validationSchema = Yup.object({
         data: Yup.object({
-            title: Yup.string().required("Title is required"),
-            webImage: Yup.string().required("Title is required"),
-            mobileImage: Yup.string().required("Title is required"),
+            heading: Yup.string().required("Title is required"),
+            ctaUrl: Yup.string().required("Title is required"),
         }),
         order: Yup.number().required("Order is required"),
     });
@@ -135,14 +128,9 @@ const ExtraLargeTextForm = ({
                 layout: values.layout,
                 order: values.order,
                 data: {
-                    title: values.data.title,
-                    subTitle: values.data.subTitle,
-                    content: values.data.content,
-                    contentright: values.data.contentright,
-                    buttontext: values.data.buttontext,
-                    buttonurl: values.data.buttonurl,
-                    buttontextright: values.data.buttontextright,
-                    buttonurlright: values.data.buttonurlright,
+                    text: values.data.text,
+                    ctaUrl: values.data.ctaUrl,
+                    ctaText: values.data.ctaText,
                     paddingtop: values.data.paddingtop,
                     paddingbottem: values.data.paddingbottom,
                 },
@@ -223,7 +211,118 @@ const ExtraLargeTextForm = ({
             }) => (
                 <Card className="border shadow-sm">
                     <Form className="w-full">
-                        <div className="grid gap-4 py-4"></div>
+                        <div className="grid gap-4 py-4">
+
+                            {/* Text */}
+                            <CustomRichTextEditor
+                                id="text"
+                                placeholder="text"
+                                required
+                                value={values.data.text ?? ""}
+                                onChange={(e) => setFieldValue("data.text", e.target.value)}
+                                onBlur={handleBlur}
+                                styleClasses={styleClasses}
+                                error={getIn(errors,"data.text")}
+                                touched={getIn(touched,"data.text")}
+                            />
+
+                            {/* CTA Url */}
+                            <CustomFormField
+                                type="text"
+                                id="data.ctaUrl"
+                                placeholder="CTA Url"
+                                value={values.data.ctaUrl}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.ctaUrl")}
+                                touched={getIn(touched, "data.ctaUrl")}
+                            />
+
+                            {/* CTA Text */}
+                            <CustomFormField
+                                type="text"
+                                id="data.ctaText"
+                                placeholder="CTA Text"
+                                value={values.data.ctaText}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.ctaText")}
+                                touched={getIn(touched, "data.ctaText")}
+                            />
+
+                            {/* Padding Top */}
+                            <CustomFormField
+                                type="number"
+                                id="data.paddingtop"
+                                placeholder="Padding Top"
+                                value={values.data.paddingtop}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.paddingtop")}
+                                touched={getIn(touched, "data.paddingtop")}
+                            />
+
+                            {/* Padding Bottom */}
+                            <CustomFormField
+                                type="number"
+                                id="data.paddingbottom"
+                                placeholder="Padding Bottom"
+                                value={values.data.paddingbottom}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.paddingbottom")}
+                                touched={getIn(touched, "data.paddingbottom")}
+                            />
+
+                            {/* Order */}
+                            <CustomFormField
+                                type="number"
+                                id="order"
+                                placeholder="Order"
+                                value={values.order}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={errors.order}
+                                touched={touched.order}
+                            />
+                                
+                            {/* Visibility */}
+                            <CustomCheckedField
+                                id="visibility"
+                                placeholder="Is Publish?"
+                                required
+                                mode="boolean"
+                                value={values.visibility}
+                                onChange={(val) => setFieldValue("visibility", val)}
+                                onBlur={handleBlur}
+                                error={errors.visibility as string}
+                                touched={touched.visibility}
+                                styleClasses={styleClasses}
+                            />
+                                
+                            {/* Actions */}
+                            <FormActionsBtns
+                                onCancelHref="/cms-manager"
+                                showSaveAndClose
+                                loading={loading}
+                                disabled={!sessionRole}
+                                onBeforeSubmit={(t) => {
+                                    submitTypeRef.current = t;
+                                }}
+                                onSubmitClick={() => submitForm()}
+                            />
+                            
+                        </div>
                     </Form>
                 </Card>
             )}

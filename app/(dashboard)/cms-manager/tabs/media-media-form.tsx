@@ -97,7 +97,7 @@ const MediaMediaForm = ({
         const initialValues: MediaMediaSection = useMemo(
             () => ({
                 id: data?.id || "",
-                type: "Text-Media",
+                type: "Media-Media",
                 layout: data?.layout || 1,
                 order: data?.order || 2,
                 data: {

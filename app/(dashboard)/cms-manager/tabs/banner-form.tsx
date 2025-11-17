@@ -1,10 +1,15 @@
 "use client"
 
 import { createNewSection, updateSection } from "@/app/actions/section.actions";
+import CustomCheckedField from "@/components/common/custom-checked-field";
+import CustomSelectField from "@/components/common/custom-select-field";
+import { FormActionsBtns } from "@/components/common/form-actions-btns";
+import CustomFormField from "@/components/common/form-field";
+import ImageInput from "@/components/common/image-input/ImageInput";
 import { useToast } from "@/components/hooks/use-toast";
 import { Card } from "@/components/ui/card";
 import { Section } from "@/types/section";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik, FormikHelpers, getIn } from "formik";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo } from "react";
 import { useState } from "react";
@@ -12,14 +17,15 @@ import * as Yup from "yup";
 
 type BannerSection = Omit<Section, ""> & {
     data: {
+        ctaBanner: string;
+        heading: string;
+        layout: number;
         title: string;
         subTitle: string;
-        content: string;
-        contentright: string;
-        buttontext: string;
-        buttonurl: string;
-        buttontextright: string;
-        buttonurlright: string;
+        backgroundColor: string;
+        image: string;
+        mobileImage: string;
+        ctaUrl: string;
         paddingtop: number;
         paddingbottom: number;
     }
@@ -91,18 +97,19 @@ const BannerForm = ({
     const initialValues: BannerSection = useMemo(
         () => ({
             id: data?.id || "",
-            type: "Text-Media",
+            type: "Banner",
             layout: data?.layout || 1,
             order: data?.order || 2,
             data: {
+                ctaBanner: data?.data.ctaBanner || "",
+                heading: data?.data.heading || "",
+                layout: data?.data.layout || 1,
                 title:data?.data.title || "",
                 subTitle:data?.data.subTitle || "",
-                content:data?.data.content || "",
-                contentright:data?.data.contentright || "",
-                buttontext:data?.data.buttontext || "",
-                buttonurl:data?.data.buttonurl || "",
-                buttontextright:data?.data.buttontextright || "",
-                buttonurlright:data?.data.buttonurlright || "",
+                backgroundColor: data?.data.backgroundColor || "",
+                image: data?.data.image || "",
+                mobileImage: data?.data.mobileImage || "",
+                ctaUrl: data?.data.ctaUrl || "",
                 paddingtop:data?.data.paddingtop || 0,
                 paddingbottom:data?.data.paddingbottom || 0,
             },
@@ -135,16 +142,17 @@ const BannerForm = ({
                 layout: values.layout,
                 order: values.order,
                 data: {
+                    ctaBanner: values.data.ctaBanner,
+                    heading: values.data.heading,
+                    layout: values.data.layout,
                     title: values.data.title,
                     subTitle: values.data.subTitle,
-                    content: values.data.content,
-                    contentright: values.data.contentright,
-                    buttontext: values.data.buttontext,
-                    buttonurl: values.data.buttonurl,
-                    buttontextright: values.data.buttontextright,
-                    buttonurlright: values.data.buttonurlright,
+                    backgroundColor: values.data.backgroundColor,
+                    image: values.data.image,
+                    mobileImage: values.data.mobileImage,
+                    ctaUrl: values.data.ctaUrl,
                     paddingtop: values.data.paddingtop,
-                    paddingbottem: values.data.paddingbottom,
+                    paddingbottom: values.data.paddingbottom,
                 },
                 visibility: values.visibility,
                 pageId: pageId || ""
@@ -223,7 +231,206 @@ const BannerForm = ({
             }) => (
                 <Card className="border shadow-sm">
                     <Form className="w-full">
-                        <div className="grid gap-4 py-4"></div>
+                        <div className="grid gap-4 py-4">
+
+                            {/* CTA Banner */}
+                            <CustomFormField
+                                type="text"
+                                id="data.Banner"
+                                placeholder="CTA Url"
+                                value={values.data.Banner}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.Banner")}
+                                touched={getIn(touched, "data.Banner")}
+                            />
+
+                            {/* Heading */}
+                            <CustomFormField
+                                type="text"
+                                id="data.heading"
+                                placeholder="Heading"
+                                value={values.data.heading}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.heading")}
+                                touched={getIn(touched, "data.heading")}
+                            />
+
+                            {/* Layout */}
+                            <CustomSelectField
+                                id="data.layout"
+                                placeholder="Layout"
+                                required
+                                value={values.data.layout}
+                                onChange={(v) => setFieldValue("data.layout", v)}
+                                onBlur={handleBlur}
+                                options={[
+                                    { label: "Layout 1", value: 1 },
+                                    { label: "Layout 2", value: 2 },
+                                    { label: "Layout 3", value: 3 },
+                                ]}
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.layout")}
+                                touched={getIn(touched, "data.layout")}
+                            />
+                            
+
+                            {/* Title */}
+                            <CustomFormField
+                                type="text"
+                                id="data.title"
+                                placeholder="Title"
+                                value={values.data.title}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.title")}
+                                touched={getIn(touched, "data.title")}
+                            />
+
+                            {/* Sub Title */}
+                            <CustomFormField
+                                type="text"
+                                id="data.subtitle"
+                                placeholder="Sub Title"
+                                value={values.data.subtitle}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.subtitle")}
+                                touched={getIn(touched, "data.subtitle")}
+                            />
+
+                            {/* Background Color */}
+                            <CustomFormField
+                                type="color"
+                                id="data.backgroundColor"
+                                placeholder="Sub Title"
+                                value={values.data.backgroundColor}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.backgroundColor")}
+                                touched={getIn(touched, "data.backgroundColor")}
+                            />
+
+                            {/* Image */}
+                            <ImageInput
+                                id="data.image"
+                                placeholder="Web Image"
+                                url={values.data.image as string}
+                                required={false} 
+                                setFieldValue={setFieldValue}
+                                fieldName={"data.image"}
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.image")}
+                                touched={getIn(touched, "data.image")}
+                            />
+                            
+                            {/* Mobile Image */}
+                            <ImageInput
+                                id="data.mobileImage"
+                                placeholder="Mobile Image"
+                                url={values.data.mobileImage as string}
+                                required={false} 
+                                setFieldValue={setFieldValue}
+                                fieldName={"data.mobileImage"}
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.mobileImage")}
+                                touched={getIn(touched, "data.mobileImage")}
+                            />
+
+                            {/* CTA Url */}
+                            <CustomFormField
+                                type="text"
+                                id="data.ctaUrl"
+                                placeholder="CTA Url"
+                                value={values.data.ctaUrl}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.ctaUrl")}
+                                touched={getIn(touched, "data.ctaUrl")}
+                            />
+
+                            {/* Padding Top */}
+                            <CustomFormField
+                                type="number"
+                                id="data.paddingtop"
+                                placeholder="Padding Top"
+                                value={values.data.paddingtop}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.paddingtop")}
+                                touched={getIn(touched, "data.paddingtop")}
+                            />
+
+                            {/* Padding Bottom */}
+                            <CustomFormField
+                                type="number"
+                                id="data.paddingbottom"
+                                placeholder="Padding Bottom"
+                                value={values.data.paddingbottom}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.paddingbottom")}
+                                touched={getIn(touched, "data.paddingbottom")}
+                            />
+
+                            {/* Order */}
+                            <CustomFormField
+                                type="number"
+                                id="order"
+                                placeholder="Order"
+                                value={values.order}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={errors.order}
+                                touched={touched.order}
+                            />
+                                
+                            {/* Visibility */}
+                            <CustomCheckedField
+                                id="visibility"
+                                placeholder="Is Publish?"
+                                required
+                                mode="boolean"
+                                value={values.visibility}
+                                onChange={(val) => setFieldValue("visibility", val)}
+                                onBlur={handleBlur}
+                                error={errors.visibility as string}
+                                touched={touched.visibility}
+                                styleClasses={styleClasses}
+                            />
+                                
+                            {/* Actions */}
+                            <FormActionsBtns
+                                onCancelHref="/cms-manager"
+                                showSaveAndClose
+                                loading={loading}
+                                disabled={!sessionRole}
+                                onBeforeSubmit={(t) => {
+                                    submitTypeRef.current = t;
+                                }}
+                                onSubmitClick={() => submitForm()}
+                            />
+
+                        </div>
                     </Form>
                 </Card>
             )}

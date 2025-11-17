@@ -40,18 +40,18 @@ export const getAllSection = async (pageId: string) => {
 // ========== Create Section ==========
 export const createNewSection = async (payload: Section) => {
     try {
-        // required validations
-        if (!payload?.data?.title) {
-            throw new Error("Section title is required")
-        }
+        // // required validations
+        // if (!payload?.data?.title) {
+        //     throw new Error("Section title is required")
+        // }
         
         delete (payload as any).id
         delete (payload as any).createdAt
         delete (payload as any).updatedAt
         
         
-        // // Set defaults
-        // if (payload.visibility === undefined) payload.visibility = false;
+        // Set defaults
+        if (payload.visibility === undefined) payload.visibility = false;
         
         // Call Service
         const savedData = await saveSection(payload)
