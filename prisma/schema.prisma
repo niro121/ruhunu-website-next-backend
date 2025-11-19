@@ -220,3 +220,105 @@ model NewsLetter {
 
   createdAt DateTime @default(now())
 }
+
+model Room {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  name       String  @default("")
+  category   String
+  image      String
+  content    String
+  slug       String
+  order      Int     @default(0)
+  visibility Boolean @default(false)
+
+  createdBy String?  @db.ObjectId
+  updatedBy String?  @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model RoomsCategory {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  name       String  @default("")
+  visibility Boolean @default(false)
+
+  createdBy String?  @db.ObjectId
+  updatedBy String?  @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Page {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  title           String    @default("")
+  metaTitle       String
+  metaKeyword     String
+  metaDescription String
+  metaImage       String
+  slug            String
+  sections        Section[]
+  visibility      Boolean   @default(false)
+
+  createdBy String?  @db.ObjectId
+  updatedBy String?  @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Section {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  type   String
+  data   Json
+  pageId String @db.ObjectId
+  page   Page   @relation(fields: [pageId], references: [id])
+}
+
+model Testimonial {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  designation String
+  testimonial String
+  rating      Int
+  visibility  Boolean @default(false)
+
+  createdBy String?  @db.ObjectId
+  updatedBy String?  @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ContactInquiries {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  phone     String
+  email     String
+  message   String
+  status    Boolean  @default(false)
+  createdBy String?  @db.ObjectId
+  updatedBy String?  @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CollectingCenter {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  area       String
+  visibility Boolean @default(false)
+
+  centers CenterLocation[] 
+  createdBy String?  @db.ObjectId
+  updatedBy String?  @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CenterLocation {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  centerName String
+  address    String
+  phone      String
+
+  collectingCenterId String           @db.ObjectId // relation field
+  collectingCenter   CollectingCenter @relation(fields: [collectingCenterId], references: [id])
+}

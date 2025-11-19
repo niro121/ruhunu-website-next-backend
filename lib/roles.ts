@@ -2,11 +2,15 @@ export const ALL_ROLES: Record<string, string[]> = {
     admin: [
         "/docters",
         "/menu-manager",
+        "/cms-manager",
         "/careers",
         "/services",
         "/branches",
         "/news-and-events",
         "/news-letter-subcriptions",
+        "/rooms",
+        "/room-categorys",
+        "/collecting-centers",
         "/users",
         "/nts"
     ],
