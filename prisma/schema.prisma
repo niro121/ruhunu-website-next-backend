@@ -292,10 +292,33 @@ model ContactInquiries {
   name      String
   phone     String
   email     String
-  meaasage  String
+  message   String
   status    Boolean  @default(false)
   createdBy String?  @db.ObjectId
   updatedBy String?  @db.ObjectId
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model CollectingCenter {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  area       String
+  visibility Boolean @default(false)
+
+  centers CenterLocation[] 
+  createdBy String?  @db.ObjectId
+  updatedBy String?  @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CenterLocation {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  centerName String
+  address    String
+  phone      String
+
+  collectingCenterId String           @db.ObjectId // relation field
+  collectingCenter   CollectingCenter @relation(fields: [collectingCenterId], references: [id])
 }

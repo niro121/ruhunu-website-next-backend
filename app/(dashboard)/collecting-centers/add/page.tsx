@@ -1,25 +1,25 @@
 import { fetchServerSession } from "@/lib/session";
 import { getNextOrder } from "@/lib/utils/totalRecordCount";
-import { Page } from "@/types/page";
+import { Center } from "@/types/center";
 import { redirect } from "next/navigation";
-import PageFormTabs from "../page-form-tabs";
+import CenterForm from "../center-form";
 
-export default async function NewCMSPage() {
+export default async function NewCenterPage() {
     const session = await fetchServerSession();
     if (!session?.user) redirect("/login");
     
     const sessionRole = (session.user as any)?.role ?? undefined;
     
-    const page: Page| null = null;
+    const center: Center| null = null;
     
-    const nextOrder = await getNextOrder("page");
+    const nextOrder = await getNextOrder("collectingCenter");
     
     return (
         <div className="space-y-4 px-8">
             <div className="flex items-center">
-                <h1 className="text-xl font-semibold">Create New Page</h1>
+                <h1 className="text-xl font-semibold">Create Collecting Center</h1>
             </div>
-            <PageFormTabs page={page} sessionRole={sessionRole} order={nextOrder}/>
+            <CenterForm center={center} sessionRole={sessionRole} order={nextOrder}/>
         </div>
     )
 }

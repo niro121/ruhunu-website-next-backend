@@ -1,11 +1,12 @@
+import AddNewLinkButton from "@/components/common/add-new-link-btn";
 import { fetchServerSession } from "@/lib/session";
 import { SearchInput } from "../search";
-import AddNewLinkButton from "@/components/common/add-new-link-btn";
 import { Suspense } from "react";
-import { CustomDataTable } from "@/components/common/custom-data-table";
 import Loading from "../loading";
-import { bulkDeletePages, getAllPages } from "@/app/actions/page.actions";
-import { pagesColumns } from "./columns";
+import { CustomDataTable } from "@/components/common/custom-data-table";
+import { centersColumns } from "./columns";
+import { bulkDeleteCenters, getAllCenters } from "@/app/actions/center.actions";
+
 
 type SearchParams = {
     searchParams?: Promise<{
@@ -15,16 +16,15 @@ type SearchParams = {
     }>
 }
 
-export default async function Page( {searchParams} : SearchParams ) {
+export default async function Page ({searchParams} : SearchParams ) {
 
     const resolvedSearchParams = await searchParams;
     const session = await fetchServerSession()
-    
-    const { data, totalRecords } = await getAllPages({
+
+    const { data, totalRecords } = await getAllCenters({
         page: resolvedSearchParams?.page,
         limit: resolvedSearchParams?.limit,
         keyword: resolvedSearchParams?.keyword,
-        role: session?.user?.role ?? ""
     })
 
     return (
@@ -38,7 +38,7 @@ export default async function Page( {searchParams} : SearchParams ) {
                             className={"rounded-lg bg-background pl-8 w-full sm:w-auto"}
                         />
                     </div>
-                    <AddNewLinkButton href="/cms-manager/add" />
+                    <AddNewLinkButton href="/collecting-centers/add" />
                 </div>
             </div>
             <div className="lg:hidden mt-2 relative flex-1 md:grow-0">
@@ -51,12 +51,12 @@ export default async function Page( {searchParams} : SearchParams ) {
             <div className="overflow-hidden">
                 <Suspense fallback={<Loading />}>
                     <CustomDataTable
-                        heading="Pages"
-                        subHeading="Manage your pages here."
-                        columns={pagesColumns}
+                        heading="Collecting Centers"
+                        subHeading="Manage your collecting centers here."
+                        columns={centersColumns}
                         data={data}
                         rowCount={totalRecords}
-                        deleteServerAction={bulkDeletePages}
+                        deleteServerAction={bulkDeleteCenters}
                         page={resolvedSearchParams?.page}
                     />
                 </Suspense>
