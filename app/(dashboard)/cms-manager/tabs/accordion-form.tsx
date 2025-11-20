@@ -1,10 +1,14 @@
 "use client"
 
-import { createNewSection, updateSection } from "@/app/actions/section.actions";
+import { createNewSection, fetchSectionById, getNextOrder, updateSection } from "@/app/actions/section.actions";
+import CustomCheckedField from "@/components/common/custom-checked-field";
+import { FormActionsBtns } from "@/components/common/form-actions-btns";
+import CustomFormField from "@/components/common/form-field";
 import { useToast } from "@/components/hooks/use-toast";
 import { Card } from "@/components/ui/card";
 import { Section } from "@/types/section";
-import { Form, Formik, FormikHelpers } from "formik";
+import { JsonObject } from "@prisma/client/runtime/library";
+import { Form, Formik, FormikHelpers, getIn } from "formik";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo } from "react";
 import { useState } from "react";
@@ -14,19 +18,15 @@ type AccordionSection = Omit<Section, ""> & {
     data: {
         title: string;
         subTitle: string;
-        content: string;
-        contentright: string;
-        buttontext: string;
-        buttonurl: string;
-        buttontextright: string;
-        buttonurlright: string;
         paddingtop: number;
         paddingbottom: number;
+        content: string;
     }
 }
 
 type AccordionProps = {
     pageId: string | null;
+    content: AccordionSection | null;
     sessionRole: string | undefined;
     styleClasses: {
         parentDiv: string;
@@ -38,85 +38,52 @@ type AccordionProps = {
 
 const AccordionForm = ({
     pageId,
+    content,
     styleClasses,
     sessionRole,
     onUpdated,
 }: AccordionProps) => {
     const [loading, setLoading] = useState(false);
-    const [data, setData] = useState<AccordionSection | null>(null);
     const { toast } = useToast();
     const router = useRouter();
     const submitTypeRef = React.useRef<"save" | "save-close">("save");
-    
-    // Fetch data
-    const fetchData = async () => {
-        if (!pageId) return;
-            
-        setLoading(true);
-        try {
-            // const res = await fetchSectionById(pageId);
-            // if (res.data) {
-            //     // Cast Prisma JSON field safely
-            //     const sectionData = res.data.data as unknown as {
-            //         title?: string;
-            //         webImage?: string | string[];
-            //         mobileImage?: string | string[];
-            //     };
-        
-            //     const heroData: HeroSection = {
-            //         ...res.data,
-            //         data: {
-            //         title: sectionData.title ?? "",
-            //         webImage: sectionData.webImage ?? "",
-            //         mobileImage: sectionData.mobileImage ?? "",
-            //         },
-            //     };
-            
-            //     setData(heroData);
-            // } else {
-            //     setData(null);
-            // }
-        } catch (error) {
-            console.error("Error fetching hero data:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-            
-    useEffect(() => {
-        fetchData();
-    }, [pageId]);
+    const [nextOrder, setNextOrder] = useState<number>(1); 
+
+    useEffect(() => {    
+        const fetchOrder = async () => {
+            try {
+                const order = await getNextOrder(pageId || '');
+                setNextOrder(order);
+            } catch (error) {
+                console.error("Error fetching next order:", error);
+            }
+        };
+        if (!content && pageId) fetchOrder();
+    }, [content, pageId]);
 
     // Initial Values
     const initialValues: AccordionSection = useMemo(
         () => ({
-            id: data?.id || "",
-            type: "Text-Media",
-            layout: data?.layout || 1,
-            order: data?.order || 2,
+            id: content?.id || "",
+            type: "Accordion",
+            layout: content?.layout || 1,
+            order: content?.order || nextOrder,
             data: {
-                title:data?.data.title || "",
-                subTitle:data?.data.subTitle || "",
-                content:data?.data.content || "",
-                contentright:data?.data.contentright || "",
-                buttontext:data?.data.buttontext || "",
-                buttonurl:data?.data.buttonurl || "",
-                buttontextright:data?.data.buttontextright || "",
-                buttonurlright:data?.data.buttonurlright || "",
-                paddingtop:data?.data.paddingtop || 0,
-                paddingbottom:data?.data.paddingbottom || 0,
+                title:content?.data.title || "",
+                subTitle:content?.data.subTitle || "",
+                paddingtop:content?.data.paddingtop || 0,
+                paddingbottom:content?.data.paddingbottom || 0,
+                content:content?.data.content || "",
             },
             pageId: pageId || "",
-            visibility: data?.visibility || false,
-        }),[data]
+            visibility: content?.visibility || false,
+        }),[content,nextOrder]
     );
 
     // Validation Schema
     const validationSchema = Yup.object({
         data: Yup.object({
             title: Yup.string().required("Title is required"),
-            webImage: Yup.string().required("Title is required"),
-            mobileImage: Yup.string().required("Title is required"),
         }),
         order: Yup.number().required("Order is required"),
     });
@@ -137,20 +104,13 @@ const AccordionForm = ({
                 data: {
                     title: values.data.title,
                     subTitle: values.data.subTitle,
-                    content: values.data.content,
-                    contentright: values.data.contentright,
-                    buttontext: values.data.buttontext,
-                    buttonurl: values.data.buttonurl,
-                    buttontextright: values.data.buttontextright,
-                    buttonurlright: values.data.buttonurlright,
                     paddingtop: values.data.paddingtop,
                     paddingbottem: values.data.paddingbottom,
+                    content: values.data.content,
                 },
                 visibility: values.visibility,
                 pageId: pageId || ""
             };
-        
-            console.log({createPayload});
         
             let resp: any;
     
@@ -173,7 +133,7 @@ const AccordionForm = ({
                 
             toast({
                 variant: "success",
-                title: values.id ? "Hero updated" : "Hero created",
+                title: values.id ? "Section updated" : "Section created",
                 description: values.id
                 ? "Changes updated successfully."
                 : "Changes saved successfully.",
@@ -223,7 +183,105 @@ const AccordionForm = ({
             }) => (
                 <Card className="border shadow-sm">
                     <Form className="w-full">
-                        <div className="grid gap-4 py-4"></div>
+                        <div className="grid gap-4 py-4">
+                            
+                            {/* Title */}
+                            <CustomFormField
+                                type="text"
+                                id="data.title"
+                                placeholder="Title"
+                                value={values.data.title}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.title")}
+                                touched={getIn(touched, "data.title")}
+                            />
+
+                            {/* Sub Title */}
+                            <CustomFormField
+                                type="text"
+                                id="data.subTitle"
+                                placeholder="Sub Title"
+                                value={values.data.subTitle}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.subTitle")}
+                                touched={getIn(touched, "data.subTitle")}
+                            />
+
+                            {/* Padding Top */}
+                            <CustomFormField
+                                type="number"
+                                id="data.paddingtop"
+                                placeholder="Padding Top"
+                                value={values.data.paddingtop}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.paddingtop")}
+                                touched={getIn(touched, "data.paddingtop")}
+                            />
+
+                            {/* Padding Bottom */}
+                            <CustomFormField
+                                type="number"
+                                id="data.paddingbottom"
+                                placeholder="Padding Bottom"
+                                value={values.data.paddingbottom}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.paddingbottom")}
+                                touched={getIn(touched, "data.paddingbottom")}
+                            />
+
+                            {/* Order */}
+                            <CustomFormField
+                                type="number"
+                                id="order"
+                                placeholder="Order"
+                                value={values.order}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={errors.order}
+                                touched={touched.order}
+                            />
+                                
+                            {/* Visibility */}
+                            <CustomCheckedField
+                                id="visibility"
+                                placeholder="Is Publish?"
+                                required
+                                mode="boolean"
+                                value={values.visibility}
+                                onChange={(val) => setFieldValue("visibility", val)}
+                                onBlur={handleBlur}
+                                error={errors.visibility as string}
+                                touched={touched.visibility}
+                                styleClasses={styleClasses}
+                            />
+                                
+                            {/* Actions */}
+                            <FormActionsBtns
+                                onCancelHref="/cms-manager"
+                                showSaveAndClose
+                                loading={loading}
+                                disabled={!sessionRole}
+                                onBeforeSubmit={(t) => {
+                                    submitTypeRef.current = t;
+                                }}
+                                onSubmitClick={() => submitForm()}
+                            />
+
+                        </div>
                     </Form>
                 </Card>
             )}

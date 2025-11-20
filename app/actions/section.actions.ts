@@ -1,6 +1,6 @@
 "use server"
 
-import { deleteOneSection, deleteSections, getHero, getSection, getSectionById, saveSection, updateOneSection } from "@/services/section.service";
+import { deleteOneSection, deleteSections, getHero, getNextSectionOrder, getSection, getSectionById, saveSection, updateOneSection } from "@/services/section.service";
 import { Section, UpdateSectionDTO } from "@/types/section";
 
 // ========== Get Hero Section ==========
@@ -89,14 +89,14 @@ export const updateSection = async (id: string,payload: UpdateSectionDTO) => {
 
 
 // ========== Get single Section data ==========
-export const fetchSectionById = async (id: string) => {
+export const fetchSectionById = async (id: string, type: string) => {
 
     try {
         if (!id) {
             throw new Error("Section id not found");
         }
 
-        const section = await getSectionById(id);
+        const section = await getSectionById(id,type);
 
         if (!section) {
             throw new Error("Sections not found");
@@ -134,5 +134,17 @@ export const deleteSection = async (id: string) => {
     } catch (error: any) {
         console.log('delete Section error ==>', error);
         throw new Error(error.message ?? "Error deleting data. please try again later")
+    }
+}
+
+export const getNextOrder = async (pageId: string) => {
+    try {
+        
+        const order = await getNextSectionOrder(pageId);
+        return order
+
+    } catch (error: any) {
+        console.log('getNextOrder ==>', error);
+        throw new Error(error.message ?? "Error get Next Order. please try again later")
     }
 }

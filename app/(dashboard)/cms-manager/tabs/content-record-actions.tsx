@@ -11,10 +11,12 @@ import { useState } from "react";
 
 interface ContentActionsProps<TData extends Section> {
     row: Row<TData>
+    onChange: () => void;
 }
 
 const ContentRecordAction = <TData extends Section> ({
     row,
+    onChange,
 }: ContentActionsProps<TData>) => {
     const [showDeleteConfirmation, setShowDelConfirmation] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -48,6 +50,7 @@ const ContentRecordAction = <TData extends Section> ({
             } finally {
                 setLoading(false)
                 showHideDeleteModal(false)
+                onChange();
             }
         } else {
             toast({

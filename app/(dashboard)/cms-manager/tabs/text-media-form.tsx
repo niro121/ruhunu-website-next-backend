@@ -1,6 +1,6 @@
 "use client"
 
-import { createNewSection, updateSection } from "@/app/actions/section.actions";
+import { createNewSection, getNextOrder, updateSection } from "@/app/actions/section.actions";
 import CustomCheckedField from "@/components/common/custom-checked-field";
 import CustomRichTextEditor from "@/components/common/custom-rich-text-editor";
 import CustomSelectField from "@/components/common/custom-select-field";
@@ -35,6 +35,7 @@ type TextMediaSection = Omit<Section, ""> & {
 
 type TextMediaProps = {
     pageId: string | null;
+    content: TextMediaSection | null;
     sessionRole: string | undefined;
     styleClasses: {
         parentDiv: string;
@@ -46,77 +47,51 @@ type TextMediaProps = {
 
 const TextMediaForm = ({
     pageId,
+    content,
     styleClasses,
     sessionRole,
     onUpdated,
 }: TextMediaProps) => {
     const [loading, setLoading] = useState(false);
-    const [data, setData] = useState<TextMediaSection | null>(null);
     const { toast } = useToast();
     const router = useRouter();
     const submitTypeRef = React.useRef<"save" | "save-close">("save");
-
-    // Fetch data
-    const fetchData = async () => {
-        if (!pageId) return;
-    
-        setLoading(true);
-        try {
-            // const res = await fetchSectionById(pageId);
-            // if (res.data) {
-            //     // Cast Prisma JSON field safely
-            //     const sectionData = res.data.data as unknown as {
-            //         title?: string;
-            //         webImage?: string | string[];
-            //         mobileImage?: string | string[];
-            //     };
-
-            //     const heroData: HeroSection = {
-            //         ...res.data,
-            //         data: {
-            //         title: sectionData.title ?? "",
-            //         webImage: sectionData.webImage ?? "",
-            //         mobileImage: sectionData.mobileImage ?? "",
-            //         },
-            //     };
-    
-            //     setData(heroData);
-            // } else {
-            //     setData(null);
-            // }
-        } catch (error) {
-            console.error("Error fetching hero data:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
-    
-    useEffect(() => {
-        fetchData();
-    }, [pageId]);
+    const [nextOrder, setNextOrder] = useState<number>(1); 
+                
+    useEffect(() => {    
+        const fetchOrder = async () => {
+            try {
+                const order = await getNextOrder(pageId || '');
+                setNextOrder(order);
+            } catch (error) {
+                console.error("Error fetching next order:", error);
+            }
+        };
+        if (!content && pageId) fetchOrder();
+    }, [content, pageId]);
 
     // Initial Values
     const initialValues: TextMediaSection = useMemo(
         () => ({
-            id: data?.id || "",
+            id: content?.id || "",
             type: "Text-Media",
-            layout: data?.layout || 1,
-            order: data?.order || 2,
+            layout: content?.layout || 1,
+            order: content?.order || nextOrder,
             data: {
-                title:data?.data.title || "",
-                subTitle:data?.data.subTitle || "",
-                alignment:data?.data.alignment || 1,
-                webImage:data?.data.webImage || "",
-                mobileImage:data?.data.mobileImage || "",
-                content:data?.data.content || "",
-                buttontext:data?.data.buttontext || "",
-                buttonurl:data?.data.buttonurl || "",
-                paddingtop:data?.data.paddingtop || 0,
-                paddingbottom:data?.data.paddingbottom || 0,
+                title:content?.data.title || "",
+                subTitle:content?.data.subTitle || "",
+                alignment:content?.data.alignment || 1,
+                webImage:content?.data.webImage || "",
+                mobileImage:content?.data.mobileImage || "",
+                content:content?.data.content || "",
+                buttontext:content?.data.buttontext || "",
+                buttonurl:content?.data.buttonurl || "",
+                paddingtop:content?.data.paddingtop || 0,
+                paddingbottom:content?.data.paddingbottom || 0,
             },
             pageId: pageId || "",
-            visibility: data?.visibility || false,
-        }),[data]
+            visibility: content?.visibility || false,
+        }),[content,nextOrder]
     );
 
     // Validation Schema

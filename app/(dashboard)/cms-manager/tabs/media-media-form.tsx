@@ -1,6 +1,6 @@
 "use client"
 
-import { createNewSection, updateSection } from "@/app/actions/section.actions";
+import { createNewSection, getNextOrder, updateSection } from "@/app/actions/section.actions";
 import CustomCheckedField from "@/components/common/custom-checked-field";
 import { FormActionsBtns } from "@/components/common/form-actions-btns";
 import CustomFormField from "@/components/common/form-field";
@@ -33,6 +33,7 @@ type MediaMediaSection = Omit<Section, ""> & {
 
 type MediaMediaProps = {
     pageId: string | null;
+    content: MediaMediaSection | null;
     sessionRole: string | undefined;
     styleClasses: {
         parentDiv: string;
@@ -44,80 +45,54 @@ type MediaMediaProps = {
 
 const MediaMediaForm = ({
     pageId,
+    content,
     styleClasses,
     sessionRole,
     onUpdated,
 }: MediaMediaProps) => {
     const [loading, setLoading] = useState(false);
-    const [data, setData] = useState<MediaMediaSection | null>(null);
     const { toast } = useToast();
     const router = useRouter();
     const submitTypeRef = React.useRef<"save" | "save-close">("save");
-
-    // Fetch data
-        const fetchData = async () => {
-            if (!pageId) return;
-            
-            setLoading(true);
+    const [nextOrder, setNextOrder] = useState<number>(1); 
+                
+    useEffect(() => {    
+        const fetchOrder = async () => {
             try {
-                // const res = await fetchSectionById(pageId);
-                // if (res.data) {
-                //     // Cast Prisma JSON field safely
-                //     const sectionData = res.data.data as unknown as {
-                //         title?: string;
-                //         webImage?: string | string[];
-                //         mobileImage?: string | string[];
-                //     };
-        
-                //     const heroData: HeroSection = {
-                //         ...res.data,
-                //         data: {
-                //         title: sectionData.title ?? "",
-                //         webImage: sectionData.webImage ?? "",
-                //         mobileImage: sectionData.mobileImage ?? "",
-                //         },
-                //     };
-            
-                //     setData(heroData);
-                // } else {
-                //     setData(null);
-                // }
+                const order = await getNextOrder(pageId || '');
+                setNextOrder(order);
             } catch (error) {
-                console.error("Error fetching hero data:", error);
-            } finally {
-                setLoading(false);
+                console.error("Error fetching next order:", error);
             }
         };
-            
-        useEffect(() => {
-            fetchData();
-        }, [pageId]);
+        if (!content && pageId) fetchOrder();
+    }, [content, pageId]);
     
-        // Initial Values
-        const initialValues: MediaMediaSection = useMemo(
-            () => ({
-                id: data?.id || "",
-                type: "Media-Media",
-                layout: data?.layout || 1,
-                order: data?.order || 2,
-                data: {
-                    title:data?.data.title || "",
-                    subTitle:data?.data.subTitle || "",
-                    image: data?.data.image || "",
-                    mobileImage: data?.data.mobileImage || "",
-                    imageright: data?.data.imageright || "",
-                    mobileImageright: data?.data.mobileImageright || "",
-                    video: data?.data.video || "",
-                    videoright: data?.data.videoright || "",
-                    externalVideoUrl: data?.data.externalVideoUrl || "",
-                    externalVideoUrlright: data?.data.externalVideoUrlright || "",
-                    paddingtop:data?.data.paddingtop || 0,
-                    paddingbottom:data?.data.paddingbottom || 0,
-                },
-                pageId: pageId || "",
-                visibility: data?.visibility || false,
-            }),[data]
-        );
+    // Initial Values
+    const initialValues: MediaMediaSection = useMemo(
+        () => ({
+            id: content?.id || "",
+            type: "Media-Media",
+            layout: content?.layout || 1,
+            order: content?.order || nextOrder,
+            data: {
+                title:content?.data.title || "",
+                subTitle:content?.data.subTitle || "",
+                image: content?.data.image || "",
+                mobileImage: content?.data.mobileImage || "",
+                imageright: content?.data.imageright || "",
+                mobileImageright: content?.data.mobileImageright || "",
+                video: content?.data.video || "",
+                videoright: content?.data.videoright || "",
+                externalVideoUrl: content?.data.externalVideoUrl || "",
+                externalVideoUrlright: content?.data.externalVideoUrlright || "",
+                paddingtop:content?.data.paddingtop || 0,
+                paddingbottom:content?.data.paddingbottom || 0,
+            },
+            pageId: pageId || "",
+            visibility: content?.visibility || false,
+        }),[content,nextOrder]
+    );
     
         // Validation Schema
         const validationSchema = Yup.object({

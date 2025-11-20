@@ -117,6 +117,17 @@ export default function ContentTable({
         setSelectedType(type); // open popup
     };
 
+    const handleBulkDelete = async (ids: string[]): Promise<boolean> => {
+        try {
+            await bulkDeleteSection(ids);
+            await fetchData();
+            return true;
+        } catch (error) {
+            console.error("Bulk delete failed:", error);
+            return false;
+        }
+    };
+
     const handleClosePopup = () => {
         setSelectedType(null);
         fetchData();
@@ -127,115 +138,131 @@ export default function ContentTable({
         switch (selectedType) {
             case 'Text Only':
                 return <TextOnlyForm 
-                    pageId={currentPageId || ''} 
-                    sessionRole={sessionRole} 
-                    styleClasses={styleClasses} 
-                    onUpdated={function (page: any): void {}}
+                    pageId={currentPageId || ''}
+                    content={null}
+                    sessionRole={sessionRole}
+                    styleClasses={styleClasses}
+                    onUpdated={fetchData} 
                 />;
             case 'Text-Text':
                 return <TextTextForm 
-                    pageId={currentPageId || ''} 
+                    pageId={currentPageId || ''}
+                    content={null}
                     sessionRole={sessionRole} 
                     styleClasses={styleClasses} 
-                    onUpdated={function (page: any): void {}}
+                    onUpdated={fetchData}
                 />
             case 'Text-Media':
                 return <TextMediaForm 
-                    pageId={currentPageId || ''} 
+                    pageId={currentPageId || ''}
+                    content={null}
                     sessionRole={sessionRole} 
                     styleClasses={styleClasses} 
-                    onUpdated={function (page: any): void {}}
+                    onUpdated={fetchData}
                 />;
             case 'Media Only':
                 return <MediaOnlyForm 
-                    pageId={currentPageId || ''} 
+                    pageId={currentPageId || ''}
+                    content={null}
                     sessionRole={sessionRole} 
                     styleClasses={styleClasses} 
-                    onUpdated={function (page: any): void {}}
+                    onUpdated={fetchData}
                 />;
             case 'Media-Media':
                 return <MediaMediaForm 
-                    pageId={currentPageId || ''} 
+                    pageId={currentPageId || ''}
+                    content={null}
                     sessionRole={sessionRole} 
                     styleClasses={styleClasses} 
-                    onUpdated={function (page: any): void {}}
+                    onUpdated={fetchData}
                 />;
             case 'Extra Large Text':
                 return <ExtraLargeTextForm 
-                    pageId={currentPageId || ''} 
+                    pageId={currentPageId || ''}
+                    content={null}
                     sessionRole={sessionRole} 
                     styleClasses={styleClasses} 
-                    onUpdated={function (page: any): void {}}
+                    onUpdated={fetchData}
                 />;
             case 'Spacer':
                 return <SpacerForm
-                    pageId={currentPageId || ''} 
+                    pageId={currentPageId || ''}
+                    content={null}
                     sessionRole={sessionRole} 
                     styleClasses={styleClasses} 
-                    onUpdated={function (page: any): void {}}
+                    onUpdated={fetchData}
                 />;
             case 'Award':
                 return <AwardForm
-                    pageId={currentPageId || ''} 
+                    pageId={currentPageId || ''}
+                    content={null}
                     sessionRole={sessionRole} 
                     styleClasses={styleClasses} 
-                    onUpdated={function (page: any): void {}}
+                    onUpdated={fetchData}
                 />;
             case 'Banner':
                 return <BannerForm
-                    pageId={currentPageId || ''} 
+                    pageId={currentPageId || ''}
+                    content={null}
                     sessionRole={sessionRole} 
                     styleClasses={styleClasses} 
-                    onUpdated={function (page: any): void {}}
+                    onUpdated={fetchData}
                 />;
             case 'Borad Of Directors':
                 return <BoradOfDirectorsForm
                     pageId={currentPageId || ''} 
+                    content={null}
                     sessionRole={sessionRole} 
                     styleClasses={styleClasses} 
-                    onUpdated={function (page: any): void {}}
+                    onUpdated={fetchData}
                 />;
             case 'Caousel':
                 return <CaouselForm
-                    pageId={currentPageId || ''} 
+                    pageId={currentPageId || ''}
+                    content={null}
                     sessionRole={sessionRole} 
                     styleClasses={styleClasses} 
-                    onUpdated={function (page: any): void {}}
+                    onUpdated={fetchData}
                 />;
             case 'Accordion':
                 return <AccordionForm
                     pageId={currentPageId || ''} 
+                    content={null}
                     sessionRole={sessionRole} 
                     styleClasses={styleClasses} 
-                    onUpdated={function (page: any): void {}}
+                    onUpdated={fetchData}
                 />;
             case 'Documents':
                 return <DocumentsForm
                     pageId={currentPageId || ''} 
+                    content={null}
                     sessionRole={sessionRole} 
                     styleClasses={styleClasses} 
-                    onUpdated={function (page: any): void {}}
+                    onUpdated={fetchData}
                 />;
             case 'Media':
                 return <MediaForm
-                    pageId={currentPageId || ''} 
+                    pageId={currentPageId || ''}
+                    content={null}
                     sessionRole={sessionRole} 
                     styleClasses={styleClasses} 
-                    onUpdated={function (page: any): void {}}
+                    onUpdated={fetchData}
                 />;
             case 'PopUp':
                 return <PopUpForm
-                    pageId={currentPageId || ''} 
+                    pageId={currentPageId || ''}
+                    content={null}
                     sessionRole={sessionRole} 
                     styleClasses={styleClasses} 
-                    onUpdated={function (page: any): void {}}
+                    onUpdated={fetchData}
                 />;
             case 'Map':
                 return <MapForm
                     pageId={currentPageId || ''} 
+                    content={null}
                     sessionRole={sessionRole} 
                     styleClasses={styleClasses} 
-                    onUpdated={function (page: any): void {}}
+                    onUpdated={fetchData}
                 />;
             default:
                 return null;
@@ -282,10 +309,11 @@ export default function ContentTable({
                             onChange: fetchData,
                             sessionRole,
                             currentPageId,
+                            styleClasses,
                         })}
                         data={data}
                         rowCount={totalRecords}
-                        deleteServerAction={bulkDeleteSection}
+                        deleteServerAction={handleBulkDelete}
                         page={searchParams?.page}
                     />
                 </Suspense>

@@ -139,14 +139,17 @@ export const updateOneSection = async (id: string, payload: UpdateSectionDTO) =>
 }
 
 // ========== Get single Section data ==========
-export const getSectionById = async (id: string) => {
+export const getSectionById = async (id: string, type: string) => {
+
+    console.log({id})
 
     try {
-        console.log(id)
-        const result = await prisma.section.findUnique({
-            where: { id: id },
+        const result = await prisma.section.findFirst({
+            where: {
+                pageId: id,
+                type: type 
+            },
         })
-        
         return result
     } catch (error: any) {
         throw new Error(error.message ?? "")
@@ -186,3 +189,23 @@ export const deleteOneSection = async (id: string) => {
         throw new Error(error.message ?? "Delete Section Error")
     }
 }
+
+export const getNextSectionOrder = async (pageId: string) => {
+    try {
+        // Find the max order for the page
+        const result = await prisma.section.aggregate({
+            where: { pageId },
+            _max: { order: true },
+        });
+
+        // If there is no section yet, start with 1
+        const maxOrder = result._max.order ?? 0;
+
+        // Return next order number
+        console.log(maxOrder + 1)
+        return maxOrder + 1;
+    } catch (error: any) {
+        console.log("getNextSectionOrder error ==> ", error)
+        throw new Error(error.message ?? "Get Next Section Order Error")
+    }
+};
