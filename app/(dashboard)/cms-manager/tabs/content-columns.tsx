@@ -12,19 +12,19 @@ import HeroForm from "./hero-Form";
 import TextOnlyForm from "./text-only-form";
 import TextTextForm from "./text-text-form";
 import TextMediaForm from "./text-media-form";
-import MediaOnlyForm from "./media-only-form";
-import MediaMediaForm from "./media-media-form";
-import ExtraLargeTextForm from "./extra-large-text-form";
+import MediaOnlyForm from "./forms/media-only-form";
+import MediaMediaForm from "./forms/media-media-form";
+import ExtraLargeTextForm from "./forms/extra-large-text-form";
 import SpacerForm from "./spacer-form";
-import AwardForm from "./award-form";
-import BannerForm from "./banner-form";
-import BoradOfDirectorsForm from "./borad-0f-directors-form";
-import CaouselForm from "./caousel-form";
-import AccordionForm from "./accordion-form";
-import MediaForm from "./media-form";
+import AwardForm from "./forms/award-form";
+import BannerForm from "./forms/banner-form";
+import BoradOfDirectorsForm from "./forms/borad-0f-directors-form";
+import CaouselForm from "./forms/caousel-form";
+import AccordionForm from "./forms/accordion-form";
+import MediaForm from "./forms/media-form";
 import PopUpForm from "./popup-form";
-import MapForm from "./map-form";
-import DocumentsForm from "./documents-form";
+import MapForm from "./forms/map-form";
+import DocumentsForm from "./forms/documents-form";
 
 const sectionForms: Record<string, React.FC<any>> = {
     "Hero": HeroForm,
