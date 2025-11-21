@@ -24,7 +24,7 @@ export default async function CMSEditPage (
     return (
         <div className="space-y-4 px-8">
             <div className="flex items-center">
-                <h1 className="text-xl font-semibold">Edit Career And Applications</h1>
+                <h1 className="text-xl font-semibold">Edit Page</h1>
             </div>
             <PageFormTabs page={page} sessionRole={sessionRole} order={nextOrder}/>
         </div>

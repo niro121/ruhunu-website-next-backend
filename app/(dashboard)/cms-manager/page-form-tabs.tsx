@@ -7,6 +7,9 @@ import { Page } from "@/types/page";
 import { useRouter } from "next/navigation";
 import React from "react";
 import PageForm from "./tabs/page-form";
+import HeroForm from "./tabs/hero-Form";
+import ContentTable from "./tabs/content-table";
+
 
 type PageFormProps = {
     page: Page | null;
@@ -117,17 +120,34 @@ export default function PageFormTabs({ page, sessionRole, order}: PageFormProps)
                 </Card>
             </TabsContent>
 
-            <TabsContent value="application" className="mt-0">
+            <TabsContent value="hero" className="mt-0">
                 <Card className="border shadow-sm">
+                    <CardHeader className="border-b">
+                        <CardTitle className="text-xl">Hero Details</CardTitle>
+                    </CardHeader>
                     <CardContent className="pt-6">
+                        <HeroForm 
+                            pageId={currentPage?.id || ''}
+                            sessionRole={sessionRole}
+                            styleClasses={styleClasses}
+                            onUpdated={function (page: any): void {} }
+                            //onUpdated={} 
+                        />
                     </CardContent>
                 </Card>
             </TabsContent>
 
-            <TabsContent value="application" className="mt-0">
+            <TabsContent value="content" className="mt-0">
                 <Card className="border shadow-sm">
+                     <CardHeader className="border-b">
+                        <CardTitle className="text-xl">Content Details</CardTitle>
+                    </CardHeader>
                     <CardContent className="pt-6">
-                        
+                        <ContentTable
+                            currentPageId={currentPage?.id || ""}
+                            sessionRole={sessionRole} 
+                            styleClasses={styleClasses}
+                        />
                     </CardContent>
                 </Card>
             </TabsContent>
