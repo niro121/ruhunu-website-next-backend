@@ -25,6 +25,8 @@ import MediaForm from "./forms/media-form";
 import PopUpForm from "./forms/popup-form";
 import MapForm from "./forms/map-form";
 import DocumentsForm from "./forms/documents-form";
+import ServicesForm from "./forms/services-form";
+import TestimonialsForm from "./forms/testimonials-form";
 
 const sectionForms: Record<string, React.FC<any>> = {
     "Hero": HeroForm,
@@ -44,6 +46,8 @@ const sectionForms: Record<string, React.FC<any>> = {
     "Media" : MediaForm,
     "PopUp" : PopUpForm,
     "Map" : MapForm,
+    "Services" : ServicesForm,
+    "Testimonials" : TestimonialsForm,
 };
 
 
@@ -192,6 +196,22 @@ function ContentColumnsTitleCell({
                 />;
             case 'Map':
                 return <MapForm
+                    pageId={currentPageId || ''}
+                    content={content}
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses || defaultStyleClasses} 
+                    onUpdated={onChange ?? (() => {})}
+                />;
+            case 'Services':
+                return <ServicesForm
+                    pageId={currentPageId || ''}
+                    content={content}
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses || defaultStyleClasses} 
+                    onUpdated={onChange ?? (() => {})}
+                />;
+            case 'Testimonials':
+                return <TestimonialsForm
                     pageId={currentPageId || ''}
                     content={content}
                     sessionRole={sessionRole} 
