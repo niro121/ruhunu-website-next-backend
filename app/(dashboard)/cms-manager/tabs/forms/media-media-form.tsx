@@ -98,8 +98,8 @@ const MediaMediaForm = ({
         const validationSchema = Yup.object({
             data: Yup.object({
                 title: Yup.string().required("Title is required"),
-                webImage: Yup.string().required("Title is required"),
-                mobileImage: Yup.string().required("Title is required"),
+                // webImage: Yup.string().required("Title is required"),
+                // mobileImage: Yup.string().required("Title is required"),
             }),
             order: Yup.number().required("Order is required"),
         });

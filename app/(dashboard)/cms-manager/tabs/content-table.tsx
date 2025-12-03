@@ -40,6 +40,8 @@ import DocumentsForm from './forms/documents-form';
 import MediaForm from './forms/media-form';
 import PopUpForm from './forms/popup-form';
 import MapForm from './forms/map-form';
+import ServicesForm from './forms/services-form';
+import TestimonialsForm from './forms/testimonials-form';
 
 type ContentTableProps = {
     currentPageId: string | undefined;
@@ -111,6 +113,8 @@ export default function ContentTable({
         'Media',
         'PopUp',
         'Map',
+        'Services',
+        'Testimonials'
     ];
 
     const handleSelectType = (type: string) => {
@@ -259,6 +263,22 @@ export default function ContentTable({
             case 'Map':
                 return <MapForm
                     pageId={currentPageId || ''} 
+                    content={null}
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses} 
+                    onUpdated={fetchData}
+                />;
+            case 'Services':
+                return <ServicesForm
+                    pageId={currentPageId || ''}
+                    content={null}
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses} 
+                    onUpdated={fetchData}
+                />;
+            case 'Testimonials':
+                return <TestimonialsForm
+                    pageId={currentPageId || ''}
                     content={null}
                     sessionRole={sessionRole} 
                     styleClasses={styleClasses} 
