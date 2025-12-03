@@ -10,10 +10,8 @@ import ImageInput from "@/components/common/image-input/ImageInput";
 import { useToast } from "@/components/hooks/use-toast";
 import { Card } from "@/components/ui/card";
 import { Section } from "@/types/section";
-import { Value } from "@radix-ui/react-select";
 import { Form, Formik, FormikHelpers, getIn } from "formik";
 import { useRouter } from "next/navigation";
-import { title } from "process";
 import React, { useEffect, useMemo } from "react";
 import { useState } from "react";
 import * as Yup from "yup";
@@ -98,8 +96,8 @@ const TextMediaForm = ({
     const validationSchema = Yup.object({
         data: Yup.object({
             title: Yup.string().required("Title is required"),
-            webImage: Yup.string().required("Title is required"),
-            mobileImage: Yup.string().required("Title is required"),
+            // webImage: Yup.string().required("Title is required"),
+            // mobileImage: Yup.string().required("Title is required"),
         }),
         order: Yup.number().required("Order is required"),
     });

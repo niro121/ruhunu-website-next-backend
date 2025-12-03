@@ -70,7 +70,7 @@ const TextTextForm = ({
     const initialValues: TextTextSection = useMemo(
         () => ({
             id: content?.id || "",
-            type: "Text-Media",
+            type: "Text-Text",
             layout: content?.layout || 1,
             order: content?.order || nextOrder,
             data: {
@@ -93,9 +93,9 @@ const TextTextForm = ({
     // Validation Schema
     const validationSchema = Yup.object({
         data: Yup.object({
-            title: Yup.string().required("Title is required"),
-            webImage: Yup.string().required("Title is required"),
-            mobileImage: Yup.string().required("Title is required"),
+            // title: Yup.string().required("Title is required"),
+            // webImage: Yup.string().required("Title is required"),
+            // mobileImage: Yup.string().required("Title is required"),
         }),
         order: Yup.number().required("Order is required"),
     });
