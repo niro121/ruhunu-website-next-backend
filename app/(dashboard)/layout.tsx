@@ -149,6 +149,13 @@ async function DesktopNav({ session }: { session: Session | null }) {
           icon={<UserGroup className="h-5 w-5" />}
         />
 
+        {/* // =========================== CONTACT INQUIRIES =========================== */}
+        <NavLink
+          href={hasAccess("/contact-inquiries") ? "/contact-inquiries" : "unauthorized-access"}
+          label="Contact Inquiries"
+          icon={<UserGroup className="h-5 w-5" />}
+        />
+
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
         <p className="text-white">
