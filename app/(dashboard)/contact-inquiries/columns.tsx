@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { CircleCorrect, CircleX } from "@/components/icons";
+import { CircleCorrect, CircleX, Eye } from "@/components/icons";
 import Link from "next/link";
 import { ContactInquiriesManager } from "@/types/contactinquiries";
 import ContactRecordActions from "./record-actions";
@@ -76,11 +76,12 @@ export const contactColumns: ColumnDef<ContactInquiriesManager>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      const status = row.getValue("status");
-      return status === true ? (
+      const status = row.getValue("status") as boolean;
+
+      return status ? (
         <CircleCorrect className="text-green-500 w-7 h-7" />
       ) : (
-        <CircleX className="text-red-500 w-7 h-7" />
+        <Eye className="text-yellow-500 w-6 h-6" />
       );
     },
   },

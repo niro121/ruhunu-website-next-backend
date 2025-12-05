@@ -10,13 +10,17 @@ import { useRouter } from "next/navigation";
 import React, { useMemo } from "react";
 import * as Yup from "yup";
 import { updateOneContactInquiry } from "@/services/contactinquiries.service";
+import CustomSelectField from "@/components/common/custom-select-field";
 
 type ContactInquiriesFormProps = {
   contact: ContactInquiriesManager | null;
   sessionRole: string | undefined;
 };
 
-const ContactInquiriesForm = ({ contact, sessionRole }: ContactInquiriesFormProps) => {
+const ContactInquiriesForm = ({
+  contact,
+  sessionRole,
+}: ContactInquiriesFormProps) => {
   const [loading, setLoading] = React.useState(false);
   const { toast } = useToast();
   const router = useRouter();
@@ -132,7 +136,6 @@ const ContactInquiriesForm = ({ contact, sessionRole }: ContactInquiriesFormProp
         <Card className="border shadow-sm">
           <Form className="w-full">
             <div className="grid gap-4 py-4">
-
               {/* Name */}
               <CustomFormField
                 type="text"
@@ -190,13 +193,16 @@ const ContactInquiriesForm = ({ contact, sessionRole }: ContactInquiriesFormProp
               />
 
               {/* Status */}
-              <CustomCheckedField
+              <CustomSelectField
                 id="status"
-                placeholder="Active / Inactive"
+                placeholder="Select Status"
                 required
-                mode="boolean"
-                value={values.status}
-                onChange={(val) => setFieldValue("status", val)}
+                value={values.status ? "true" : "false"}
+                options={[
+                  { label: "Not Contacted", value: "false" },
+                  { label: "Contacted", value: "true" },
+                ]}
+                onChange={(val) => setFieldValue("status", val === "true")}
                 onBlur={handleBlur}
                 error={errors.status as string}
                 touched={touched.status}
