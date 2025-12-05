@@ -330,3 +330,4 @@ model CenterLocation {
   collectingCenterId String           @db.ObjectId // relation field
   collectingCenter   CollectingCenter @relation(fields: [collectingCenterId], references: [id])
 }
+
