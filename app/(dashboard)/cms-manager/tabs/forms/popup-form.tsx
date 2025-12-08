@@ -289,10 +289,10 @@ const PopUpForm = ({
 
                                             <CustomRichTextEditor
                                                 id="text"
-                                                placeholder="text"
+                                                placeholder="Text Description"
                                                 required
-                                                value={values.data.content.description ?? ""}
-                                                onChange={(e) => setFieldValue("data..content.description", e.target.value)}
+                                                value={values.data.content.description}
+                                                onChange={(e) => setFieldValue("data.content.description", e.target.value)}
                                                 onBlur={handleBlur}
                                                 styleClasses={styleClasses}
                                                 error={getIn(errors,"data.content.description")}

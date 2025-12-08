@@ -96,9 +96,9 @@ const BannerForm = ({
     // Validation Schema
     const validationSchema = Yup.object({
         data: Yup.object({
-            title: Yup.string().required("Title is required"),
-            webImage: Yup.string().required("Title is required"),
-            mobileImage: Yup.string().required("Title is required"),
+            // title: Yup.string().required("Title is required"),
+            // webImage: Yup.string().required("Title is required"),
+            // mobileImage: Yup.string().required("Title is required"),
         }),
         order: Yup.number().required("Order is required"),
     });
@@ -211,15 +211,15 @@ const BannerForm = ({
                             {/* CTA Banner */}
                             <CustomFormField
                                 type="text"
-                                id="data.Banner"
-                                placeholder="CTA Url"
-                                value={values.data.Banner}
+                                id="data.ctaBanner"
+                                placeholder="CTA Banner"
+                                value={values.data.ctaBanner}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 required
                                 styleClasses={styleClasses}
-                                error={getIn(errors, "data.Banner")}
-                                touched={getIn(touched, "data.Banner")}
+                                error={getIn(errors, "data.ctaBanner")}
+                                touched={getIn(touched, "data.ctaBanner")}
                             />
 
                             {/* Heading */}
@@ -272,15 +272,15 @@ const BannerForm = ({
                             {/* Sub Title */}
                             <CustomFormField
                                 type="text"
-                                id="data.subtitle"
+                                id="data.subTitle"
                                 placeholder="Sub Title"
-                                value={values.data.subtitle}
+                                value={values.data.subTitle}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 required
                                 styleClasses={styleClasses}
-                                error={getIn(errors, "data.subtitle")}
-                                touched={getIn(touched, "data.subtitle")}
+                                error={getIn(errors, "data.subTitle")}
+                                touched={getIn(touched, "data.subTitle")}
                             />
 
                             {/* Background Color */}
