@@ -13,7 +13,7 @@ export const ALL_ROLES: Record<string, string[]> = {
         "/room-categorys",
         "/collecting-centers",
         "/users",
-        
+        "/contact-inquiries",  
     ],
     dataOfficer: [
         

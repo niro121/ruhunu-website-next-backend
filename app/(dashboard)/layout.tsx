@@ -16,6 +16,7 @@ import {
   Ambulance,
   BedSingle,
   Mail,
+  FileText,
 } from "lucide-react"
 import { Session } from "next-auth";
 import {
@@ -82,7 +83,7 @@ async function DesktopNav({ session }: { session: Session | null }) {
         <NavLink
           href={hasAccess("/cms-manager") ? "/cms-manager" : "unauthorized-access"}
           label="CMS Manager"
-          icon={<UserGroup className="h-5 w-5" />}
+          icon={<FileText className="h-5 w-5" />}
         />
 
         {/* // =========================== CAREERS =========================== */}
@@ -159,6 +160,13 @@ async function DesktopNav({ session }: { session: Session | null }) {
           icon={<UserGroup className="h-5 w-5" />}
         />
 
+        {/* // =========================== CONTACT INQUIRIES =========================== */}
+        <NavLink
+          href={hasAccess("/contact-inquiries") ? "/contact-inquiries" : "unauthorized-access"}
+          label="Contact Inquiries"
+          icon={<UserGroup className="h-5 w-5" />}
+        />
+
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
         <p className="text-white">
@@ -225,7 +233,7 @@ async function MobileNav({ session }: { session: Session | null }) {
           <NavLink
             href={hasAccess("/cms-manager") ? "/cms-manager" : "unauthorized-access"}
             label="CMS Manager"
-            icon={<UserGroup className="h-5 w-5" />}
+            icon={<FileText className="h-5 w-5" />}
           />
 
           {/* // =========================== CAREERS =========================== */}
