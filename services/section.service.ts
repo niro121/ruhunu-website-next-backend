@@ -35,6 +35,9 @@ export const getSection = async (pageId: string) => {
         const result = await prisma.section.findMany({
             where: {
                 pageId: pageId,
+            },
+            orderBy: {
+                order: "asc"
             }
         });
 

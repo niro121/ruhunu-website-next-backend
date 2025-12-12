@@ -16,6 +16,7 @@ import * as Yup from "yup";
 type ServicesSection = Omit<Section, ""> & {
     data: {
         bg_color: string;
+        link?: string;
         paddingtop: number;
         paddingbottom: number;
     }
@@ -67,6 +68,7 @@ const ServicesForm = ({
             order: content?.order || nextOrder,
             data: {
                 bg_color: content?.data.bg_color || "",
+                link: content?.data.link || "",
                 paddingtop:content?.data.paddingtop || 0,
                 paddingbottom:content?.data.paddingbottom || 0,
             },
@@ -98,6 +100,7 @@ const ServicesForm = ({
                 order: values.order,
                 data: {
                     bg_color: values.data.bg_color,
+                    link: values.data.link,
                     paddingtop: values.data.paddingtop,
                     paddingbottem: values.data.paddingbottom,
                 },
@@ -190,6 +193,20 @@ const ServicesForm = ({
                                 styleClasses={styleClasses}
                                 error={getIn(errors, "data.bg_color")}
                                 touched={getIn(touched, "data.bg_color")}
+                            />
+
+                            {/* Link */}
+                            <CustomFormField
+                                type="text"
+                                id="data.link"
+                                placeholder="Button Navigation link (If has)"
+                                value={values.data.link}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.link")}
+                                touched={getIn(touched, "data.link")}
                             />
                             
                             {/* Padding Top */}

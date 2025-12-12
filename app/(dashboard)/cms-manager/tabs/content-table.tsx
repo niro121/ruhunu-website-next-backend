@@ -42,6 +42,7 @@ import PopUpForm from './forms/popup-form';
 import MapForm from './forms/map-form';
 import ServicesForm from './forms/services-form';
 import TestimonialsForm from './forms/testimonials-form';
+import FacebookYoubuteForm from './forms/facebook-youtube-section-form';
 
 type ContentTableProps = {
     currentPageId: string | undefined;
@@ -114,7 +115,8 @@ export default function ContentTable({
         'PopUp',
         'Map',
         'Services',
-        'Testimonials'
+        'Testimonials',
+        'Facebook-Youtube'
     ];
 
     const handleSelectType = (type: string) => {
@@ -284,6 +286,14 @@ export default function ContentTable({
                     styleClasses={styleClasses} 
                     onUpdated={fetchData}
                 />;
+            case 'Facebook-Youtube':
+                return <FacebookYoubuteForm 
+                    pageId={currentPageId || ''} 
+                    content={null}
+                    sessionRole={sessionRole}
+                    styleClasses={styleClasses}
+                    onUpdated={fetchData}
+                />
             default:
                 return null;
         }

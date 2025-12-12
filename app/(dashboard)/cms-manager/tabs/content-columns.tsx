@@ -27,6 +27,7 @@ import MapForm from "./forms/map-form";
 import DocumentsForm from "./forms/documents-form";
 import ServicesForm from "./forms/services-form";
 import TestimonialsForm from "./forms/testimonials-form";
+import FacebookYoubuteForm from "./forms/facebook-youtube-section-form";
 
 const sectionForms: Record<string, React.FC<any>> = {
     "Hero": HeroForm,
@@ -218,6 +219,14 @@ function ContentColumnsTitleCell({
                     styleClasses={styleClasses || defaultStyleClasses} 
                     onUpdated={onChange ?? (() => {})}
                 />;
+            case 'Facebook-Youtube':
+                return <FacebookYoubuteForm 
+                    pageId={currentPageId || ''} 
+                    content={content}
+                    sessionRole={sessionRole}
+                    styleClasses={styleClasses || defaultStyleClasses}
+                    onUpdated={onChange ?? (() => {})}
+                />
             default:
                 return null;
         }

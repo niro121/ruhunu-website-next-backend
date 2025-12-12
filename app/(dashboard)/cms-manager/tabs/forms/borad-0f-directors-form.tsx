@@ -8,6 +8,7 @@ import ImageInput from "@/components/common/image-input/ImageInput";
 import { useToast } from "@/components/hooks/use-toast";
 import { Card } from "@/components/ui/card";
 import { Section } from "@/types/section";
+import { it } from "date-fns/locale";
 import { Form, Formik, FormikHelpers, getIn } from "formik";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo } from "react";
@@ -18,9 +19,13 @@ type BoradOfDirectorsSection = Omit<Section, ""> & {
     data: {
         title: string;
         subtitle: string;
-        image: string;
         paddingtop: number;
         paddingbottom: number;
+        directors: {
+            image: string;
+            name: string;
+            title: string;
+        }[]
     }
 }
 
@@ -72,9 +77,22 @@ const BoradOfDirectorsForm = ({
             data: {
                 title:content?.data.title || "",
                 subtitle:content?.data.subTitle || "",
-                image:content?.data.image || "",
                 paddingtop:content?.data.paddingtop || 0,
                 paddingbottom:content?.data.paddingbottom || 0,
+                directors:
+                    content?.data?.directors && Array.isArray(content.data.directors)
+                    ? content.data.directors.map((item) => ({
+                        image: item?.image || "",
+                        name: item?.name || "",
+                        title: item?.title || ""
+                    }))
+                    : [
+                        {
+                            image : "",
+                            name : "",
+                            title : ""
+                        },
+                    ],
             },
             pageId: pageId || "",
             visibility: content?.visibility || false,
@@ -84,8 +102,8 @@ const BoradOfDirectorsForm = ({
     // Validation Schema
     const validationSchema = Yup.object({
         data: Yup.object({
-            title: Yup.string().required("Title is required"),
-            image: Yup.string().required("Title is required"),
+            // title: Yup.string().required("Title is required"),
+            // image: Yup.string().required("Title is required"),
         }),
         order: Yup.number().required("Order is required"),
     });
