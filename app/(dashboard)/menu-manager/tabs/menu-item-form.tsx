@@ -83,7 +83,7 @@ const MenuItemForm = ({
       title: menuItem?.title ?? "",
       url: menuItem?.url ?? "",
       menuId: menuItem?.menuId ?? "",
-      parentId: menuItem?.parentId ?? "",
+      parentId: menuItem?.parentId ?? "none",
       visible: menuItem?.visible ?? false,
       order: menuItem?.order ?? nextOrder,
     }),
