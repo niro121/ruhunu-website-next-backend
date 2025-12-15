@@ -184,7 +184,7 @@ export function CustomDataTable<TData, TValue>({
                 <Button
                   size="sm"
                   variant="outline"
-                  className="gap-1 border-red-500 text-red-500 px-8 transition-colors ease-in-out duration-100 hover:bg-red-500 hover:text-white h-[40px]"
+                  className="gap-1 border-red-500 text-red-500 px-8 transition-colors ease-in-out duration-100 hover:bg-red-500 hover:text-white h-10"
                   disabled={Object.keys(rowSelection).length === 0}
                   onClick={() => setShowDelConfirmation(true)}
                 >
@@ -199,7 +199,7 @@ export function CustomDataTable<TData, TValue>({
 
         </CardHeader>
         <CardContent>
-          <Table className="border-[1px]">
+          <Table className="border">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>

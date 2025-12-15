@@ -1,19 +1,19 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { MdOutlineClose } from 'react-icons/md';
-import { Plus, Minus } from 'lucide-react'; // ✅ clean icons
-import { Label } from "@/components/ui/label";
-import { ErrorMessage } from "formik";
+import { Plus, Minus } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { ErrorMessage } from 'formik';
 import styles from './imageinput.module.css';
 
 interface MultiImageInputProps {
   id: string;
-  urls: string[];
+  urls?: string[] | string | null;
   placeholder: string;
   disabled?: boolean;
-  required: boolean;
+  required?: boolean;
   setFieldValue: (field: string, value: any) => void;
   fieldName: string;
   styleClasses?: {
@@ -30,7 +30,7 @@ const MultiImageInput: React.FC<MultiImageInputProps> = ({
   urls,
   placeholder,
   disabled = false,
-  required,
+  required = false,
   setFieldValue,
   fieldName,
   styleClasses,
@@ -38,24 +38,40 @@ const MultiImageInput: React.FC<MultiImageInputProps> = ({
   touched,
 }) => {
   const [isUploading, setIsUploading] = useState(false);
-  const [previewList, setPreviewList] = useState<string[]>(urls || []);
+  const [previewList, setPreviewList] = useState<string[]>([]);
 
   const validTypes = [
-    'image/jpeg', 'image/png', 'image/jpg', 'image/webp',
-    'image/gif', 'image/bmp', 'image/svg+xml', 'image/avif'
+    'image/jpeg',
+    'image/png',
+    'image/jpg',
+    'image/webp',
+    'image/gif',
+    'image/bmp',
+    'image/svg+xml',
+    'image/avif',
   ];
 
   const hasError = Boolean(error && touched);
+
+  // ✅ Normalize urls whenever prop changes
+  useEffect(() => {
+    if (Array.isArray(urls)) {
+      setPreviewList(urls.filter(Boolean));
+    } else if (typeof urls === 'string') {
+      setPreviewList(urls ? [urls] : []);
+    } else {
+      setPreviewList([]);
+    }
+  }, [urls]);
 
   // ========== handle image upload ==========
   const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.currentTarget.files;
     if (!files || files.length === 0) return;
 
-    const newFiles = Array.from(files);
     setIsUploading(true);
-
     try {
+      const newFiles = Array.from(files);
       const uploadedUrls: string[] = [];
 
       for (const file of newFiles) {
@@ -86,19 +102,19 @@ const MultiImageInput: React.FC<MultiImageInputProps> = ({
       const updatedList = [...previewList, ...uploadedUrls];
       setPreviewList(updatedList);
       setFieldValue(fieldName, updatedList);
-      toast.success('Images uploaded');
+      toast.success('Images uploaded successfully');
     } catch (err) {
       console.error(err);
       toast.error('Error uploading images');
     } finally {
       setIsUploading(false);
-      event.target.value = '';
+      event.target.value = ''; // reset file input
     }
   };
 
   // ========== remove one image ==========
   const handleRemove = (url: string) => {
-    const updatedList = previewList.filter(img => img !== url);
+    const updatedList = previewList.filter((img) => img !== url);
     setPreviewList(updatedList);
     setFieldValue(fieldName, updatedList);
   };
@@ -109,25 +125,30 @@ const MultiImageInput: React.FC<MultiImageInputProps> = ({
     setFieldValue(fieldName, []);
   };
 
+  // ✅ Always use safe list for rendering
+  const safePreviewList = Array.isArray(previewList)
+    ? previewList.filter(Boolean)
+    : [];
+
   return (
     <div className={styleClasses?.parentDiv}>
-      <Label htmlFor={id} className={styleClasses?.labelClassName || ""}>
+      <Label htmlFor={id} className={styleClasses?.labelClassName || ''}>
         {placeholder}
         {required && <span className="text-red-600"> *</span>}
       </Label>
 
-      <div className={`${styleClasses?.inputClassName} w-full`}>
-        {/* ===== Upload bar ===== */}
+      <div className={`${styleClasses?.inputClassName || ''} w-full`}>
+        {/* ===== Upload Bar ===== */}
         <div
           className={[
             styles.customInput,
             hasError ? 'border-red-600 ring-1 ring-red-600' : 'border-gray-300',
             disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer',
-            'flex items-center justify-between p-2',
+            'flex items-center justify-between p-2 rounded-md border transition-all',
           ].join(' ')}
         >
           {isUploading ? (
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4">
               <div className={styles.spinnerLoging} aria-label="Uploading" />
               <span className={styles.fileNameLoading}>Uploading...</span>
             </div>
@@ -135,13 +156,12 @@ const MultiImageInput: React.FC<MultiImageInputProps> = ({
             <>
               <span className={styles.placeholder}>Images</span>
               <span className={styles.fileName}>
-                {previewList.length > 0
-                  ? `${previewList.length} image(s)`
+                {safePreviewList.length > 0
+                  ? `${safePreviewList.length} image(s)`
                   : 'No files chosen'}
               </span>
 
-              {/* Buttons */}
-              <div className="flex gap-3 items-center ">
+              <div className="flex gap-2 items-center">
                 {/* + Add */}
                 <label
                   htmlFor={fieldName}
@@ -151,7 +171,7 @@ const MultiImageInput: React.FC<MultiImageInputProps> = ({
                 </label>
 
                 {/* - Remove All */}
-                {previewList.length > 0 && (
+                {safePreviewList.length > 0 && (
                   <button
                     type="button"
                     onClick={handleRemoveAll}
@@ -180,10 +200,10 @@ const MultiImageInput: React.FC<MultiImageInputProps> = ({
           accept={validTypes.join(',')}
         />
 
-        {/* ===== Preview grid BELOW the bar ===== */}
-        {previewList.length > 0 && (
+        {/* ===== Preview Grid ===== */}
+        {safePreviewList.length > 0 && (
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 mt-3">
-            {previewList.map((imgUrl, index) => (
+            {safePreviewList.map((imgUrl, index) => (
               <div
                 key={index}
                 className={`${styles.imgPreview} relative border rounded-lg overflow-hidden shadow-sm`}
@@ -206,7 +226,7 @@ const MultiImageInput: React.FC<MultiImageInputProps> = ({
           </div>
         )}
 
-        {/* Error */}
+        {/* ===== Error Message ===== */}
         <ErrorMessage
           name={fieldName}
           component="div"
