@@ -136,18 +136,11 @@ async function DesktopNav({ session }: { session: Session | null }) {
           icon={<Building className="h-5 w-5" />}
         />
 
-         {/* // =========================== TESTIMONIALS =========================== */}
-         <NavLink
+        {/* // =========================== TESTIMONIALS =========================== */}
+        <NavLink
           href={hasAccess("/testimonials") ? "/testimonials" : "unauthorized-access"}
           label="Testimonials"
           icon={<BriefcaseIcon className="h-5 w-5" />}
-        />
-
-        {/* // =========================== USERS =========================== */}
-        <NavLink
-          href={hasAccess("/users") ? "/users" : "unauthorized-access"}
-          label="Users"
-          icon={<UserGroup className="h-5 w-5" />}
         />
 
         {/* // =========================== CONTACT INQUIRIES =========================== */}
@@ -307,6 +300,13 @@ async function MobileNav({ session }: { session: Session | null }) {
             href={hasAccess("/nts") ? "/nts" : "unauthorized-access"}
             label="NTS Application"
             icon={<UserGroup className="h-5 w-5" />}
+          />
+
+          {/* // =========================== TESTIMONIALS =========================== */}
+          <NavLink
+            href={hasAccess("/testimonials") ? "/testimonials" : "unauthorized-access"}
+            label="Testimonials"
+            icon={<BriefcaseIcon className="h-5 w-5" />}
           />
 
           {/* // =========================== USERS =========================== */}
