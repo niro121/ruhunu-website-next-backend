@@ -11,6 +11,7 @@ export const ALL_ROLES: Record<string, string[]> = {
         "/rooms",
         "/room-categorys",
         "/collecting-centers",
+        "/testimonials",
         "/users",
         "/contact-inquiries",  
         "/nts"
