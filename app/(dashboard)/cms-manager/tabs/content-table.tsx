@@ -17,12 +17,7 @@ import { useRouter } from 'next/navigation';
 import { bulkDeleteSection, getAllSection } from '@/app/actions/section.actions';
 import Loading from '../../loading';
 import { CustomDataTable } from '@/components/common/custom-data-table';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+
 import TextOnlyForm from './forms/text-only-form';
 import { CustomDialog } from '@/components/common/custom-dialog';
 import TextMediaForm from './forms/text-media-form';
@@ -43,6 +38,9 @@ import MapForm from './forms/map-form';
 import ServicesForm from './forms/services-form';
 import TestimonialsForm from './forms/testimonials-form';
 import FacebookYoubuteForm from './forms/facebook-youtube-section-form';
+import ContactForm from './forms/contact-form';
+import PdfViwerForm from './forms/pdf-viewer-form';
+import GalleryForm from './forms/gallery-form';
 
 type ContentTableProps = {
     currentPageId: string | undefined;
@@ -114,9 +112,12 @@ export default function ContentTable({
         'Media',
         'PopUp',
         'Map',
+        'Gallery',
         'Services',
         'Testimonials',
-        'Facebook-Youtube'
+        'Facebook-Youtube',
+        'Contact Form',
+        'PdfViwer'
     ];
 
     const handleSelectType = (type: string) => {
@@ -270,6 +271,14 @@ export default function ContentTable({
                     styleClasses={styleClasses} 
                     onUpdated={fetchData}
                 />;
+            case 'Gallery':
+                return <GalleryForm
+                    pageId={currentPageId || ''} 
+                    content={null}
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses} 
+                    onUpdated={fetchData}
+                />;
             case 'Services':
                 return <ServicesForm
                     pageId={currentPageId || ''}
@@ -294,6 +303,25 @@ export default function ContentTable({
                     styleClasses={styleClasses}
                     onUpdated={fetchData}
                 />
+
+            case 'Contact Form':
+                return <ContactForm 
+                    pageId={currentPageId || ''} 
+                    content={null}
+                    sessionRole={sessionRole}
+                    styleClasses={styleClasses}
+                    onUpdated={fetchData}
+                />
+
+            case 'PdfViwer':
+                return <PdfViwerForm
+                    pageId={currentPageId || ''} 
+                    content={null}
+                    sessionRole={sessionRole}
+                    styleClasses={styleClasses}
+                    onUpdated={fetchData}
+                />
+
             default:
                 return null;
         }

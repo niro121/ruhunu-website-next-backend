@@ -80,3 +80,34 @@ input[type='search']::-ms-clear {
     }
   }
 }
+
+/* Sidebar container */
+.sidebar {
+  overflow-y: auto;
+}
+
+/* Scrollbar width */
+.sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Scrollbar track */
+.sidebar::-webkit-scrollbar-track {
+  background: #f1f1f1; /* light grey */
+}
+
+/* Scrollbar thumb */
+.sidebar::-webkit-scrollbar-thumb {
+  background: #888; /* scroll color */
+  border-radius: 4px;
+}
+
+/* Scrollbar thumb on hover */
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.sidebar {
+  scrollbar-width: thin; /* auto | thin | none */
+  scrollbar-color: #ffffff #f1f1f100; /* thumb | track */
+}

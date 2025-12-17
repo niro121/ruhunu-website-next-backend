@@ -39,6 +39,7 @@ export const getAllSection = async (pageId: string) => {
 
 // ========== Create Section ==========
 export const createNewSection = async (payload: Section) => {
+    console.log({payload})
     try {
         // // required validations
         // if (!payload?.data?.title) {

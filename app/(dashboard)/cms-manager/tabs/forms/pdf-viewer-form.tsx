@@ -2,36 +2,34 @@
 
 import { createNewSection, getNextOrder, updateSection } from "@/app/actions/section.actions";
 import CustomCheckedField from "@/components/common/custom-checked-field";
+import FileUpload from "@/components/common/file-upload";
+import fileUpload from "@/components/common/file-upload";
 import { FormActionsBtns } from "@/components/common/form-actions-btns";
 import CustomFormField from "@/components/common/form-field";
-import ImageInput from "@/components/common/image-input/ImageInput";
 import { useToast } from "@/components/hooks/use-toast";
 import { Card } from "@/components/ui/card";
 import { Section } from "@/types/section";
-import { it } from "date-fns/locale";
 import { FieldArray, Form, Formik, FormikHelpers, getIn } from "formik";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo } from "react";
 import { useState } from "react";
 import * as Yup from "yup";
 
-type BoradOfDirectorsSection = Omit<Section, ""> & {
+type PdfViwerSection = Omit<Section, ""> & {
     data: {
         title: string;
-        subtitle: string;
         paddingtop: number;
         paddingbottom: number;
-        directors: {
-            image: string;
+        content: {
             name: string;
-            title: string;
+            fileUrl: string;
         }[]
     }
 }
 
-type BoradOfDirectorsProps = {
+type PdfViwerProps = {
     pageId: string | null;
-    content: BoradOfDirectorsSection | null;
+    content: PdfViwerSection | null;
     sessionRole: string | undefined;
     styleClasses: {
         parentDiv: string;
@@ -41,19 +39,19 @@ type BoradOfDirectorsProps = {
     onUpdated: (page: any) => void;
 }
 
-const BoradOfDirectorsForm = ({
+const PdfViwerForm = ({
     pageId,
     content,
     styleClasses,
     sessionRole,
     onUpdated,
-}: BoradOfDirectorsProps) => {
+}: PdfViwerProps) => {
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
     const router = useRouter();
     const submitTypeRef = React.useRef<"save" | "save-close">("save");
     const [nextOrder, setNextOrder] = useState<number>(1); 
-        
+                    
     useEffect(() => {    
         const fetchOrder = async () => {
             try {
@@ -66,31 +64,27 @@ const BoradOfDirectorsForm = ({
         if (!content && pageId) fetchOrder();
     }, [content, pageId]);
     
-
     // Initial Values
-    const initialValues: BoradOfDirectorsSection = useMemo(
+    const initialValues: PdfViwerSection = useMemo(
         () => ({
             id: content?.id || "",
-            type: "Borad Of Directors",
+            type: "PdfViwer",
             layout: content?.layout || 1,
             order: content?.order || nextOrder,
             data: {
                 title:content?.data.title || "",
-                subtitle:content?.data.subTitle || "",
                 paddingtop:content?.data.paddingtop || 0,
                 paddingbottom:content?.data.paddingbottom || 0,
-                directors:
-                    content?.data?.directors && Array.isArray(content.data.directors)
-                    ? content.data.directors.map((item) => ({
-                        image: item?.image || "",
+                content:
+                    content?.data?.content && Array.isArray(content.data.content)
+                    ? content.data.content.map((item) => ({
                         name: item?.name || "",
-                        title: item?.title || ""
-                    }))
+                        fileUrl: item?.fileUrl || "",
+                        }))
                     : [
                         {
-                            image : "",
-                            name : "",
-                            title : ""
+                            name: "",
+                            fileUrl: "",
                         },
                     ],
             },
@@ -98,20 +92,19 @@ const BoradOfDirectorsForm = ({
             visibility: content?.visibility || false,
         }),[content,nextOrder]
     );
-
+    
     // Validation Schema
     const validationSchema = Yup.object({
         data: Yup.object({
-            // title: Yup.string().required("Title is required"),
-            // image: Yup.string().required("Title is required"),
+            //title: Yup.string().required("Title is required"),
         }),
         order: Yup.number().required("Order is required"),
     });
-    
+
     // Submit
     const handleSubmit = async (
-        values: BoradOfDirectorsSection,
-        { resetForm }: FormikHelpers<BoradOfDirectorsSection>,
+        values: PdfViwerSection,
+        { resetForm }: FormikHelpers<PdfViwerSection>,
         submitType: "save" | "save-close" = "save"
     ) => {
         setLoading(true);
@@ -123,21 +116,19 @@ const BoradOfDirectorsForm = ({
                 order: values.order,
                 data: {
                     title: values.data.title,
-                    subtitle: values.data.subtitle,
                     paddingtop: values.data.paddingtop,
                     paddingbottem: values.data.paddingbottom,
-                    directors: values.data.directors.map((item,index) => ({
-                        image: item.image,
+                    content: values.data.content.map((item, index) => ({
                         name: item.name,
-                        title: item.title,
+                        fileUrl: item.fileUrl,
                     })),
                 },
                 visibility: values.visibility,
                 pageId: pageId || ""
             };
-        
+
             let resp: any;
-    
+                
             if (values.id) resp = await updateSection(values.id, createPayload);
             else resp = await createNewSection(createPayload as Section);
                     
@@ -186,7 +177,7 @@ const BoradOfDirectorsForm = ({
             setLoading(false);
         }
     };
-    
+
     return (
         <Formik
             initialValues={initialValues}
@@ -222,106 +213,7 @@ const BoradOfDirectorsForm = ({
                                 error={getIn(errors, "data.title")}
                                 touched={getIn(touched, "data.title")}
                             />
-
-                            {/* Sub Title */}
-                            <CustomFormField
-                                type="text"
-                                id="data.subtitle"
-                                placeholder="Sub Title"
-                                value={values.data.subtitle}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                required
-                                styleClasses={styleClasses}
-                                error={getIn(errors, "data.subtitle")}
-                                touched={getIn(touched, "data.subtitle")}
-                            />
-
-                            <FieldArray name="data.directors">
-                                {({ push, remove }) => (
-                                    <div className="flex gap-4 px-3">
-                                        {/* LEFT SIDE: Label + Add Button */}
-                                        <div className="flex flex-col items-start w-42 gap-2 pt-2">
-                                            <span className="font-semibold text-gray-700">Directors</span>
-                                        </div>
-
-                                        {/* RIGHT SIDE: Content Cards */}
-                                        <div className="flex-1 flex flex-col gap-6">
-                                            {values.data.directors.map((item, index) => (
-                                                <Card key={index} className="border shadow-sm p-4 relative">
-                                                    <div className="grid gap-4">
-
-                                                        {/* Image */}
-                                                        <ImageInput
-                                                            id={`data.directors.${index}.image`}
-                                                            placeholder="Image"
-                                                            url={item.image as string}
-                                                            required={false} 
-                                                            setFieldValue={setFieldValue}
-                                                            fieldName={`data.directors.${index}.image`}
-                                                            styleClasses={styleClasses}
-                                                            error={getIn(errors, `data.directors.${index}.image`)}
-                                                            touched={getIn(touched, `data.directors.${index}.image`)}
-                                                        />
-
-                                                        {/* Name */}
-                                                        <CustomFormField
-                                                            type="text"
-                                                            id={`data.directors.${index}.name`}
-                                                            placeholder="Name"
-                                                            value={item.name}
-                                                            onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                            required
-                                                            styleClasses={styleClasses}
-                                                            error={getIn(errors, `data.directors.${index}.name`)}
-                                                            touched={getIn(touched, `data.directors.${index}.name`)}
-                                                        />
-
-                                                        {/* Title */}
-                                                        <CustomFormField
-                                                            type="text"
-                                                            id={`data.directors.${index}.title`}
-                                                            placeholder="Title"
-                                                            value={item.title}
-                                                            onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                            required
-                                                            styleClasses={styleClasses}
-                                                            error={getIn(errors, `data.directors.${index}.title`)}
-                                                            touched={getIn(touched, `data.directors.${index}.title`)}
-                                                        />
-                                                    </div>
-                                                    {/* REMOVE BUTTON */}
-                                                    {values.data.directors.length > 1 && (
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => remove(index)}
-                                                            className="px-2 py-1 bg-red-500 text-white rounded text-sm"
-                                                        >
-                                                            Remove
-                                                        </button>
-                                                    )}
-                                                </Card>
-                                            ))}
-                                            <button
-                                                type="button"
-                                                onClick={() =>
-                                                    push({
-                                                        name: "",
-                                                        latitude: "",
-                                                        longitude: "",
-                                                    })
-                                                }
-                                                className="px-3 py-1 bg-blue-500 text-white rounded text-sm"
-                                            >
-                                                + Add Director
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-                            </FieldArray>
-
+                            
                             {/* Padding Top */}
                             <CustomFormField
                                 type="number"
@@ -349,7 +241,7 @@ const BoradOfDirectorsForm = ({
                                 error={getIn(errors, "data.paddingbottom")}
                                 touched={getIn(touched, "data.paddingbottom")}
                             />
-
+                            
                             {/* Order */}
                             <CustomFormField
                                 type="number"
@@ -363,7 +255,77 @@ const BoradOfDirectorsForm = ({
                                 error={errors.order}
                                 touched={touched.order}
                             />
-                                
+
+                            <FieldArray name="data.content">
+                                {({ push, remove }) => (
+                                    <div className="flex gap-4 px-3">
+                                        {/* LEFT SIDE: Label + Add Button */}
+                                        <div className="flex flex-col items-start w-42 gap-2 pt-2">
+                                            <span className="font-semibold text-gray-700">Content</span>
+                                        </div>
+
+                                        {/* RIGHT SIDE: Content Cards */}
+                                        <div className="flex-1 flex flex-col gap-6">
+                                            {values.data.content.map((item, index) => (
+                                                <Card key={index} className="border shadow-sm p-4 relative">
+                                                    <div className="grid gap-4">
+
+                                                        {/* TITLE */}
+                                                        <CustomFormField
+                                                            type="text"
+                                                            id={`data.content.${index}.name`}
+                                                            placeholder="Title"
+                                                            value={item.name}
+                                                            onChange={handleChange}
+                                                            onBlur={handleBlur}
+                                                            required
+                                                            styleClasses={styleClasses}
+                                                            error={getIn(errors, `data.content.${index}.name`)}
+                                                            touched={getIn(touched, `data.content.${index}.name`)}
+                                                        />
+
+                                                        {/* File Upload */}
+                                                        <FileUpload
+                                                            id={`data.content.${index}.fileUrl`}
+                                                            fieldName={`data.content.${index}.fileUrl`} // Must match Formik path exactly
+                                                            placeholder="Upload Document"
+                                                            allow=".pdf,.doc,.docx"
+                                                            setFieldValue={setFieldValue}
+                                                            styleClasses={styleClasses}
+                                                            value={item.fileUrl}
+                                                        />
+
+                                                    </div>
+                                                    {/* REMOVE BUTTON */}
+                                                    {values.data.content.length > 1 && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => remove(index)}
+                                                            className="px-2 py-1 bg-red-500 text-white rounded text-sm"
+                                                        >
+                                                            Remove
+                                                        </button>
+                                                    )}
+                                                </Card>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    push({
+                                                        name: "",
+                                                        latitude: "",
+                                                        longitude: "",
+                                                    })
+                                                }
+                                                className="px-3 py-1 bg-blue-500 text-white rounded text-sm"
+                                            >
+                                                + Add Content
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </FieldArray>
+                                        
                             {/* Visibility */}
                             <CustomCheckedField
                                 id="visibility"
@@ -377,7 +339,7 @@ const BoradOfDirectorsForm = ({
                                 touched={touched.visibility}
                                 styleClasses={styleClasses}
                             />
-                                
+
                             {/* Actions */}
                             <FormActionsBtns
                                 onCancelHref="/cms-manager"
@@ -389,13 +351,12 @@ const BoradOfDirectorsForm = ({
                                 }}
                                 onSubmitClick={() => submitForm()}
                             />
-
                         </div>
                     </Form>
                 </Card>
             )}
         </Formik>
-    )                     
+    )
 }
 
-export default BoradOfDirectorsForm;
+export default PdfViwerForm;

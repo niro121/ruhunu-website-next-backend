@@ -232,7 +232,7 @@ const HeroForm = ({
                     <Form className="w-full">
                         <div className="grid gap-4 py-4">
                             {/* Type */}
-                            <CustomFormField
+                            {/* <CustomFormField
                                 type="text"
                                 id="type"
                                 placeholder="Type"
@@ -244,7 +244,7 @@ const HeroForm = ({
                                 styleClasses={styleClasses}
                                 error={errors.type}
                                 touched={touched.type}
-                            />
+                            /> */}
 
                             {/* Layout */}
                             <CustomSelectField
