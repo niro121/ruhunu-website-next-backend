@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { createNewSection, getNextOrder, updateSection } from "@/app/actions/section.actions";
+import {createNewSection, getNextOrder, updateSection,} from "@/app/actions/section.actions";
 import CustomCheckedField from "@/components/common/custom-checked-field";
 import CustomRichTextEditor from "@/components/common/custom-rich-text-editor";
 import CustomSelectField from "@/components/common/custom-select-field";
@@ -10,11 +10,19 @@ import ImageInput from "@/components/common/image-input/ImageInput";
 import { useToast } from "@/components/hooks/use-toast";
 import { Card } from "@/components/ui/card";
 import { Section } from "@/types/section";
-import { Form, Formik, FormikHelpers, getIn } from "formik";
+import { Form, Formik, FormikHelpers, FieldArray, getIn } from "formik";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useMemo } from "react";
-import { useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import * as Yup from "yup";
+
+/* ================= TYPES ================= */
+
+type TextMediaItem = {
+    title: string;
+    description: string;
+    image: string;
+    alignment: number;
+};
 
 type TextMediaSection = Omit<Section, ""> & {
     data: {
@@ -28,10 +36,13 @@ type TextMediaSection = Omit<Section, ""> & {
         buttonurl: string;
         paddingtop: number;
         paddingbottom: number;
-    }
-}
 
-type TextMediaProps = {
+        // Layout 4
+        items?: TextMediaItem[];
+    };
+};
+
+type Props = {
     pageId: string | null;
     content: TextMediaSection | null;
     sessionRole: string | undefined;
@@ -43,155 +54,119 @@ type TextMediaProps = {
     onUpdated: (page: any) => void;
 };
 
-const TextMediaForm = ({
+export default function TextMediaForm({
     pageId,
     content,
     styleClasses,
     sessionRole,
     onUpdated,
-}: TextMediaProps) => {
+}: Props) {
     const [loading, setLoading] = useState(false);
+    const [nextOrder, setNextOrder] = useState<number>(1);
+    const submitTypeRef = useRef<"save" | "save-close">("save");
+
     const { toast } = useToast();
     const router = useRouter();
-    const submitTypeRef = React.useRef<"save" | "save-close">("save");
-    const [nextOrder, setNextOrder] = useState<number>(1); 
-                
-    useEffect(() => {    
-        const fetchOrder = async () => {
-            try {
-                const order = await getNextOrder(pageId || '');
-                setNextOrder(order);
-            } catch (error) {
-                console.error("Error fetching next order:", error);
-            }
-        };
-        if (!content && pageId) fetchOrder();
+
+    useEffect(() => {
+        if (!content && pageId) {
+            getNextOrder(pageId).then(setNextOrder).catch(console.error);
+        }
     }, [content, pageId]);
 
-    // Initial Values
-    const initialValues: TextMediaSection = useMemo(
-        () => ({
-            id: content?.id || "",
-            type: "Text-Media",
-            layout: content?.layout || 1,
-            order: content?.order || nextOrder,
-            data: {
-                title:content?.data.title || "",
-                subTitle:content?.data.subTitle || "",
-                alignment:content?.data.alignment || 1,
-                webImage:content?.data.webImage || "",
-                mobileImage:content?.data.mobileImage || "",
-                content:content?.data.content || "",
-                buttontext:content?.data.buttontext || "",
-                buttonurl:content?.data.buttonurl || "",
-                paddingtop:content?.data.paddingtop || 0,
-                paddingbottom:content?.data.paddingbottom || 0,
-            },
-            pageId: pageId || "",
-            visibility: content?.visibility || false,
-        }),[content,nextOrder]
-    );
+    const initialValues: TextMediaSection = useMemo(() => ({
+        id: content?.id || "",
+        type: "Text-Media",
+        layout: content?.layout || 1,
+        order: content?.order || nextOrder,
+        pageId: pageId || "",
+        visibility: content?.visibility || false,
+        data: {
+            title: content?.data.title || "",
+            subTitle: content?.data.subTitle || "",
+            alignment: content?.data.alignment || 1,
+            webImage: content?.data.webImage || "",
+            mobileImage: content?.data.mobileImage || "",
+            content: content?.data.content || "",
+            buttontext: content?.data.buttontext || "",
+            buttonurl: content?.data.buttonurl || "",
+            paddingtop: content?.data.paddingtop || 0,
+            paddingbottom: content?.data.paddingbottom || 0,
+            items:
+                content?.data.items ||
+                (content?.layout === 4
+                    ? [
+                        {
+                        title: "",
+                        description: "",
+                        image: "",
+                        alignment: 1,
+                        },
+                    ]
+                : []),
+        },
+    }),
+    [content, nextOrder, pageId]
+  );
 
-    // Validation Schema
     const validationSchema = Yup.object({
         data: Yup.object({
             title: Yup.string().required("Title is required"),
-            // webImage: Yup.string().required("Title is required"),
-            // mobileImage: Yup.string().required("Title is required"),
         }),
         order: Yup.number().required("Order is required"),
     });
 
-    // Submit
     const handleSubmit = async (
         values: TextMediaSection,
-        { resetForm }: FormikHelpers<TextMediaSection>,
-        submitType: "save" | "save-close" = "save"
+        { resetForm }: FormikHelpers<TextMediaSection>
     ) => {
         setLoading(true);
 
         try {
-            const createPayload: Section = {
+            const payload: Section = {
                 type: values.type,
                 layout: values.layout,
                 order: values.order,
-                data: {
-                    title: values.data.title,
-                    subTitle: values.data.subTitle,
-                    alignment: values.data.alignment,
-                    webImage: values.data.webImage,
-                    mobileImage: values.data.mobileImage,
-                    content: values.data.content,
-                    buttontext: values.data.buttontext,
-                    buttonurl: values.data.buttonurl,
-                    paddingtop: values.data.paddingtop,
-                    paddingbottem: values.data.paddingbottom,
-                },
+                pageId: values.pageId,
                 visibility: values.visibility,
-                pageId: pageId || ""
+                data: {
+                    ...values.data,
+                    items: values.layout === 4 ? values.data.items : undefined,
+                },
             };
 
-            console.log({createPayload});
+            const resp = values.id ? await updateSection(values.id, payload) : await createNewSection(payload);
 
-            let resp: any;
-            
-            if (values.id) resp = await updateSection(values.id, createPayload);
-            else resp = await createNewSection(createPayload as Section);
+            if (resp?.isError) throw new Error();
 
-            if (resp?.isError) {
-                toast({
-                variant: "destructive",
-                title: "Save failed",
-                description: values.id
-                    ? "Update failed. Please check the form and try again."
-                    : "Save failed. Please check the form and try again.",
-                });
-                setLoading(false);
-                return;
-            }
-            
-            const saved: Section = resp?.data ?? resp;
-            
             toast({
                 variant: "success",
-                title: values.id ? "Hero updated" : "Hero created",
-                description: values.id
-                ? "Changes updated successfully."
-                : "Changes saved successfully.",
+                title: values.id ? "Section updated" : "Section created",
             });
-            
-            if (submitType === "save-close") {
+
+            if (submitTypeRef.current === "save-close") {
                 router.push("/cms-manager");
                 return;
             }
 
-            if (!values.id) {
-                resetForm({ values: { ...values, id: saved.id } });
-            } else {
-                onUpdated(saved);
-                resetForm({ values: { ...values, id: saved.id } });
-            }
-
-        } catch (error) {
-            console.error(error);
+            resetForm({ values: { ...values, id: resp.data?.id || values.id } });
+            onUpdated(resp.data || resp);
+        } catch {
             toast({
                 variant: "destructive",
                 title: "Save failed",
-                description: "Unexpected error occurred.",
             });
         } finally {
             setLoading(false);
         }
     };
-    
+
     return (
         <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
             enableReinitialize
-            onSubmit={(values, helpers) =>
-                handleSubmit(values, helpers, submitTypeRef.current)
-            }
+            onSubmit={handleSubmit}
         >
             {({
                 values,
@@ -206,7 +181,7 @@ const TextMediaForm = ({
                     <Form className="w-full">
                         <div className="grid gap-4 py-4">
 
-                            {/* Title */}
+                            {/* TITLE (COMMON) */}
                             <CustomFormField
                                 type="text"
                                 id="data.title"
@@ -214,202 +189,228 @@ const TextMediaForm = ({
                                 value={values.data.title}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                required
                                 styleClasses={styleClasses}
                                 error={getIn(errors, "data.title")}
                                 touched={getIn(touched, "data.title")}
+                                required={false}
                             />
 
-                            {/* Sub Title */}
-                            <CustomFormField
-                                type="text"
-                                id="data.subTitle"
-                                placeholder="Sub Title"
-                                value={values.data.subTitle}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                required
-                                styleClasses={styleClasses}
-                                error={getIn(errors, "data.subTitle")}
-                                touched={getIn(touched, "data.subTitle")}
-                            />
-
-                            {/* Layout */}
+                            {/* LAYOUT */}
                             <CustomSelectField
                                 id="layout"
                                 placeholder="Layout"
-                                required
                                 value={values.layout}
                                 onChange={(v) => setFieldValue("layout", v)}
-                                onBlur={handleBlur}
                                 options={[
                                     { label: "Layout 1", value: 1 },
                                     { label: "Layout 2", value: 2 },
                                     { label: "Layout 3", value: 3 },
+                                    { label: "Layout 4", value: 4 },
                                 ]}
                                 styleClasses={styleClasses}
-                                error={errors.layout}
-                                touched={touched.layout}
-                            />
+                                required={false}
+                            />    
+                            {values.layout !== 4 && (
+                                <>
+                                    <CustomFormField
+                                        type="text"
+                                        id="data.subTitle"
+                                        placeholder="Sub Title"
+                                        value={values.data.subTitle}
+                                        onChange={handleChange}
+                                        styleClasses={styleClasses} 
+                                        onBlur={handleBlur} 
+                                        required={false}
+                                    />
 
-                            {/* Media Alignment */}
-                            <CustomSelectField
-                                id="alignment"
-                                placeholder="Media Alignment"
-                                required
-                                value={values.data.alignment}
-                                onChange={(v) => setFieldValue("alignment", v)}
-                                onBlur={handleBlur}
-                                options={[
-                                    { label: "Left", value: 1 },
-                                    { label: "Right", value: 2 },
-                                ]}
-                                styleClasses={styleClasses}
-                                error={getIn(errors, "data.alignment")}
-                                touched={getIn(touched, "data.alignment")}
-                            />
+                                    <CustomSelectField
+                                        id="alignment"
+                                        placeholder="Media Alignment"
+                                        value={values.data.alignment}
+                                        onChange={(v) => setFieldValue("data.alignment", v)}
+                                        options={[
+                                            { label: "Left", value: 1 },
+                                            { label: "Right", value: 2 },
+                                        ]}
+                                        styleClasses={styleClasses}
+                                        required={false}
+                                    />
 
-                            {/* Web Image */}
-                            <ImageInput
-                                id="data.webImage"
-                                placeholder="Web Image"
-                                url={values.data.webImage as string}
-                                required={false} 
-                                setFieldValue={setFieldValue}
-                                fieldName={"data.webImage"}
-                                styleClasses={styleClasses}
-                                error={getIn(errors, "data.webImage")}
-                                touched={getIn(touched, "data.webImage")}
-                            />
+                                    <ImageInput
+                                        id="data.webImage"
+                                        placeholder="Web Image"
+                                        url={values.data.webImage}
+                                        setFieldValue={setFieldValue}
+                                        fieldName="data.webImage"
+                                        styleClasses={styleClasses}
+                                        required={false}
+                                    />
 
-                            {/* Mobile Image */}
-                            <ImageInput
-                                id="data.mobileImage"
-                                placeholder="Mobile Image"
-                                url={values.data.mobileImage as string}
-                                required={false} 
-                                setFieldValue={setFieldValue}
-                                fieldName={"data.mobileImage"}
-                                styleClasses={styleClasses}
-                                error={getIn(errors, "data.mobileImage")}
-                                touched={getIn(touched, "data.mobileImage")}
-                            />
+                                    <ImageInput
+                                        id="data.mobileImage"
+                                        placeholder="Mobile Image"
+                                        url={values.data.mobileImage}
+                                        setFieldValue={setFieldValue}
+                                        fieldName="data.mobileImage"
+                                        styleClasses={styleClasses}
+                                        required={false}
+                                    />
 
-                            {/* Content */}
-                            <CustomRichTextEditor
-                                id="content"
-                                placeholder="Content"
-                                required
-                                value={values.data.content ?? ""}
-                                onChange={(e) => setFieldValue("data.content", e.target.value)}
-                                onBlur={handleBlur}
-                                styleClasses={styleClasses}
-                                error={getIn(errors,"data.content")}
-                                touched={getIn(touched,"data.content")}
-                            />
+                                    <CustomRichTextEditor
+                                        id="data.content"
+                                        placeholder="Content"
+                                        value={values.data.content}
+                                        onChange={(e) => setFieldValue("data.content", e.target.value)}
+                                        styleClasses={styleClasses} 
+                                        onBlur={handleBlur}
+                                    />
 
-                            {/* Button Text */}
-                            <CustomFormField
-                                type="text"
-                                id="data.buttontext"
-                                placeholder="Button Text"
-                                value={values.data.buttontext}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                required
-                                styleClasses={styleClasses}
-                                error={getIn(errors, "data.buttontext")}
-                                touched={getIn(touched, "data.buttontext")}
-                            />
+                                    <CustomFormField
+                                        type="text"
+                                        id="data.buttontext"
+                                        placeholder="Button Text"
+                                        value={values.data.buttontext}
+                                        onChange={handleChange}
+                                        styleClasses={styleClasses}
+                                        onBlur={handleBlur}
+                                        required={false}
+                                    />
 
-                            {/* Button Url */}
-                            <CustomFormField
-                                type="text"
-                                id="data.buttonurl"
-                                placeholder="Button Url"
-                                value={values.data.buttonurl}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                required
-                                styleClasses={styleClasses}
-                                error={getIn(errors, "data.buttonurl")}
-                                touched={getIn(touched, "data.buttonurl")}
-                            />
+                                    <CustomFormField
+                                        type="text"
+                                        id="data.buttonurl"
+                                        placeholder="Button Url"
+                                        value={values.data.buttonurl}
+                                        onChange={handleChange}
+                                        styleClasses={styleClasses}
+                                        onBlur={handleBlur}
+                                        required={false}
+                                    />
+                                </>
+                            )}
 
-                            {/* Padding Top */}
-                            <CustomFormField
-                                type="number"
-                                id="data.paddingtop"
-                                placeholder="Padding Top"
-                                value={values.data.paddingtop}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                required
-                                styleClasses={styleClasses}
-                                error={getIn(errors, "data.paddingtop")}
-                                touched={getIn(touched, "data.paddingtop")}
-                            />
+                            {/* ================= LAYOUT 4 ================= */}
+                            {values.layout === 4 && (
+                                <FieldArray name="data.items">
+                                    {({ push, remove }) => (
+                                        <div className="space-y-6 py-6">
+                                            {values.data.items?.map((_, index) => (
+                                                <Card key={index} className="space-y-4 mx-4 ">
+                                                    <CustomFormField
+                                                        type="text"
+                                                        id={`data.items.${index}.title`}
+                                                        placeholder="Item Title"
+                                                        value={values.data.items![index].title}
+                                                        onChange={handleChange}
+                                                        styleClasses={styleClasses} 
+                                                        onBlur={handleBlur} 
+                                                        required={false}
+                                                    />
 
-                            {/* Padding Bottom */}
-                            <CustomFormField
-                                type="number"
-                                id="data.paddingbottom"
-                                placeholder="Padding Bottom"
-                                value={values.data.paddingbottom}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                required
-                                styleClasses={styleClasses}
-                                error={getIn(errors, "data.paddingbottom")}
-                                touched={getIn(touched, "data.paddingbottom")}
-                            />
+                                                    <CustomRichTextEditor
+                                                        id={`data.items.${index}.description`}
+                                                        placeholder="Description"
+                                                        value={values.data.items![index].description}
+                                                        onChange={(e) => setFieldValue(
+                                                            `data.items.${index}.description`,
+                                                            e.target.value
+                                                        )}
+                                                        styleClasses={styleClasses} 
+                                                        onBlur={handleBlur}
+                                                    />
 
-                            {/* Order */}
+                                                    <ImageInput
+                                                        id={`data.items.${index}.image`}
+                                                        placeholder="Item Image"
+                                                        url={values.data.items![index].image}
+                                                        setFieldValue={setFieldValue}
+                                                        fieldName={`data.items.${index}.image`}
+                                                        styleClasses={styleClasses} 
+                                                        required={false}
+                                                    />
+
+                                                    <CustomSelectField
+                                                        id={`data.items.${index}.alignment`}
+                                                        placeholder="Image Alignment"
+                                                        value={values.data.items![index].alignment}
+                                                        onChange={(v) => setFieldValue(`data.items.${index}.alignment`,v)}
+                                                        options={[
+                                                            { label: "Left", value: 1 },
+                                                            { label: "Right", value: 2 },
+                                                        ]}
+                                                        styleClasses={styleClasses}
+                                                        required={false}
+                                                    />
+                                                    <div className="flex justify-center">
+                                                        <button
+                                                            type="button"
+                                                            className="text-white bg-red-500 text-sm py-2 w-full mx-4 rounded"
+                                                            onClick={() => remove(index)}
+                                                        >
+                                                            Remove Item
+                                                        </button>
+                                                    </div>
+                                                </Card>
+                                            ))}
+                                            <div className="flex justify-center">
+                                                <button
+                                                    type="button"
+                                                    className="w-full py-2 bg-green-600 text-white rounded mx-4 justify-self-center"
+                                                    onClick={() =>
+                                                        push({
+                                                            title: "",
+                                                            description: "",
+                                                            image: "",
+                                                            alignment: 1,
+                                                        })
+                                                    }
+                                                >
+                                                    + Add Item
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </FieldArray>
+                            )}
+
+                            {/* ORDER */}
                             <CustomFormField
                                 type="number"
                                 id="order"
                                 placeholder="Order"
                                 value={values.order}
                                 onChange={handleChange}
+                                styleClasses={styleClasses} 
                                 onBlur={handleBlur}
-                                required
-                                styleClasses={styleClasses}
-                                error={errors.order}
-                                touched={touched.order}
+                                required={false}
                             />
-                            
-                            {/* Visibility */}
+
+                            {/* VISIBILITY */}
                             <CustomCheckedField
                                 id="visibility"
                                 placeholder="Is Publish?"
-                                required
                                 mode="boolean"
                                 value={values.visibility}
-                                onChange={(val) => setFieldValue("visibility", val)}
-                                onBlur={handleBlur}
-                                error={errors.visibility as string}
-                                touched={touched.visibility}
-                                styleClasses={styleClasses}
+                                onChange={(v) => setFieldValue("visibility", v)}
+                                styleClasses={styleClasses} 
+                                required={false}
                             />
-                            
-                            {/* Actions */}
+
+                            {/* ACTIONS */}
                             <FormActionsBtns
                                 onCancelHref="/cms-manager"
                                 showSaveAndClose
                                 loading={loading}
                                 disabled={!sessionRole}
-                                onBeforeSubmit={(t) => {
-                                    submitTypeRef.current = t;
-                                }}
-                                onSubmitClick={() => submitForm()}
+                                onBeforeSubmit={(t) =>
+                                    (submitTypeRef.current = t)
+                                }
+                                onSubmitClick={submitForm}
                             />
-
                         </div>
                     </Form>
                 </Card>
             )}
         </Formik>
-    );         
+    );
 }
-
-export default TextMediaForm;

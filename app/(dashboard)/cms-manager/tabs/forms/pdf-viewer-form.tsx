@@ -2,35 +2,34 @@
 
 import { createNewSection, getNextOrder, updateSection } from "@/app/actions/section.actions";
 import CustomCheckedField from "@/components/common/custom-checked-field";
-import CustomRichTextEditor from "@/components/common/custom-rich-text-editor";
+import FileUpload from "@/components/common/file-upload";
+import fileUpload from "@/components/common/file-upload";
 import { FormActionsBtns } from "@/components/common/form-actions-btns";
 import CustomFormField from "@/components/common/form-field";
-import ImageInput from "@/components/common/image-input/ImageInput";
 import { useToast } from "@/components/hooks/use-toast";
 import { Card } from "@/components/ui/card";
 import { Section } from "@/types/section";
-import { Form, Formik, FormikHelpers, getIn } from "formik";
+import { FieldArray, Form, Formik, FormikHelpers, getIn } from "formik";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo } from "react";
 import { useState } from "react";
 import * as Yup from "yup";
 
-type PopUpSection = Omit<Section, ""> & {
+type PdfViwerSection = Omit<Section, ""> & {
     data: {
         title: string;
         paddingtop: number;
         paddingbottom: number;
         content: {
-            image: string;
-            title: string;
-            description: string;
-        }
+            name: string;
+            fileUrl: string;
+        }[]
     }
 }
 
-type PopUpProps = {
+type PdfViwerProps = {
     pageId: string | null;
-    content: PopUpSection | null;
+    content: PdfViwerSection | null;
     sessionRole: string | undefined;
     styleClasses: {
         parentDiv: string;
@@ -40,19 +39,19 @@ type PopUpProps = {
     onUpdated: (page: any) => void;
 }
 
-const PopUpForm = ({
+const PdfViwerForm = ({
     pageId,
     content,
     styleClasses,
     sessionRole,
     onUpdated,
-}: PopUpProps) => {
+}: PdfViwerProps) => {
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
     const router = useRouter();
     const submitTypeRef = React.useRef<"save" | "save-close">("save");
     const [nextOrder, setNextOrder] = useState<number>(1); 
-                
+                    
     useEffect(() => {    
         const fetchOrder = async () => {
             try {
@@ -64,42 +63,48 @@ const PopUpForm = ({
         };
         if (!content && pageId) fetchOrder();
     }, [content, pageId]);
-
+    
     // Initial Values
-    const initialValues: PopUpSection = useMemo(
+    const initialValues: PdfViwerSection = useMemo(
         () => ({
             id: content?.id || "",
-            type: "PopUp",
+            type: "PdfViwer",
             layout: content?.layout || 1,
             order: content?.order || nextOrder,
             data: {
                 title:content?.data.title || "",
                 paddingtop:content?.data.paddingtop || 0,
                 paddingbottom:content?.data.paddingbottom || 0,
-                content:content?.data?.content || {
-                    image: content?.data.content.image || "",
-                    title: content?.data.content.title || "",
-                    description:content?.data.content.description || "",
-                }
-
+                content:
+                    content?.data?.content && Array.isArray(content.data.content)
+                    ? content.data.content.map((item) => ({
+                        name: item?.name || "",
+                        fileUrl: item?.fileUrl || "",
+                        }))
+                    : [
+                        {
+                            name: "",
+                            fileUrl: "",
+                        },
+                    ],
             },
             pageId: pageId || "",
             visibility: content?.visibility || false,
         }),[content,nextOrder]
     );
-
+    
     // Validation Schema
     const validationSchema = Yup.object({
         data: Yup.object({
-            title: Yup.string().required("Title is required"),
+            //title: Yup.string().required("Title is required"),
         }),
         order: Yup.number().required("Order is required"),
     });
-    
+
     // Submit
     const handleSubmit = async (
-        values: PopUpSection,
-        { resetForm }: FormikHelpers<PopUpSection>,
+        values: PdfViwerSection,
+        { resetForm }: FormikHelpers<PdfViwerSection>,
         submitType: "save" | "save-close" = "save"
     ) => {
         setLoading(true);
@@ -113,16 +118,17 @@ const PopUpForm = ({
                     title: values.data.title,
                     paddingtop: values.data.paddingtop,
                     paddingbottem: values.data.paddingbottom,
-                    content: values.data.content,
+                    content: values.data.content.map((item, index) => ({
+                        name: item.name,
+                        fileUrl: item.fileUrl,
+                    })),
                 },
                 visibility: values.visibility,
                 pageId: pageId || ""
             };
-        
-            console.log({createPayload});
-        
+
             let resp: any;
-    
+                
             if (values.id) resp = await updateSection(values.id, createPayload);
             else resp = await createNewSection(createPayload as Section);
                     
@@ -142,7 +148,7 @@ const PopUpForm = ({
                 
             toast({
                 variant: "success",
-                title: values.id ? "Hero updated" : "Hero created",
+                title: values.id ? "Section updated" : "Section created",
                 description: values.id
                 ? "Changes updated successfully."
                 : "Changes saved successfully.",
@@ -171,7 +177,7 @@ const PopUpForm = ({
             setLoading(false);
         }
     };
-    
+
     return (
         <Formik
             initialValues={initialValues}
@@ -207,7 +213,7 @@ const PopUpForm = ({
                                 error={getIn(errors, "data.title")}
                                 touched={getIn(touched, "data.title")}
                             />
-
+                            
                             {/* Padding Top */}
                             <CustomFormField
                                 type="number"
@@ -221,7 +227,7 @@ const PopUpForm = ({
                                 error={getIn(errors, "data.paddingtop")}
                                 touched={getIn(touched, "data.paddingtop")}
                             />
-
+                            
                             {/* Padding Bottom */}
                             <CustomFormField
                                 type="number"
@@ -235,7 +241,7 @@ const PopUpForm = ({
                                 error={getIn(errors, "data.paddingbottom")}
                                 touched={getIn(touched, "data.paddingbottom")}
                             />
-
+                            
                             {/* Order */}
                             <CustomFormField
                                 type="number"
@@ -250,61 +256,76 @@ const PopUpForm = ({
                                 touched={touched.order}
                             />
 
-                            <div className="flex gap-4 px-3">
-                                {/* LEFT SIDE: Label + Add Button */}
-                                <div className="flex flex-col items-start w-42 gap-2 pt-2">
-                                    <span className="font-semibold text-gray-700">Content</span>
-                                </div>
-
-                                {/* RIGHT SIDE: Content Cards */}
-                                <div className="flex-1 flex flex-col gap-6">
-                                    <Card className="border shadow-sm p-4 relative">
-                                        <div className="grid gap-4">
-                                            {/* IMAGE */}
-                                            <ImageInput
-                                                id={"data.content.image"}
-                                                placeholder="Image"
-                                                url={values.data.content.image}
-                                                required={false}
-                                                setFieldValue={setFieldValue}
-                                                fieldName={"data.content.image"}
-                                                styleClasses={styleClasses}
-                                                error={getIn(errors, "data.content.image")}
-                                                touched={getIn(touched, "data.content.image")}
-                                            />
-                                                    
-                                            {/* Title */}
-                                            <CustomFormField
-                                                type="text"
-                                                id="data.content.title"
-                                                placeholder="Title"
-                                                value={values.data.content.title}
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                required
-                                                styleClasses={styleClasses}
-                                                error={getIn(errors, "data.content.title")}
-                                                touched={getIn(touched, "data.content.title")}
-                                            />
-
-                                            <CustomRichTextEditor
-                                                id="text"
-                                                placeholder="Text Description"
-                                                required
-                                                value={values.data.content.description}
-                                                onChange={(e) => setFieldValue("data.content.description", e.target.value)}
-                                                onBlur={handleBlur}
-                                                styleClasses={styleClasses}
-                                                error={getIn(errors,"data.content.description")}
-                                                touched={getIn(touched,"data.content.description")}
-                                            />
-
+                            <FieldArray name="data.content">
+                                {({ push, remove }) => (
+                                    <div className="flex gap-4 px-3">
+                                        {/* LEFT SIDE: Label + Add Button */}
+                                        <div className="flex flex-col items-start w-42 gap-2 pt-2">
+                                            <span className="font-semibold text-gray-700">Content</span>
                                         </div>
-                                    </Card>
-                                </div>
-                            </div>
-                                            
 
+                                        {/* RIGHT SIDE: Content Cards */}
+                                        <div className="flex-1 flex flex-col gap-6">
+                                            {values.data.content.map((item, index) => (
+                                                <Card key={index} className="border shadow-sm p-4 relative">
+                                                    <div className="grid gap-4">
+
+                                                        {/* TITLE */}
+                                                        <CustomFormField
+                                                            type="text"
+                                                            id={`data.content.${index}.name`}
+                                                            placeholder="Title"
+                                                            value={item.name}
+                                                            onChange={handleChange}
+                                                            onBlur={handleBlur}
+                                                            required
+                                                            styleClasses={styleClasses}
+                                                            error={getIn(errors, `data.content.${index}.name`)}
+                                                            touched={getIn(touched, `data.content.${index}.name`)}
+                                                        />
+
+                                                        {/* File Upload */}
+                                                        <FileUpload
+                                                            id={`data.content.${index}.fileUrl`}
+                                                            fieldName={`data.content.${index}.fileUrl`} // Must match Formik path exactly
+                                                            placeholder="Upload Document"
+                                                            allow=".pdf,.doc,.docx"
+                                                            setFieldValue={setFieldValue}
+                                                            styleClasses={styleClasses}
+                                                            value={item.fileUrl}
+                                                        />
+
+                                                    </div>
+                                                    {/* REMOVE BUTTON */}
+                                                    {values.data.content.length > 1 && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => remove(index)}
+                                                            className="px-2 py-1 bg-red-500 text-white rounded text-sm"
+                                                        >
+                                                            Remove
+                                                        </button>
+                                                    )}
+                                                </Card>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    push({
+                                                        name: "",
+                                                        latitude: "",
+                                                        longitude: "",
+                                                    })
+                                                }
+                                                className="px-3 py-1 bg-blue-500 text-white rounded text-sm"
+                                            >
+                                                + Add Content
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </FieldArray>
+                                        
                             {/* Visibility */}
                             <CustomCheckedField
                                 id="visibility"
@@ -318,7 +339,7 @@ const PopUpForm = ({
                                 touched={touched.visibility}
                                 styleClasses={styleClasses}
                             />
-                                
+
                             {/* Actions */}
                             <FormActionsBtns
                                 onCancelHref="/cms-manager"
@@ -330,13 +351,12 @@ const PopUpForm = ({
                                 }}
                                 onSubmitClick={() => submitForm()}
                             />
-
                         </div>
                     </Form>
                 </Card>
             )}
         </Formik>
-    )                     
+    )
 }
 
-export default PopUpForm;
+export default PdfViwerForm;

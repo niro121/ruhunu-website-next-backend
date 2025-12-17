@@ -1,16 +1,16 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import styles from './imageinput.module.css';
+import styles from './videoinput.module.css';
 import { MdOutlineClose } from 'react-icons/md';
 import toast from 'react-hot-toast';
 import { Label } from "@/components/ui/label";
 import { ErrorMessage, FormikErrors, FormikTouched } from "formik";
 
-interface ImageInputProps {
+interface VideoInputProps {
     id: string;
     url: string;
-    placeholder: string;
+    placeholder: string; // e.g., "Trailer Video"
     disabled?: boolean;
     required: boolean;
     setFieldValue: (field: string, value: any) => void;
@@ -22,25 +22,20 @@ interface ImageInputProps {
     };
     error?: string | string[] | FormikErrors<any> | FormikErrors<any>[];
     touched?: boolean | FormikTouched<any> | FormikTouched<any>[];
-
-    imgPreviewStyleClasses?: string;
-    previewImgOnly?: boolean; // show only img preview no close button
-    previewSize?: number;
 }
 
-// Formik error value into a plain string
-const toErrorString = (e: ImageInputProps['error']): string | undefined => {
+// Reuse your helpers
+const toErrorString = (e: VideoInputProps['error']): string | undefined => {
     if (!e) return undefined;
     if (typeof e === 'string') return e;
     if (Array.isArray(e)) {
         const flat = e.map(x => (typeof x === 'string' ? x : '')).filter(Boolean).join(', ');
         return flat || undefined;
     }
-    return undefined; // ignore nested objects
+    return undefined;
 };
 
-// Formik touched value into a simple boolean
-const toTouchedBool = (t: ImageInputProps['touched']): boolean => {
+const toTouchedBool = (t: VideoInputProps['touched']): boolean => {
     if (!t) return false;
     if (typeof t === 'boolean') return t;
     if (Array.isArray(t)) return t.some(Boolean);
@@ -48,7 +43,7 @@ const toTouchedBool = (t: ImageInputProps['touched']): boolean => {
     return false;
 };
 
-const ImageInput: React.FC<ImageInputProps> = ({
+const VideoInput: React.FC<VideoInputProps> = ({
     id,
     url,
     placeholder,
@@ -59,62 +54,58 @@ const ImageInput: React.FC<ImageInputProps> = ({
     styleClasses,
     error,
     touched,
-    imgPreviewStyleClasses,
-    previewImgOnly = false,
-    previewSize = 50,
 }) => {
+    const [isUploading, setIsUploading] = useState(false);
+    const [videoUrl, setVideoUrl] = useState<string | null>(url ? url : null);
+    const [fileName, setFileName] = useState(url ? url : '');
 
-    const [isUploading, setIsUploading] = useState(false); // are we in the middle of an upload?
-    const [imagePreview, setImagePreview] = useState<string | null>(url ? url : null); // preview URL
-    const [imgName, setImgName] = useState(url ? url : ''); // displayed file name
-
-    // keep local state in sync with external Formik url
     useEffect(() => {
         if (typeof url === 'string' && url) {
-            setImgName(url.split('/').pop() || '');
-            setImagePreview(url);
+            setFileName(url.split('/').pop() || '');
+            setVideoUrl(url);
         } else {
-            setImgName('');
-            setImagePreview(null);
+            setFileName('');
+            setVideoUrl(null);
         }
     }, [url]);
 
-    // normalize error + touched
     const normalizedError = toErrorString(error);
     const normalizedTouched = toTouchedBool(touched);
     const hasError = Boolean(normalizedError && normalizedTouched);
 
-    // allowed file types for upload
+    // VIDEO-ONLY types
     const validTypes = [
-        'image/jpeg', 'image/png', 'image/jpg', 'image/webp',
-        'image/gif', 'image/bmp', 'image/svg+xml', 'image/avif'
+        'video/mp4',
+        'video/webm',
+        'video/ogg',
+        'video/quicktime',    // .mov
+        'video/x-matroska',   // .mkv
+        'video/x-msvideo',    // .avi
+        'video/x-ms-wmv',     // .wmv
+        'application/octet-stream', // some browsers report odd types on certain containers
     ];
 
-    // main handler when user picks a file
-    const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.currentTarget.files?.[0];
         if (!file) return;
 
-        // simple MIME type validation
         if (!validTypes.includes(file.type)) {
-            toast.error('Invalid file type. Only image files are allowed.');
+            toast.error('Invalid file type. Only video files are allowed.');
             return;
         }
 
         setIsUploading(true);
 
         try {
-            // ask backend for presigned S3 URL
             const presignRes = await fetch('/api/s3/presign', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ fileName: file.name, contentType: file.type, folder: "images" }),
+                body: JSON.stringify({ fileName: file.name, contentType: file.type }),
             });
             if (!presignRes.ok) throw new Error('Failed to get presigned URL');
 
             const { uploadUrl, publicUrl } = await presignRes.json();
 
-            // put the file directly to S3
             const putRes = await fetch(uploadUrl, {
                 method: 'PUT',
                 headers: { 'Content-Type': file.type },
@@ -122,43 +113,39 @@ const ImageInput: React.FC<ImageInputProps> = ({
             });
             if (!putRes.ok) throw new Error('S3 upload failed');
 
-            // update local + Formik state
-            setImagePreview(publicUrl);
-            setImgName(file.name);
+            setVideoUrl(publicUrl);
+            setFileName(file.name);
             setFieldValue(fieldName, publicUrl);
 
-            toast.success('Image uploaded');
+            toast.success('Video uploaded');
         } catch (err) {
             console.error(err);
-            toast.error('Error uploading image');
+            toast.error('Error uploading video');
         } finally {
             setIsUploading(false);
         }
     };
 
-    // clear image from state + Formik
-    const clearImage = (e: React.MouseEvent) => {
+    const clearFile = (e: React.MouseEvent) => {
         e.preventDefault();
-        setImagePreview(null);
-        setImgName('');
+        setVideoUrl(null);
+        setFileName('');
         setFieldValue(fieldName, '');
 
-        // also reset the hidden <input type="file">
         const fileInput = document.getElementById(fieldName) as HTMLInputElement | null;
         if (fileInput) fileInput.value = '';
     };
 
     return (
         <div className={styleClasses?.parentDiv}>
-            {/* label with required marker */}
             <Label htmlFor={id} className={styleClasses?.labelClassName || ""}>
                 {placeholder}
                 {required && <span className="text-red-600"> *</span>}
             </Label>
 
             <div className={`${styleClasses?.inputClassName} w-99`}>
-                {/* upload button area */}
-                {(!imagePreview || imagePreview === 'null') && (
+                {/* Upload button */}
+                {(!videoUrl || videoUrl === 'null') && (
                     <label
                         htmlFor={fieldName}
                         className={[
@@ -172,17 +159,15 @@ const ImageInput: React.FC<ImageInputProps> = ({
                         aria-describedby={hasError ? `${fieldName}-error` : undefined}
                     >
                         {isUploading ? (
-                            // spinner mode
                             <div className="flex items-center gap-6">
                                 <div className={styles.spinnerLoging} aria-label="Uploading" />
                                 <span className={styles.fileNameLoading}>Uploading...</span>
                             </div>
                         ) : (
-                            // normal text/buttons
                             <>
-                                <span className={styles.placeholder}>Image</span>
+                                <span className={styles.placeholder}>Video</span>
                                 <span className={styles.fileName}>
-                                    {imgName !== '' && imagePreview !== 'null' ? imgName : 'No file chosen'}
+                                    {fileName !== '' && videoUrl !== 'null' ? fileName : 'No file chosen'}
                                 </span>
                                 <span className={styles.placeholderBrowse}>Browse</span>
                             </>
@@ -190,7 +175,7 @@ const ImageInput: React.FC<ImageInputProps> = ({
                     </label>
                 )}
 
-                {/* hidden file input triggered by clicking label above */}
+                {/* Hidden file input */}
                 <input
                     type="file"
                     id={fieldName}
@@ -198,72 +183,50 @@ const ImageInput: React.FC<ImageInputProps> = ({
                     style={{ display: 'none' }}
                     className={`${styles.imageElement} ${styles.defaultImgElement} form-control-file`}
                     placeholder="Choose File"
-                    onChange={handleImageChange}
+                    onChange={handleFileChange}
                     disabled={disabled || isUploading}
                     accept={validTypes.join(',')}
                 />
 
-                {/* image preview section */}
-                {imagePreview && imagePreview !== 'null' && (
-                    previewImgOnly ? (
-                        // --- img preview: 50x50 by default, full image (contain), no close btn, no filename ---
-                        <div
-                            className={[
-                                // If custom classes provided, use them, else default
-                                imgPreviewStyleClasses || `inline-flex items-center justify-center rounded border border-gray-300 p-1`
-                            ].join(' ')}
-                            aria-invalid={hasError ? 'true' : 'false'}
-                            aria-describedby={hasError ? `${fieldName}-error` : undefined}
-                        >
-                            <img
-                                src={imagePreview}
-                                alt={imgName || 'preview'}
-                                width={previewSize}
-                                height={previewSize}
-                                className="object-contain"
-                                style={{ width: previewSize, height: previewSize }}
-                            />
-                            
-                        </div>
-                    ) : (
-                        // --- else background & close button ---
-                        <div
-                            className={[
-                                styles.imgPreview,
-                                'rounded',
-                                hasError ? 'ring-1 ring-red-600' : ''
-                            ].join(' ')}
-                            aria-invalid={hasError ? 'true' : 'false'}
-                            aria-describedby={hasError ? `${fieldName}-error` : undefined}
-                        >
-                            <div
-                                className={`${styles.imageViewInner} relative`}
-                                style={{ backgroundImage: `url("${imagePreview}")` }}
-                            >
+                {/* Video preview */}
+                {videoUrl && videoUrl !== 'null' && (
+                    <div
+                        className={[styles.imgPreview, 'rounded', hasError ? 'ring-1 ring-red-600' : ''].join(' ')}
+                        aria-invalid={hasError ? 'true' : 'false'}
+                        aria-describedby={hasError ? `${fieldName}-error` : undefined}
+                    >
+                        {/* responsive frame */}
+                        <div className={styles.videoPreview}>
+                            <div className={styles.videoFrame}>
                                 {isUploading && (
-                                    <div className="absolute inset-0 grid place-items-center bg-black/30">
+                                    <div className={styles.spinnerOverlay}>
                                         <div className={styles.spinner} aria-label="Uploading" />
                                     </div>
                                 )}
 
+                                <video
+                                    src={videoUrl}
+                                    controls
+                                    preload="metadata"
+                                    className={styles.videoElement}
+                                />
+
                                 <button
                                     type="button"
                                     className={styles.previewInnerCloseBtn}
-                                    onClick={clearImage}
-                                    aria-label="Remove image"
+                                    onClick={clearFile}
+                                    aria-label="Remove video"
                                     disabled={isUploading}
                                 >
                                     <MdOutlineClose />
                                 </button>
                             </div>
-
-                            <p className={styles.imageName}>{imgName}</p>
-                            
                         </div>
-                    )
+
+                        <p className={styles.imageName}>{fileName}</p>
+                    </div>
                 )}
 
-                {/* error message from Formik */}
                 <ErrorMessage
                     name={fieldName}
                     component="div"
@@ -271,9 +234,8 @@ const ImageInput: React.FC<ImageInputProps> = ({
                     className="invalid-feedback text-red-600 text-sm whitespace-pre-wrap pt-1 sm:pt-0 mt-2"
                 />
             </div>
-            
         </div>
     );
 };
 
-export default ImageInput;
+export default VideoInput;

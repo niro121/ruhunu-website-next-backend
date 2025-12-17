@@ -6,8 +6,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Section } from "@/types/section";
 import { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
+
 import ContentRecordAction from "./content-record-actions";
+
 import HeroForm from "./hero-Form";
 import TextOnlyForm from "./forms/text-only-form";
 import TextTextForm from "./forms/text-text-form";
@@ -27,6 +28,10 @@ import MapForm from "./forms/map-form";
 import DocumentsForm from "./forms/documents-form";
 import ServicesForm from "./forms/services-form";
 import TestimonialsForm from "./forms/testimonials-form";
+import FacebookYoubuteForm from "./forms/facebook-youtube-section-form";
+import ContactForm from "./forms/contact-form";
+import PdfViwerForm from "./forms/pdf-viewer-form";
+import GalleryForm from "./forms/gallery-form";
 
 const sectionForms: Record<string, React.FC<any>> = {
     "Hero": HeroForm,
@@ -46,8 +51,11 @@ const sectionForms: Record<string, React.FC<any>> = {
     "Media" : MediaForm,
     "PopUp" : PopUpForm,
     "Map" : MapForm,
+    "Gallery" : GalleryForm,
     "Services" : ServicesForm,
     "Testimonials" : TestimonialsForm,
+    "Contact Form" : ContactForm,
+    "Pdf Viwer" : PdfViwerForm,
 };
 
 
@@ -202,6 +210,16 @@ function ContentColumnsTitleCell({
                     styleClasses={styleClasses || defaultStyleClasses} 
                     onUpdated={onChange ?? (() => {})}
                 />;
+
+            case 'Gallery':
+                return <GalleryForm
+                    pageId={currentPageId || ''}
+                    content={content}
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses || defaultStyleClasses} 
+                    onUpdated={onChange ?? (() => {})}
+                />;
+
             case 'Services':
                 return <ServicesForm
                     pageId={currentPageId || ''}
@@ -218,6 +236,33 @@ function ContentColumnsTitleCell({
                     styleClasses={styleClasses || defaultStyleClasses} 
                     onUpdated={onChange ?? (() => {})}
                 />;
+            case 'Facebook-Youtube':
+                return <FacebookYoubuteForm 
+                    pageId={currentPageId || ''} 
+                    content={content}
+                    sessionRole={sessionRole}
+                    styleClasses={styleClasses || defaultStyleClasses}
+                    onUpdated={onChange ?? (() => {})}
+                />
+
+            case 'Contact':
+                return <ContactForm 
+                    pageId={currentPageId || ''} 
+                    content={content}
+                    sessionRole={sessionRole}
+                    styleClasses={styleClasses || defaultStyleClasses}
+                    onUpdated={onChange ?? (() => {})}
+                />
+
+            case 'PdfViwer':
+                return <PdfViwerForm
+                    pageId={currentPageId || ''} 
+                    content={content}
+                    sessionRole={sessionRole}
+                    styleClasses={styleClasses || defaultStyleClasses}
+                    onUpdated={onChange ?? (() => {})}
+                />
+
             default:
                 return null;
         }

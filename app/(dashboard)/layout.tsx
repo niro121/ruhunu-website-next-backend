@@ -17,6 +17,9 @@ import {
   BedSingle,
   Mail,
   FileText,
+  MessageSquare,
+  Phone,
+  ClipboardCheck,
 } from "lucide-react"
 import { Session } from "next-auth";
 import {
@@ -42,29 +45,23 @@ async function DesktopNav({ session }: { session: Session | null }) {
 
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-56 flex-col border-r bg-[#18CE67] sm:flex">
-      <nav className="flex flex-col items-stretch gap-2 px-3 sm:py-5">
-
-        {/* // =========================== LOGO =========================== */}
-        <div className="mb-1 bg-white p-2 rounded-[10px]">
-          <Link
-            href="/welcome"
-            className="group flex shrink-0 items-center justify-center text-base text-white"
-          >
-            <Image
-              src={Logo}
-              alt="Home"
-              width={100}
-              height={100}
-              unoptimized
-              className="object-contain"
-            />
-            {/* <span>Scope</span> */}
-          </Link>
-        </div>
-        <div className="mb-2 px-1">
-          <div className="h-px bg-white/10" />
-        </div>
-
+      {/* // =========================== LOGO =========================== */}
+      <div className="bg-white p-2 m-2 rounded-[10px]">
+        <Link
+          href="/welcome"
+          className="group flex shrink-0 items-center justify-center text-base text-white"
+        >
+          <Image
+            src={Logo}
+            alt="Home"
+            width={100}
+            height={100}
+            unoptimized
+            className="object-contain"
+          />
+        </Link>
+      </div>
+      <nav className="flex flex-col items-stretch gap-1 px-3 sm:py-3 overflow-y-auto sidebar">
         {/* // =========================== DOCTERS =========================== */}
         <NavLink
           href={hasAccess("/docters") ? "/docters" : "unauthorized-access"}
@@ -153,20 +150,33 @@ async function DesktopNav({ session }: { session: Session | null }) {
             icon={<UserGroup className="h-5 w-5" />}
           />
 
-        {/* // =========================== USERS =========================== */}
+        {/* // =========================== TESTIMONIALS =========================== */}
         <NavLink
-          href={hasAccess("/users") ? "/users" : "unauthorized-access"}
-          label="Users"
-          icon={<UserGroup className="h-5 w-5" />}
+          href={hasAccess("/testimonials") ? "/testimonials" : "unauthorized-access"}
+          label="Testimonials"
+          icon={<MessageSquare className="h-5 w-5" />}
         />
 
         {/* // =========================== CONTACT INQUIRIES =========================== */}
         <NavLink
           href={hasAccess("/contact-inquiries") ? "/contact-inquiries" : "unauthorized-access"}
           label="Contact Inquiries"
-          icon={<UserGroup className="h-5 w-5" />}
+          icon={<Phone className="h-5 w-5" />}
         />
 
+        {/* // =========================== NTS Application =========================== */}
+        <NavLink
+          href={hasAccess("/nts") ? "/nts" : "unauthorized-access"}
+          label="NTS Application"
+          icon={<ClipboardCheck className="h-5 w-5" />}
+        />
+
+        {/* // =========================== USERS =========================== */}
+        <NavLink
+          href={hasAccess("/users") ? "/users" : "unauthorized-access"}
+          label="Users"
+          icon={<UserGroup className="h-5 w-5" />}
+        />
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
         <p className="text-white">
@@ -290,6 +300,27 @@ async function MobileNav({ session }: { session: Session | null }) {
             href={hasAccess("/collecting-centers") ? "/collecting-centers" : "unauthorized-access"}
             label="Collecting Centers"
             icon={<Building className="h-5 w-5" />}
+          />
+
+          {/* // =========================== CONTACT INQUIRIES =========================== */}
+          <NavLink
+            href={hasAccess("/contact-inquiries") ? "/contact-inquiries" : "unauthorized-access"}
+            label="Contact Inquiries"
+            icon={<Phone className="h-5 w-5" />}
+          />
+
+          {/* // =========================== NTS Application =========================== */}
+          <NavLink
+            href={hasAccess("/nts") ? "/nts" : "unauthorized-access"}
+            label="NTS Application"
+            icon={<ClipboardCheck className="h-5 w-5" />}
+          />
+
+          {/* // =========================== TESTIMONIALS =========================== */}
+          <NavLink
+            href={hasAccess("/testimonials") ? "/testimonials" : "unauthorized-access"}
+            label="Testimonials"
+            icon={<MessageSquare className="h-5 w-5" />}
           />
 
           {/* // =========================== NTS APPLICATION MANAGER =========================== */}

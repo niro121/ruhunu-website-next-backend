@@ -25,6 +25,8 @@ type BannerSection = Omit<Section, ""> & {
         backgroundColor: string;
         image: string;
         mobileImage: string;
+        buttonText: string;
+        buttonUrl: string;
         ctaUrl: string;
         paddingtop: number;
         paddingbottom: number;
@@ -84,6 +86,8 @@ const BannerForm = ({
                 backgroundColor: content?.data.backgroundColor || "",
                 image: content?.data.image || "",
                 mobileImage: content?.data.mobileImage || "",
+                buttonText: content?.data.buttonText || "",
+                buttonUrl: content?.data.buttonUrl || "",
                 ctaUrl: content?.data.ctaUrl || "",
                 paddingtop:content?.data.paddingtop || 0,
                 paddingbottom:content?.data.paddingbottom || 0,
@@ -96,9 +100,9 @@ const BannerForm = ({
     // Validation Schema
     const validationSchema = Yup.object({
         data: Yup.object({
-            title: Yup.string().required("Title is required"),
-            webImage: Yup.string().required("Title is required"),
-            mobileImage: Yup.string().required("Title is required"),
+            // title: Yup.string().required("Title is required"),
+            // webImage: Yup.string().required("Title is required"),
+            // mobileImage: Yup.string().required("Title is required"),
         }),
         order: Yup.number().required("Order is required"),
     });
@@ -125,6 +129,8 @@ const BannerForm = ({
                     backgroundColor: values.data.backgroundColor,
                     image: values.data.image,
                     mobileImage: values.data.mobileImage,
+                    buttonText: values.data.buttonText,
+                    buttonUrl: values.data.buttonUrl,
                     ctaUrl: values.data.ctaUrl,
                     paddingtop: values.data.paddingtop,
                     paddingbottom: values.data.paddingbottom,
@@ -211,15 +217,15 @@ const BannerForm = ({
                             {/* CTA Banner */}
                             <CustomFormField
                                 type="text"
-                                id="data.Banner"
-                                placeholder="CTA Url"
-                                value={values.data.Banner}
+                                id="data.ctaBanner"
+                                placeholder="CTA Banner"
+                                value={values.data.ctaBanner}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 required
                                 styleClasses={styleClasses}
-                                error={getIn(errors, "data.Banner")}
-                                touched={getIn(touched, "data.Banner")}
+                                error={getIn(errors, "data.ctaBanner")}
+                                touched={getIn(touched, "data.ctaBanner")}
                             />
 
                             {/* Heading */}
@@ -272,15 +278,15 @@ const BannerForm = ({
                             {/* Sub Title */}
                             <CustomFormField
                                 type="text"
-                                id="data.subtitle"
+                                id="data.subTitle"
                                 placeholder="Sub Title"
-                                value={values.data.subtitle}
+                                value={values.data.subTitle}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 required
                                 styleClasses={styleClasses}
-                                error={getIn(errors, "data.subtitle")}
-                                touched={getIn(touched, "data.subtitle")}
+                                error={getIn(errors, "data.subTitle")}
+                                touched={getIn(touched, "data.subTitle")}
                             />
 
                             {/* Background Color */}
@@ -321,6 +327,34 @@ const BannerForm = ({
                                 styleClasses={styleClasses}
                                 error={getIn(errors, "data.mobileImage")}
                                 touched={getIn(touched, "data.mobileImage")}
+                            />
+
+                            {/* Button Text */}
+                            <CustomFormField
+                                type="text"
+                                id="data.buttonText"
+                                placeholder="Button Text"
+                                value={values.data.buttonText}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.buttonText")}
+                                touched={getIn(touched, "data.buttonText")}
+                            />
+                            
+                            {/* Button Url */}
+                            <CustomFormField
+                                type="text"
+                                id="data.buttonUrl"
+                                placeholder="Button Text"
+                                value={values.data.buttonUrl}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.buttonUrl")}
+                                touched={getIn(touched, "data.buttonUrl")}
                             />
 
                             {/* CTA Url */}
