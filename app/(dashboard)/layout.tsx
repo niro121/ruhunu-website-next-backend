@@ -17,6 +17,9 @@ import {
   BedSingle,
   Mail,
   FileText,
+  MessageSquare,
+  Phone,
+  ClipboardCheck,
 } from "lucide-react"
 import { Session } from "next-auth";
 import {
@@ -140,21 +143,21 @@ async function DesktopNav({ session }: { session: Session | null }) {
         <NavLink
           href={hasAccess("/testimonials") ? "/testimonials" : "unauthorized-access"}
           label="Testimonials"
-          icon={<BriefcaseIcon className="h-5 w-5" />}
+          icon={<MessageSquare className="h-5 w-5" />}
         />
 
         {/* // =========================== CONTACT INQUIRIES =========================== */}
         <NavLink
           href={hasAccess("/contact-inquiries") ? "/contact-inquiries" : "unauthorized-access"}
           label="Contact Inquiries"
-          icon={<UserGroup className="h-5 w-5" />}
+          icon={<Phone className="h-5 w-5" />}
         />
 
         {/* // =========================== NTS Application =========================== */}
         <NavLink
           href={hasAccess("/nts") ? "/nts" : "unauthorized-access"}
           label="NTS Application"
-          icon={<UserGroup className="h-5 w-5" />}
+          icon={<ClipboardCheck className="h-5 w-5" />}
         />
 
         {/* // =========================== USERS =========================== */}
@@ -292,21 +295,21 @@ async function MobileNav({ session }: { session: Session | null }) {
           <NavLink
             href={hasAccess("/contact-inquiries") ? "/contact-inquiries" : "unauthorized-access"}
             label="Contact Inquiries"
-            icon={<UserGroup className="h-5 w-5" />}
+            icon={<Phone className="h-5 w-5" />}
           />
 
           {/* // =========================== NTS Application =========================== */}
           <NavLink
             href={hasAccess("/nts") ? "/nts" : "unauthorized-access"}
             label="NTS Application"
-            icon={<UserGroup className="h-5 w-5" />}
+            icon={<ClipboardCheck className="h-5 w-5" />}
           />
 
           {/* // =========================== TESTIMONIALS =========================== */}
           <NavLink
             href={hasAccess("/testimonials") ? "/testimonials" : "unauthorized-access"}
             label="Testimonials"
-            icon={<BriefcaseIcon className="h-5 w-5" />}
+            icon={<MessageSquare className="h-5 w-5" />}
           />
 
           {/* // =========================== USERS =========================== */}
