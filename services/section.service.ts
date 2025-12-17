@@ -35,6 +35,9 @@ export const getSection = async (pageId: string) => {
         const result = await prisma.section.findMany({
             where: {
                 pageId: pageId,
+            },
+            orderBy: {
+                order: "asc"
             }
         });
 
@@ -53,13 +56,9 @@ export const getSection = async (pageId: string) => {
 // ========== Create Section ==========
 export const saveSection = async (section: Section) => {
 
-    section
-
     try {
 
         const user = await getLoggedInUser(); //get logged user data
-
-        console.log({section})
 
         const result = await prisma.section.create({
             data: {
@@ -108,7 +107,7 @@ export const updateOneSection = async (id: string, payload: UpdateSectionDTO) =>
     
         const user = await getLoggedInUser(); //get logged user data
 
-        console.log("id : ",id ,"payload : ", payload)
+        console.log("id : ",id ,"payload : ", payload.data)
     
         const result = await prisma.section.update({
             data: {

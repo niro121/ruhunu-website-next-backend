@@ -204,18 +204,18 @@ const TextOnlyForm = ({
                                 touched={getIn(touched, "data.subtitle")}
                             />
 
-                                {/* Content */}
-                                <CustomRichTextEditor
-                                    id="data.content"
-                                    placeholder="Content"
-                                    required
-                                    value={values.data.content}
-                                    onChange={(e) => setFieldValue("data.content", e.target.value)}
-                                    onBlur={handleBlur}
-                                    styleClasses={styleClasses}
-                                    error={getIn(errors, "data.content")}
-                                    touched={getIn(touched, "data.content")}
-                                />
+                            {/* Content */}
+                            <CustomRichTextEditor
+                                id="data.content"
+                                placeholder="Content"
+                                required
+                                value={values.data.content}
+                                onChange={(e) => setFieldValue("data.content", e.target.value)}
+                                onBlur={handleBlur}
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.content")}
+                                touched={getIn(touched, "data.content")}
+                            />
 
                             {/* Button Text */}
                             <CustomFormField

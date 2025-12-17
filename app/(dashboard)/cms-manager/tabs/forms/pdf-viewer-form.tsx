@@ -2,29 +2,34 @@
 
 import { createNewSection, getNextOrder, updateSection } from "@/app/actions/section.actions";
 import CustomCheckedField from "@/components/common/custom-checked-field";
+import FileUpload from "@/components/common/file-upload";
+import fileUpload from "@/components/common/file-upload";
 import { FormActionsBtns } from "@/components/common/form-actions-btns";
 import CustomFormField from "@/components/common/form-field";
 import { useToast } from "@/components/hooks/use-toast";
 import { Card } from "@/components/ui/card";
 import { Section } from "@/types/section";
-import { Form, Formik, FormikHelpers, getIn } from "formik";
+import { FieldArray, Form, Formik, FormikHelpers, getIn } from "formik";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo } from "react";
 import { useState } from "react";
 import * as Yup from "yup";
 
-type ServicesSection = Omit<Section, ""> & {
+type PdfViwerSection = Omit<Section, ""> & {
     data: {
-        bg_color: string;
-        link?: string;
+        title: string;
         paddingtop: number;
         paddingbottom: number;
+        content: {
+            name: string;
+            fileUrl: string;
+        }[]
     }
 }
 
-type ServicesProps = {
+type PdfViwerProps = {
     pageId: string | null;
-    content: ServicesSection | null;
+    content: PdfViwerSection | null;
     sessionRole: string | undefined;
     styleClasses: {
         parentDiv: string;
@@ -34,19 +39,19 @@ type ServicesProps = {
     onUpdated: (page: any) => void;
 }
 
-const ServicesForm = ({
+const PdfViwerForm = ({
     pageId,
     content,
     styleClasses,
     sessionRole,
     onUpdated,
-}: ServicesProps) => {
+}: PdfViwerProps) => {
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
     const router = useRouter();
     const submitTypeRef = React.useRef<"save" | "save-close">("save");
-    const [nextOrder, setNextOrder] = useState<number>(1);
-
+    const [nextOrder, setNextOrder] = useState<number>(1); 
+                    
     useEffect(() => {    
         const fetchOrder = async () => {
             try {
@@ -58,25 +63,36 @@ const ServicesForm = ({
         };
         if (!content && pageId) fetchOrder();
     }, [content, pageId]);
-
+    
     // Initial Values
-    const initialValues: ServicesSection = useMemo(
+    const initialValues: PdfViwerSection = useMemo(
         () => ({
             id: content?.id || "",
-            type: "Services",
+            type: "PdfViwer",
             layout: content?.layout || 1,
             order: content?.order || nextOrder,
             data: {
-                bg_color: content?.data.bg_color || "",
-                link: content?.data.link || "",
+                title:content?.data.title || "",
                 paddingtop:content?.data.paddingtop || 0,
                 paddingbottom:content?.data.paddingbottom || 0,
+                content:
+                    content?.data?.content && Array.isArray(content.data.content)
+                    ? content.data.content.map((item) => ({
+                        name: item?.name || "",
+                        fileUrl: item?.fileUrl || "",
+                        }))
+                    : [
+                        {
+                            name: "",
+                            fileUrl: "",
+                        },
+                    ],
             },
             pageId: pageId || "",
             visibility: content?.visibility || false,
         }),[content,nextOrder]
     );
-
+    
     // Validation Schema
     const validationSchema = Yup.object({
         data: Yup.object({
@@ -87,8 +103,8 @@ const ServicesForm = ({
 
     // Submit
     const handleSubmit = async (
-        values: ServicesSection,
-        { resetForm }: FormikHelpers<ServicesSection>,
+        values: PdfViwerSection,
+        { resetForm }: FormikHelpers<PdfViwerSection>,
         submitType: "save" | "save-close" = "save"
     ) => {
         setLoading(true);
@@ -99,17 +115,20 @@ const ServicesForm = ({
                 layout: values.layout,
                 order: values.order,
                 data: {
-                    bg_color: values.data.bg_color,
-                    link: values.data.link,
+                    title: values.data.title,
                     paddingtop: values.data.paddingtop,
                     paddingbottem: values.data.paddingbottom,
+                    content: values.data.content.map((item, index) => ({
+                        name: item.name,
+                        fileUrl: item.fileUrl,
+                    })),
                 },
                 visibility: values.visibility,
                 pageId: pageId || ""
             };
-        
+
             let resp: any;
-    
+                
             if (values.id) resp = await updateSection(values.id, createPayload);
             else resp = await createNewSection(createPayload as Section);
                     
@@ -158,7 +177,7 @@ const ServicesForm = ({
             setLoading(false);
         }
     };
-        
+
     return (
         <Formik
             initialValues={initialValues}
@@ -181,32 +200,18 @@ const ServicesForm = ({
                     <Form className="w-full">
                         <div className="grid gap-4 py-4">
 
-                            {/* Background Color */}
-                            <CustomFormField
-                                type="color"
-                                id="data.bg_color"
-                                placeholder="Background Color"
-                                value={values.data.bg_color}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                required
-                                styleClasses={styleClasses}
-                                error={getIn(errors, "data.bg_color")}
-                                touched={getIn(touched, "data.bg_color")}
-                            />
-
-                            {/* Link */}
+                            {/* Title */}
                             <CustomFormField
                                 type="text"
-                                id="data.link"
-                                placeholder="Button Navigation link (If has)"
-                                value={values.data.link}
+                                id="data.title"
+                                placeholder="Title"
+                                value={values.data.title}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 required
                                 styleClasses={styleClasses}
-                                error={getIn(errors, "data.link")}
-                                touched={getIn(touched, "data.link")}
+                                error={getIn(errors, "data.title")}
+                                touched={getIn(touched, "data.title")}
                             />
                             
                             {/* Padding Top */}
@@ -222,7 +227,7 @@ const ServicesForm = ({
                                 error={getIn(errors, "data.paddingtop")}
                                 touched={getIn(touched, "data.paddingtop")}
                             />
-
+                            
                             {/* Padding Bottom */}
                             <CustomFormField
                                 type="number"
@@ -236,7 +241,7 @@ const ServicesForm = ({
                                 error={getIn(errors, "data.paddingbottom")}
                                 touched={getIn(touched, "data.paddingbottom")}
                             />
-
+                            
                             {/* Order */}
                             <CustomFormField
                                 type="number"
@@ -250,7 +255,77 @@ const ServicesForm = ({
                                 error={errors.order}
                                 touched={touched.order}
                             />
-                                
+
+                            <FieldArray name="data.content">
+                                {({ push, remove }) => (
+                                    <div className="flex gap-4 px-3">
+                                        {/* LEFT SIDE: Label + Add Button */}
+                                        <div className="flex flex-col items-start w-42 gap-2 pt-2">
+                                            <span className="font-semibold text-gray-700">Content</span>
+                                        </div>
+
+                                        {/* RIGHT SIDE: Content Cards */}
+                                        <div className="flex-1 flex flex-col gap-6">
+                                            {values.data.content.map((item, index) => (
+                                                <Card key={index} className="border shadow-sm p-4 relative">
+                                                    <div className="grid gap-4">
+
+                                                        {/* TITLE */}
+                                                        <CustomFormField
+                                                            type="text"
+                                                            id={`data.content.${index}.name`}
+                                                            placeholder="Title"
+                                                            value={item.name}
+                                                            onChange={handleChange}
+                                                            onBlur={handleBlur}
+                                                            required
+                                                            styleClasses={styleClasses}
+                                                            error={getIn(errors, `data.content.${index}.name`)}
+                                                            touched={getIn(touched, `data.content.${index}.name`)}
+                                                        />
+
+                                                        {/* File Upload */}
+                                                        <FileUpload
+                                                            id={`data.content.${index}.fileUrl`}
+                                                            fieldName={`data.content.${index}.fileUrl`} // Must match Formik path exactly
+                                                            placeholder="Upload Document"
+                                                            allow=".pdf,.doc,.docx"
+                                                            setFieldValue={setFieldValue}
+                                                            styleClasses={styleClasses}
+                                                            value={item.fileUrl}
+                                                        />
+
+                                                    </div>
+                                                    {/* REMOVE BUTTON */}
+                                                    {values.data.content.length > 1 && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => remove(index)}
+                                                            className="px-2 py-1 bg-red-500 text-white rounded text-sm"
+                                                        >
+                                                            Remove
+                                                        </button>
+                                                    )}
+                                                </Card>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    push({
+                                                        name: "",
+                                                        latitude: "",
+                                                        longitude: "",
+                                                    })
+                                                }
+                                                className="px-3 py-1 bg-blue-500 text-white rounded text-sm"
+                                            >
+                                                + Add Content
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </FieldArray>
+                                        
                             {/* Visibility */}
                             <CustomCheckedField
                                 id="visibility"
@@ -264,7 +339,7 @@ const ServicesForm = ({
                                 touched={touched.visibility}
                                 styleClasses={styleClasses}
                             />
-                                
+
                             {/* Actions */}
                             <FormActionsBtns
                                 onCancelHref="/cms-manager"
@@ -282,7 +357,6 @@ const ServicesForm = ({
             )}
         </Formik>
     )
-                
 }
 
-export default ServicesForm;
+export default PdfViwerForm;
