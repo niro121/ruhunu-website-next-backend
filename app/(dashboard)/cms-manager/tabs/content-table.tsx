@@ -41,6 +41,9 @@ import FacebookYoubuteForm from './forms/facebook-youtube-section-form';
 import ContactForm from './forms/contact-form';
 import PdfViwerForm from './forms/pdf-viewer-form';
 import GalleryForm from './forms/gallery-form';
+import EventsForm from './forms/event-form';
+import NTSApplicationForm from './forms/nts-application-form';
+import RmaSectionForm from './forms/RMA-section-form';
 
 type ContentTableProps = {
     currentPageId: string | undefined;
@@ -114,9 +117,12 @@ export default function ContentTable({
         'Map',
         'Gallery',
         'Services',
+        'Events',
         'Testimonials',
         'Facebook-Youtube',
         'Contact Form',
+        'NTSApplication Form',
+        'RmaSection Form',
         'PdfViwer'
     ];
 
@@ -287,6 +293,14 @@ export default function ContentTable({
                     styleClasses={styleClasses} 
                     onUpdated={fetchData}
                 />;
+            case 'Events':
+                return <EventsForm
+                    pageId={currentPageId || ''}
+                    content={null}
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses} 
+                    onUpdated={fetchData}
+                />;
             case 'Testimonials':
                 return <TestimonialsForm
                     pageId={currentPageId || ''}
@@ -306,6 +320,24 @@ export default function ContentTable({
 
             case 'Contact Form':
                 return <ContactForm 
+                    pageId={currentPageId || ''} 
+                    content={null}
+                    sessionRole={sessionRole}
+                    styleClasses={styleClasses}
+                    onUpdated={fetchData}
+                />
+
+            case 'NTSApplication Form':
+                return <NTSApplicationForm 
+                    pageId={currentPageId || ''} 
+                    content={null}
+                    sessionRole={sessionRole}
+                    styleClasses={styleClasses}
+                    onUpdated={fetchData}
+                />
+
+            case 'RmaSection Form':
+                return <RmaSectionForm 
                     pageId={currentPageId || ''} 
                     content={null}
                     sessionRole={sessionRole}

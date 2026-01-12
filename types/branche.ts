@@ -4,6 +4,7 @@ export type Branche = {
     image: string
     listImage: string[]
     description: string
+    services: string
     phone: string[]
     latitude: string
     longitude: string

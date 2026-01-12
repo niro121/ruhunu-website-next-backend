@@ -167,7 +167,7 @@ export const deletePages = async (ids: string[]) => {
 export const deleteOnePage = async (id: string) => {
     try {
 
-        await prisma.branche.delete({
+        await prisma.page.delete({
             where: {
                 id: id,
             },

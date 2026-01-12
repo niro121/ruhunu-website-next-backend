@@ -36,6 +36,7 @@ const BrancheForm = ({branche,sessionRole,order}: BrancheFormProps) => {
             image: branche?.image ?? "",
             listImage: branche?.listImage ?? [],
             description: branche?.description ?? "",
+            services: branche?.services ?? "",
             phone: branche?.phone ?? [],
             latitude: branche?.latitude ?? "",
             longitude: branche?.longitude ?? "",
@@ -64,6 +65,7 @@ const BrancheForm = ({branche,sessionRole,order}: BrancheFormProps) => {
                 image: values.image,
                 listImage: values.listImage,
                 description: values.description,
+                services: values.services,
                 phone: values.phone,
                 latitude: values.latitude,
                 longitude: values.longitude,
@@ -202,6 +204,19 @@ const BrancheForm = ({branche,sessionRole,order}: BrancheFormProps) => {
                                 styleClasses={styleClasses}
                                 error={errors.description}
                                 touched={touched.description}
+                            />
+
+                            {/* services */}
+                            <CustomRichTextEditor
+                                id="services"
+                                placeholder="Services"
+                                required
+                                value={values.services ?? ""}
+                                onChange={(e) => setFieldValue("services", e.target.value)}
+                                onBlur={handleBlur}
+                                styleClasses={styleClasses}
+                                error={errors.services}
+                                touched={touched.services}
                             />
 
                             {/* phone */}
