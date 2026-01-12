@@ -183,6 +183,7 @@ model Branche {
   image       String
   listImage   String[]
   description String   @default("")
+  services    String   @default("")
   phone       String[]
   latitude    String
   longitude   String

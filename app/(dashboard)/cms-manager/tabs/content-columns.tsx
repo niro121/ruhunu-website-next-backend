@@ -32,6 +32,9 @@ import FacebookYoubuteForm from "./forms/facebook-youtube-section-form";
 import ContactForm from "./forms/contact-form";
 import PdfViwerForm from "./forms/pdf-viewer-form";
 import GalleryForm from "./forms/gallery-form";
+import EventsForm from "./forms/event-form";
+import NTSApplicationForm from "./forms/nts-application-form";
+import RmaSectionForm from "./forms/RMA-section-form";
 
 const sectionForms: Record<string, React.FC<any>> = {
     "Hero": HeroForm,
@@ -53,8 +56,11 @@ const sectionForms: Record<string, React.FC<any>> = {
     "Map" : MapForm,
     "Gallery" : GalleryForm,
     "Services" : ServicesForm,
+    "Events" : EventsForm,
     "Testimonials" : TestimonialsForm,
     "Contact Form" : ContactForm,
+    "NTSApplication Form" : NTSApplicationForm,
+    "RmaSection Form" : RmaSectionForm,
     "Pdf Viwer" : PdfViwerForm,
 };
 
@@ -228,6 +234,16 @@ function ContentColumnsTitleCell({
                     styleClasses={styleClasses || defaultStyleClasses} 
                     onUpdated={onChange ?? (() => {})}
                 />;
+
+            case 'Events':
+                return <EventsForm
+                    pageId={currentPageId || ''}
+                    content={content}
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses || defaultStyleClasses} 
+                    onUpdated={onChange ?? (() => {})}
+                />;
+
             case 'Testimonials':
                 return <TestimonialsForm
                     pageId={currentPageId || ''}
@@ -245,8 +261,26 @@ function ContentColumnsTitleCell({
                     onUpdated={onChange ?? (() => {})}
                 />
 
+            case 'NTSApplication':
+                return <NTSApplicationForm 
+                    pageId={currentPageId || ''} 
+                    content={content}
+                    sessionRole={sessionRole}
+                    styleClasses={styleClasses || defaultStyleClasses}
+                    onUpdated={onChange ?? (() => {})}
+                />
+
             case 'Contact':
                 return <ContactForm 
+                    pageId={currentPageId || ''} 
+                    content={content}
+                    sessionRole={sessionRole}
+                    styleClasses={styleClasses || defaultStyleClasses}
+                    onUpdated={onChange ?? (() => {})}
+                />
+
+            case 'RmaSection':
+                return <RmaSectionForm 
                     pageId={currentPageId || ''} 
                     content={content}
                     sessionRole={sessionRole}
