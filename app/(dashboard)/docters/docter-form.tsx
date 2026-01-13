@@ -2,7 +2,9 @@
 
 import { createNewDocter, updateDocter } from "@/app/actions/docter.actions";
 import CustomCheckedField from "@/components/common/custom-checked-field";
+import CustomRichTextEditor from "@/components/common/custom-rich-text-editor";
 import CustomSelectField from "@/components/common/custom-select-field";
+import CustomMultiSelectField from "@/components/common/CustomMultiSelectField";
 import { FormActionsBtns } from "@/components/common/form-actions-btns";
 import CustomFormField from "@/components/common/form-field";
 import ImageInput from "@/components/common/image-input/ImageInput";
@@ -18,13 +20,51 @@ type DocterFormProps = {
     docter: Docter | null;
     sessionRole: string | undefined;
     order: number;
+    branches: {id:string,name: string}[]
+    specialitis: {id:string,name: string}[]
 };
 
-const DocterForm = ({docter,sessionRole,order}: DocterFormProps) => {
+type Option = {
+    label: string;
+    value: string;
+};
+
+const DocterForm = ({docter,sessionRole,order,branches,specialitis}: DocterFormProps) => {
     const [loading, setLoading] = React.useState(false);
     const { toast } = useToast();
     const router = useRouter();
     const submitTypeRef = React.useRef<"save" | "save-close">("save");
+
+    const title : Option[] = [
+        { label: 'MR.', value: 'MR.' },
+        { label: 'MRS.', value: 'MRS.' },
+        { label: 'MISS.', value: 'MISS.' },
+        { label: 'MS.', value: 'MS.' },
+        { label: `Ma'am`, value: `Ma'am` },
+        { label: 'DR.', value: 'DR.' },
+        { label: 'DR.(MRS)', value: 'DR.(MRS)' },
+        { label: 'DR.(MS)', value: 'DR.(MS)' },
+        { label: 'DR.(MISS)', value: 'DR.(MISS)' },
+        { label: 'PROF.', value: 'PROF.' },
+        { label: 'PROF.(MRS)', value: 'PROF.(MRS)' },
+        { label: 'MASTER.', value: 'MASTER.' },
+        { label: 'BABY.', value: 'BABY.' },
+        { label: 'REV.', value: 'REV.' },
+        { label: 'RT.REV.', value: 'RT.REV.' },
+        { label: 'HON', value: 'HON.' },
+        { label: 'RT.HON.', value: 'RT.HON.' },
+        { label: 'OTHER', value: 'OTHER.' },
+    ];
+
+    const specialitisData : Option[] = specialitis.map((speciality) => ({
+        label: speciality.name,
+        value: speciality.id,
+    }))
+
+    const branchesData: Option[] = branches.map((branch) => ({
+        label: branch.name,
+        value: branch.id,
+    }));
 
     const initialValues: Docter = useMemo(
         () => ({
@@ -34,7 +74,7 @@ const DocterForm = ({docter,sessionRole,order}: DocterFormProps) => {
             image: docter?.image ?? "",
             visibility: docter?.visibility ?? false,
             speciality: docter?.speciality ?? "",
-            branch: docter?.branch ?? "",
+            branch: docter?.branch ?? [],
             code: docter?.code ?? "",
             order: typeof docter?.order === 'number' ? docter.order : order,
             phone: docter?.phone ?? "",
@@ -178,10 +218,7 @@ const DocterForm = ({docter,sessionRole,order}: DocterFormProps) => {
                                     value={values.title}
                                     onChange={(v) => setFieldValue('title', v)}
                                     onBlur={handleBlur}
-                                    options={[
-                                        { label: 'Banner', value: 'BANNER' },
-                                        { label: 'Movie', value: 'MOVIE' }
-                                    ]}
+                                    options={title}
                                     styleClasses={styleClasses}
                                     error={errors.title}
                                     touched={touched.title}
@@ -214,48 +251,31 @@ const DocterForm = ({docter,sessionRole,order}: DocterFormProps) => {
                                     required={false}
                                 />
 
-                                {/* visibility */}
-                                <CustomCheckedField
-                                    id="visibility"
-                                    placeholder="Is Publish?"
-                                    required
-                                    mode="boolean"
-                                    value={values.visibility}
-                                    onChange={(val) => setFieldValue("visibility", val)}
-                                    onBlur={handleBlur}
-                                    error={errors.visibility as string}
-                                    touched={touched.visibility}
-                                    styleClasses={styleClasses}
-                                />
-
                                 {/* Speciality */}
-                                <CustomFormField
-                                    type="textarea"
+                                <CustomSelectField
                                     id="speciality"
                                     placeholder="Speciality"
+                                    required={false}
                                     value={values.speciality}
-                                    onChange={handleChange}
+                                    onChange={(v) => setFieldValue('speciality', v)}
                                     onBlur={handleBlur}
-                                    required
+                                    options={specialitisData}
                                     styleClasses={styleClasses}
                                     error={errors.speciality}
                                     touched={touched.speciality}
                                 />
 
                                 {/* Branch */}
-                                <CustomSelectField
+                                <CustomMultiSelectField
                                     id="branch"
                                     placeholder="Branch"
                                     required={false}
                                     value={values.branch}
                                     onChange={(v) => setFieldValue('branch', v)}
                                     onBlur={handleBlur}
-                                    options={[
-                                        { label: 'Banner', value: 'BANNER' },
-                                        { label: 'Movie', value: 'MOVIE' }
-                                    ]}
+                                    options={branchesData}
                                     styleClasses={styleClasses}
-                                    error={errors.branch}
+                                    error={typeof errors.branch === "string" ? errors.branch : undefined}
                                     touched={touched.branch}
                                 />
 
@@ -263,7 +283,7 @@ const DocterForm = ({docter,sessionRole,order}: DocterFormProps) => {
                                 <CustomFormField
                                     type="text"
                                     id="code"
-                                    placeholder="code"
+                                    placeholder="Code"
                                     value={values.code}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -271,20 +291,6 @@ const DocterForm = ({docter,sessionRole,order}: DocterFormProps) => {
                                     styleClasses={styleClasses}
                                     error={errors.code}
                                     touched={touched.code}
-                                />
-
-                                {/* Order */}
-                                <CustomFormField
-                                    type="number"
-                                    id="order"
-                                    placeholder="Order"
-                                    value={values.order}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    required
-                                    styleClasses={styleClasses}
-                                    error={errors.order}
-                                    touched={touched.order}
                                 />
 
                                 {/* Phone */}
@@ -372,8 +378,7 @@ const DocterForm = ({docter,sessionRole,order}: DocterFormProps) => {
                                 />
 
                                 {/* Qualification */}
-                                <CustomFormField
-                                    type="text"
+                                <CustomRichTextEditor
                                     id="qualification"
                                     placeholder="Qualification"
                                     value={values.qualification}
@@ -452,6 +457,20 @@ const DocterForm = ({docter,sessionRole,order}: DocterFormProps) => {
                                     onBlur={handleBlur}
                                     error={errors.advanceBooking as string}
                                     touched={touched.advanceBooking}
+                                    styleClasses={styleClasses}
+                                />
+
+                                {/* visibility */}
+                                <CustomCheckedField
+                                    id="visibility"
+                                    placeholder="Is Publish?"
+                                    required
+                                    mode="boolean"
+                                    value={values.visibility}
+                                    onChange={(val) => setFieldValue("visibility", val)}
+                                    onBlur={handleBlur}
+                                    error={errors.visibility as string}
+                                    touched={touched.visibility}
                                     styleClasses={styleClasses}
                                 />
 

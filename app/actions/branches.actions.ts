@@ -1,6 +1,6 @@
 "use server"
 
-import { deleteBranches, deleteOneBranche, getBrancheById, getBranches, saveBranche, updateOneBranche } from "@/services/branches.service"
+import { deleteBranches, deleteOneBranche, getAllBranchesForDocter, getBrancheById, getBranches, saveBranche, updateOneBranche } from "@/services/branches.service"
 import { Branche, GetBranchesParams, GetBranchesQuery, UpdateBrancheDTO } from "@/types/branche"
 import { revalidatePath } from "next/cache"
 
@@ -127,6 +127,16 @@ export const deleteBranche = async (id: string) => {
     } catch (error: any) {
         console.log('delete Branche error ==>', error);
         throw new Error(error.message ?? "Error deleting data. please try again later")
+    }
+}
+
+export const getAllBranchesToDocter = async () => {
+    try {
+        const response = await getAllBranchesForDocter();
+        return response;
+    } catch (error: any) {
+        console.log('get All Branches To Docter  error ==>', error);
+        throw new Error(error.message ?? "Error geting data. please try again later")
     }
 }
 

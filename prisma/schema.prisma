@@ -31,14 +31,14 @@ model User {
 }
 
 model Docter {
-  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
   title           String
   name            String
   speciality      String
-  branch          String
+  branch          String[]
   image           String
   code            String
-  order           Int     @default(0)
+  order           Int      @default(0)
   phone           String
   mobile          String
   address1        String
@@ -48,10 +48,10 @@ model Docter {
   qualification   String
   referralCharge  Int
   sessionNoPrefix String
-  featured        Boolean @default(false)
-  laboratory      Boolean @default(false)
-  visibility      Boolean @default(false)
-  advanceBooking  Boolean @default(false)
+  featured        Boolean  @default(false)
+  laboratory      Boolean  @default(false)
+  visibility      Boolean  @default(false)
+  advanceBooking  Boolean  @default(false)
 
   createdBy String?  @db.ObjectId
   updatedBy String?  @db.ObjectId
@@ -331,4 +331,17 @@ model CenterLocation {
 
   collectingCenterId String           @db.ObjectId // relation field
   collectingCenter   CollectingCenter @relation(fields: [collectingCenterId], references: [id])
+}
+
+model Speciality {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  code        String
+  description String
+  visibility  Boolean @default(false)
+
+  createdBy String?  @db.ObjectId
+  updatedBy String?  @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -173,3 +173,17 @@ export const deleteOneBranche = async (id: string) => {
         throw new Error(error.message ?? "Delete branche Error")
     }
 }
+
+export const getAllBranchesForDocter = async () => {
+    try {
+        const data = await prisma.branche.findMany({
+            select :{
+                id: true,name : true
+            }
+        })
+        return data
+    } catch (error: any) {
+        console.log("deleteOneBranche error ==> ", error)
+        throw new Error(error.message ?? "Delete branche Error")
+    }
+}

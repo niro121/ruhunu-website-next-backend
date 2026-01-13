@@ -5,7 +5,7 @@ export type Docter = {
     title: string
     name: string
     speciality: string
-    branch: string
+    branch: string[]
     image: string
     code: string
     order: number
