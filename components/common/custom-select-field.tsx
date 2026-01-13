@@ -133,7 +133,7 @@ const CustomSelectField = ({
               className={`select-span border ${borderClass} 
               focus:outline-none focus:ring-0 focus:ring-offset-0 
               focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 
-              data-[state=open]:ring-0 text-black`}
+              data-[state=open]:ring-0 text-black w-full px-2`}
               aria-invalid={!!(error && touched)}
               aria-required={required}
             >

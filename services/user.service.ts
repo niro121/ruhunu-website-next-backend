@@ -120,7 +120,7 @@ export const saveUser = async (userData: User) => {
         const result = await prisma.user.create({
             data: {
                 ...userData,
-                //createdBy: user.id,
+                createdBy: user.id,
                 createdAt: new Date()
             },
         })
