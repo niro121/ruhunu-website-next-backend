@@ -46,7 +46,7 @@ const CustomMultiInputField: React.FC<CustomMultiInputFieldProps> = ({
   const safeValues = values.length > 0 ? values : [""]
 
   return (
-    <div className={styleClasses?.parentDiv || "w-full"}>
+    <div className={styleClasses?.parentDiv || "grid grid-cols-1 px-3 mb-2 w-full"}>
       {/* Label */}
       <Label htmlFor={id} className={styleClasses?.labelClassName || ""}>
         {labelText}
@@ -56,11 +56,11 @@ const CustomMultiInputField: React.FC<CustomMultiInputFieldProps> = ({
       <FieldArray
         name={id}
         render={(arrayHelpers) => (
-          <div className="flex flex-col gap-3 mt-2 w-full">
+          <div className="flex flex-col gap-3 mt-2 !w-full col-span-3">
             {safeValues.map((val, index) => (
               <div
                 key={index}
-                className="flex items-center gap-2 w-full max-w-full"
+                className="flex items-center gap-2 !w-full max-w-full"
               >
                 {/* Input field */}
                 <Input
@@ -72,7 +72,7 @@ const CustomMultiInputField: React.FC<CustomMultiInputFieldProps> = ({
                   onBlur={onBlur}
                   placeholder={placeholder}
                   disabled={disabled}
-                  className={`w-full flex-1 p-2 border rounded outline-none transition-all ${
+                  className={`!w-full flex-1 p-2 border rounded outline-none transition-all ${
                     styleClasses?.inputClassName || ""
                   } ${
                     error && touched ? "border-red-600" : "border-gray-300"

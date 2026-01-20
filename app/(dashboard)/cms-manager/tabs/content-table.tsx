@@ -44,6 +44,7 @@ import GalleryForm from './forms/gallery-form';
 import EventsForm from './forms/event-form';
 import NTSApplicationForm from './forms/nts-application-form';
 import RmaSectionForm from './forms/RMA-section-form';
+import ContactDetailsForm from './forms/contact-details-section-form';
 
 type ContentTableProps = {
     currentPageId: string | undefined;
@@ -108,6 +109,7 @@ export default function ContentTable({
         'Spacer',
         'Award',
         'Banner',
+        'Contact-Banner',
         'Borad Of Directors',
         'Caousel',
         'Accordion',
@@ -215,6 +217,14 @@ export default function ContentTable({
                 />;
             case 'Banner':
                 return <BannerForm
+                    pageId={currentPageId || ''}
+                    content={null}
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses} 
+                    onUpdated={fetchData}
+                />;
+            case 'Contact-Banner':
+                return <ContactDetailsForm
                     pageId={currentPageId || ''}
                     content={null}
                     sessionRole={sessionRole} 

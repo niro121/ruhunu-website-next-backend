@@ -5,37 +5,29 @@ import CustomCheckedField from "@/components/common/custom-checked-field";
 import CustomSelectField from "@/components/common/custom-select-field";
 import { FormActionsBtns } from "@/components/common/form-actions-btns";
 import CustomFormField from "@/components/common/form-field";
-import ImageInput from "@/components/common/image-input/ImageInput";
+import CustomMultiInputField from "@/components/common/form-multi-input-field";
 import { useToast } from "@/components/hooks/use-toast";
 import { Card } from "@/components/ui/card";
-import { Section } from "@/types/section";
+import { Section } from "@/types/section"
 import { Form, Formik, FormikHelpers, getIn } from "formik";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo } from "react";
 import { useState } from "react";
 import * as Yup from "yup";
 
-type BannerSection = Omit<Section, ""> & {
+type ContactDetailsSection = Omit<Section, ""> & {
     data: {
-        ctaBanner: string;
-        heading: string;
-        layout: number;
-        title: string;
-        subTitle: string;
-        backgroundColor: string;
-        image: string;
-        mobileImage: string;
-        buttonText: string;
-        buttonUrl: string;
-        ctaUrl: string;
+        phoneNumber: string[];
+        email: string[];
+        address: string[];
         paddingtop: number;
         paddingbottom: number;
     }
 }
 
-type BannerProps = {
+type ContactDetailsProps = {
     pageId: string | null;
-    content: BannerSection | null;
+    content: ContactDetailsSection | null;
     sessionRole: string | undefined;
     styleClasses: {
         parentDiv: string;
@@ -45,13 +37,13 @@ type BannerProps = {
     onUpdated: (page: any) => void;
 }
 
-const BannerForm = ({
+const ContactDetailsForm = ({
     pageId,
     content,
     styleClasses,
     sessionRole,
     onUpdated,
-}: BannerProps) => {
+}: ContactDetailsProps) => {
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
     const router = useRouter();
@@ -69,26 +61,18 @@ const BannerForm = ({
         };
         if (!content && pageId) fetchOrder();
     }, [content, pageId]);
-    
+
     // Initial Values
-    const initialValues: BannerSection = useMemo(
+    const initialValues: ContactDetailsSection = useMemo(
         () => ({
             id: content?.id || "",
-            type: "Banner",
+            type: "Contact-Banner",
             layout: content?.layout || 1,
             order: content?.order || nextOrder,
             data: {
-                ctaBanner: content?.data.ctaBanner || "",
-                heading: content?.data.heading || "",
-                layout: content?.data.layout || 1,
-                title:content?.data.title || "",
-                subTitle:content?.data.subTitle || "",
-                backgroundColor: content?.data.backgroundColor || "",
-                image: content?.data.image || "",
-                mobileImage: content?.data.mobileImage || "",
-                buttonText: content?.data.buttonText || "",
-                buttonUrl: content?.data.buttonUrl || "",
-                ctaUrl: content?.data.ctaUrl || "",
+                phoneNumber: content?.data.phoneNumber || [],
+                email: content?.data.email || [],
+                address: content?.data.address || [],
                 paddingtop:content?.data.paddingtop || 0,
                 paddingbottom:content?.data.paddingbottom || 0,
             },
@@ -106,11 +90,11 @@ const BannerForm = ({
         }),
         order: Yup.number().required("Order is required"),
     });
-    
+
     // Submit
     const handleSubmit = async (
-        values: BannerSection,
-        { resetForm }: FormikHelpers<BannerSection>,
+        values: ContactDetailsSection,
+        { resetForm }: FormikHelpers<ContactDetailsSection>,
         submitType: "save" | "save-close" = "save"
     ) => {
         setLoading(true);
@@ -121,29 +105,21 @@ const BannerForm = ({
                 layout: values.layout,
                 order: values.order,
                 data: {
-                    ctaBanner: values.data.ctaBanner,
-                    heading: values.data.heading,
-                    layout: values.data.layout,
-                    title: values.data.title,
-                    subTitle: values.data.subTitle,
-                    backgroundColor: values.data.backgroundColor,
-                    image: values.data.image,
-                    mobileImage: values.data.mobileImage,
-                    buttonText: values.data.buttonText,
-                    buttonUrl: values.data.buttonUrl,
-                    ctaUrl: values.data.ctaUrl,
+                    phoneNumber: values.data.phoneNumber,
+                    email: values.data.email,
+                    address: values.data.address,
                     paddingtop: values.data.paddingtop,
                     paddingbottom: values.data.paddingbottom,
                 },
                 visibility: values.visibility,
                 pageId: pageId || ""
             };
-        
+
             let resp: any;
-    
+                
             if (values.id) resp = await updateSection(values.id, createPayload);
             else resp = await createNewSection(createPayload as Section);
-                    
+                                
             if (resp?.isError) {
                 toast({
                 variant: "destructive",
@@ -155,9 +131,9 @@ const BannerForm = ({
                 setLoading(false);
                 return;
             }
-                                
+                                            
             const saved: Section = resp?.data ?? resp;
-                
+                            
             toast({
                 variant: "success",
                 title: values.id ? "Section updated" : "Section created",
@@ -165,19 +141,19 @@ const BannerForm = ({
                 ? "Changes updated successfully."
                 : "Changes saved successfully.",
             });
-                
+                            
             if (submitType === "save-close") {
                 router.push("/cms-manager");
                 return;
             }
-                    
+                                
             if (!values.id) {
                 resetForm({ values: { ...values, id: saved.id } });
             } else {
                 onUpdated(saved);
                 resetForm({ values: { ...values, id: saved.id } });
             }
-                    
+                                
         } catch (error) {
             console.error(error);
             toast({
@@ -189,7 +165,7 @@ const BannerForm = ({
             setLoading(false);
         }
     };
-    
+
     return (
         <Formik
             initialValues={initialValues}
@@ -212,161 +188,61 @@ const BannerForm = ({
                     <Form className="w-full">
                         <div className="grid gap-4 py-4">
 
-                            {/* CTA Banner */}
-                            <CustomFormField
+                            {/* PhoneNumber */}
+                            <CustomMultiInputField 
                                 type="text"
-                                id="data.ctaBanner"
-                                placeholder="CTA Banner"
-                                value={values.data.ctaBanner}
+                                id="data.phoneNumber"
+                                placeholder="Phone"
+                                values={values.data.phoneNumber}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 required
+                                
                                 styleClasses={styleClasses}
-                                error={getIn(errors, "data.ctaBanner")}
-                                touched={getIn(touched, "data.ctaBanner")}
+                                error={getIn(errors, "data.phoneNumber")}
+                                touched={getIn(touched, "data.phoneNumber")}
                             />
 
-                            {/* Heading */}
-                            <CustomFormField
-                                type="text"
-                                id="data.heading"
-                                placeholder="Heading"
-                                value={values.data.heading}
+                            <CustomMultiInputField 
+                                type="email"
+                                id="data.email"
+                                placeholder="Email"
+                                values={values.data.email}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 required
+                                
                                 styleClasses={styleClasses}
-                                error={getIn(errors, "data.heading")}
-                                touched={getIn(touched, "data.heading")}
+                                error={getIn(errors, "data.email")}
+                                touched={getIn(touched, "data.email")}
                             />
 
+                            <CustomMultiInputField 
+                                type="text"
+                                id="data.address"
+                                placeholder="Address"
+                                values={values.data.address}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                required
+                                
+                                styleClasses={styleClasses}
+                                error={getIn(errors, "data.address")}
+                                touched={getIn(touched, "data.address")}
+                            />
+                            
                             {/* Layout */}
                             <CustomSelectField
-                                id="data.layout"
+                                id="layout"
                                 placeholder="Layout"
-                                required
-                                value={values.data.layout}
-                                onChange={(v) => setFieldValue("data.layout", v)}
-                                onBlur={handleBlur}
+                                value={values.layout}
+                                onChange={(v) => setFieldValue("layout", v)}
                                 options={[
                                     { label: "Layout 1", value: 1 },
                                     { label: "Layout 2", value: 2 },
-                                    { label: "Layout 3", value: 3 },
                                 ]}
                                 styleClasses={styleClasses}
-                                error={getIn(errors, "data.layout")}
-                                touched={getIn(touched, "data.layout")}
-                            />
-                            
-
-                            {/* Title */}
-                            <CustomFormField
-                                type="text"
-                                id="data.title"
-                                placeholder="Title"
-                                value={values.data.title}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                required
-                                styleClasses={styleClasses}
-                                error={getIn(errors, "data.title")}
-                                touched={getIn(touched, "data.title")}
-                            />
-
-                            {/* Sub Title */}
-                            <CustomFormField
-                                type="text"
-                                id="data.subTitle"
-                                placeholder="Sub Title"
-                                value={values.data.subTitle}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                required
-                                styleClasses={styleClasses}
-                                error={getIn(errors, "data.subTitle")}
-                                touched={getIn(touched, "data.subTitle")}
-                            />
-
-                            {/* Background Color */}
-                            <CustomFormField
-                                type="color"
-                                id="data.backgroundColor"
-                                placeholder="Sub Title"
-                                value={values.data.backgroundColor}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                required
-                                styleClasses={styleClasses}
-                                error={getIn(errors, "data.backgroundColor")}
-                                touched={getIn(touched, "data.backgroundColor")}
-                            />
-
-                            {/* Image */}
-                            <ImageInput
-                                id="data.image"
-                                placeholder="Web Image"
-                                url={values.data.image as string}
-                                required={false} 
-                                setFieldValue={setFieldValue}
-                                fieldName={"data.image"}
-                                styleClasses={styleClasses}
-                                error={getIn(errors, "data.image")}
-                                touched={getIn(touched, "data.image")}
-                            />
-                            
-                            {/* Mobile Image */}
-                            <ImageInput
-                                id="data.mobileImage"
-                                placeholder="Mobile Image"
-                                url={values.data.mobileImage as string}
-                                required={false} 
-                                setFieldValue={setFieldValue}
-                                fieldName={"data.mobileImage"}
-                                styleClasses={styleClasses}
-                                error={getIn(errors, "data.mobileImage")}
-                                touched={getIn(touched, "data.mobileImage")}
-                            />
-
-                            {/* Button Text */}
-                            <CustomFormField
-                                type="text"
-                                id="data.buttonText"
-                                placeholder="Button Text"
-                                value={values.data.buttonText}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                required
-                                styleClasses={styleClasses}
-                                error={getIn(errors, "data.buttonText")}
-                                touched={getIn(touched, "data.buttonText")}
-                            />
-                            
-                            {/* Button Url */}
-                            <CustomFormField
-                                type="text"
-                                id="data.buttonUrl"
-                                placeholder="Button Text"
-                                value={values.data.buttonUrl}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                required
-                                styleClasses={styleClasses}
-                                error={getIn(errors, "data.buttonUrl")}
-                                touched={getIn(touched, "data.buttonUrl")}
-                            />
-
-                            {/* CTA Url */}
-                            <CustomFormField
-                                type="text"
-                                id="data.ctaUrl"
-                                placeholder="CTA Url"
-                                value={values.data.ctaUrl}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                required
-                                styleClasses={styleClasses}
-                                error={getIn(errors, "data.ctaUrl")}
-                                touched={getIn(touched, "data.ctaUrl")}
+                                required={false}
                             />
 
                             {/* Padding Top */}
@@ -410,7 +286,7 @@ const BannerForm = ({
                                 error={errors.order}
                                 touched={touched.order}
                             />
-                                
+                            
                             {/* Visibility */}
                             <CustomCheckedField
                                 id="visibility"
@@ -424,7 +300,7 @@ const BannerForm = ({
                                 touched={touched.visibility}
                                 styleClasses={styleClasses}
                             />
-                                
+                                                            
                             {/* Actions */}
                             <FormActionsBtns
                                 onCancelHref="/cms-manager"
@@ -442,7 +318,7 @@ const BannerForm = ({
                 </Card>
             )}
         </Formik>
-    )                     
+    )
 }
 
-export default BannerForm;
+export default ContactDetailsForm
