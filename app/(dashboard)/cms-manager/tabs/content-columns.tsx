@@ -35,6 +35,7 @@ import GalleryForm from "./forms/gallery-form";
 import EventsForm from "./forms/event-form";
 import NTSApplicationForm from "./forms/nts-application-form";
 import RmaSectionForm from "./forms/RMA-section-form";
+import ContactDetailsForm from "./forms/contact-details-section-form";
 
 const sectionForms: Record<string, React.FC<any>> = {
     "Hero": HeroForm,
@@ -47,6 +48,7 @@ const sectionForms: Record<string, React.FC<any>> = {
     "Spacer" : SpacerForm,
     "Award" : AwardForm,
     "Banner" : BannerForm,
+    "Contact-Banner" : ContactDetailsForm,
     "Borad Of Directors" : BoradOfDirectorsForm,
     "Caousel" : CaouselForm,
     "Accordion" : AccordionForm,
@@ -160,6 +162,14 @@ function ContentColumnsTitleCell({
                     styleClasses={styleClasses || defaultStyleClasses} 
                     onUpdated={onChange ?? (() => {})}
                 />;
+            case 'Contact-Banner':
+                return <ContactDetailsForm
+                    pageId={currentPageId || ''}
+                    content={content}
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses || defaultStyleClasses} 
+                    onUpdated={onChange ?? (() => {})}
+                />
             case 'Borad Of Directors':
                 return <BoradOfDirectorsForm
                     pageId={currentPageId || ''}
