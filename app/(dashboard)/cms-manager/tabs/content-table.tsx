@@ -45,6 +45,7 @@ import EventsForm from './forms/event-form';
 import NTSApplicationForm from './forms/nts-application-form';
 import RmaSectionForm from './forms/RMA-section-form';
 import ContactDetailsForm from './forms/contact-details-section-form';
+import ConsultantForm from './forms/our-consultant-form';
 
 type ContentTableProps = {
     currentPageId: string | undefined;
@@ -113,6 +114,7 @@ export default function ContentTable({
         'Borad Of Directors',
         'Caousel',
         'Accordion',
+        'Our Consultant',
         'Documents',  
         'Media',
         'PopUp',
@@ -250,6 +252,14 @@ export default function ContentTable({
             case 'Accordion':
                 return <AccordionForm
                     pageId={currentPageId || ''} 
+                    content={null}
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses} 
+                    onUpdated={fetchData}
+                />;
+            case 'Our Consultant': 
+                return <ConsultantForm
+                    pageId={currentPageId || ''}
                     content={null}
                     sessionRole={sessionRole} 
                     styleClasses={styleClasses} 
