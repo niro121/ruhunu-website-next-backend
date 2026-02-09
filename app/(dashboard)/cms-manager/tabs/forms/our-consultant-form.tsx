@@ -76,7 +76,7 @@ const ConsultantForm = ({
     // Validation Schema
     const validationSchema = Yup.object({
         data: Yup.object({
-            title: Yup.string().required("Title is required"),
+            
         }),
         order: Yup.number().required("Order is required"),
     });
