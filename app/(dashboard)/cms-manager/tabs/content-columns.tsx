@@ -36,6 +36,7 @@ import EventsForm from "./forms/event-form";
 import NTSApplicationForm from "./forms/nts-application-form";
 import RmaSectionForm from "./forms/RMA-section-form";
 import ContactDetailsForm from "./forms/contact-details-section-form";
+import ConsultantForm from "./forms/our-consultant-form";
 
 const sectionForms: Record<string, React.FC<any>> = {
     "Hero": HeroForm,
@@ -52,6 +53,7 @@ const sectionForms: Record<string, React.FC<any>> = {
     "Borad Of Directors" : BoradOfDirectorsForm,
     "Caousel" : CaouselForm,
     "Accordion" : AccordionForm,
+    "Our Consultant" : ConsultantForm,
     "Documents" : DocumentsForm,  
     "Media" : MediaForm,
     "PopUp" : PopUpForm,
@@ -188,6 +190,14 @@ function ContentColumnsTitleCell({
                 />;
             case 'Accordion':
                 return <AccordionForm
+                    pageId={currentPageId || ''}
+                    content={content}
+                    sessionRole={sessionRole} 
+                    styleClasses={styleClasses || defaultStyleClasses} 
+                    onUpdated={onChange ?? (() => {})}
+                />;
+            case 'Our Consultant': 
+                return <ConsultantForm
                     pageId={currentPageId || ''}
                     content={content}
                     sessionRole={sessionRole} 
