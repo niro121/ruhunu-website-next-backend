@@ -308,9 +308,9 @@ const BoradOfDirectorsForm = ({
                                                 type="button"
                                                 onClick={() =>
                                                     push({
+                                                        image: "",
                                                         name: "",
-                                                        latitude: "",
-                                                        longitude: "",
+                                                        title: "",
                                                     })
                                                 }
                                                 className="px-3 py-1 bg-blue-500 text-white rounded text-sm"

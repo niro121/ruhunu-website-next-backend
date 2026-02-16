@@ -1,36 +1,28 @@
 "use client"
 
-import { createNewSection, fetchSectionById, getNextOrder, updateSection } from "@/app/actions/section.actions";
+import { createNewSection, getNextOrder, updateSection } from "@/app/actions/section.actions";
 import CustomCheckedField from "@/components/common/custom-checked-field";
-import CustomRichTextEditor from "@/components/common/custom-rich-text-editor";
 import { FormActionsBtns } from "@/components/common/form-actions-btns";
 import CustomFormField from "@/components/common/form-field";
 import { useToast } from "@/components/hooks/use-toast";
 import { Card } from "@/components/ui/card";
 import { Section } from "@/types/section";
-import { JsonObject } from "@prisma/client/runtime/library";
-import { FieldArray, Form, Formik, FormikHelpers, getIn } from "formik";
+import { Form, Formik, FormikHelpers, getIn } from "formik";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useMemo } from "react";
-import { useState } from "react";
+import React, { useMemo } from "react";
+import { useEffect, useState } from "react";
 import * as Yup from "yup";
 
-type AccordionSection = Omit<Section, ""> & {
+type VacancyTableSection = Omit<Section, ""> & {
     data: {
-        title: string;
-        subTitle: string;
         paddingtop: number;
         paddingbottom: number;
-        content: {
-            id: string;
-            content: string
-        }[];
     }
 }
 
-type AccordionProps = {
+type VacancyTableProps = {
     pageId: string | null;
-    content: AccordionSection | null;
+    content: VacancyTableSection | null;
     sessionRole: string | undefined;
     styleClasses: {
         parentDiv: string;
@@ -40,19 +32,19 @@ type AccordionProps = {
     onUpdated: (page: any) => void;
 }
 
-const AccordionForm = ({
+const VacancyTableForm = ({
     pageId,
     content,
     styleClasses,
     sessionRole,
     onUpdated,
-}: AccordionProps) => {
+}: VacancyTableProps) => {
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
     const router = useRouter();
     const submitTypeRef = React.useRef<"save" | "save-close">("save");
     const [nextOrder, setNextOrder] = useState<number>(1); 
-
+    
     useEffect(() => {    
         const fetchOrder = async () => {
             try {
@@ -66,28 +58,15 @@ const AccordionForm = ({
     }, [content, pageId]);
 
     // Initial Values
-    const initialValues: AccordionSection = useMemo(
+    const initialValues: VacancyTableSection = useMemo(
         () => ({
             id: content?.id || "",
-            type: "Accordion",
+            type: "VacancyTable",
             layout: content?.layout || 1,
             order: content?.order || nextOrder,
             data: {
-                title:content?.data.title || "",
-                subTitle:content?.data.subTitle || "",
                 paddingtop:content?.data.paddingtop || 0,
                 paddingbottom:content?.data.paddingbottom || 0,
-                content:content?.data.content && Array.isArray(content.data.content)
-                ? content.data.content.map((item) => ({
-                    id: item?.id || "",
-                    content: item?.content || ""
-                }))
-                : [
-                    {
-                        id: "",
-                        content: ""
-                    }
-                ],
             },
             pageId: pageId || "",
             visibility: content?.visibility || false,
@@ -104,8 +83,8 @@ const AccordionForm = ({
     
     // Submit
     const handleSubmit = async (
-        values: AccordionSection,
-        { resetForm }: FormikHelpers<AccordionSection>,
+        values: VacancyTableSection,
+        { resetForm }: FormikHelpers<VacancyTableSection>,
         submitType: "save" | "save-close" = "save"
     ) => {
         setLoading(true);
@@ -120,10 +99,7 @@ const AccordionForm = ({
                     subTitle: values.data.subTitle,
                     paddingtop: values.data.paddingtop,
                     paddingbottem: values.data.paddingbottom,
-                    content: values.data.content.map((item, index) => ({
-                        id: item.id,
-                        content: item.content
-                    })),
+                    content: values.data.content,
                 },
                 visibility: values.visibility,
                 pageId: pageId || ""
@@ -201,34 +177,6 @@ const AccordionForm = ({
                 <Card className="border shadow-sm">
                     <Form className="w-full">
                         <div className="grid gap-4 py-4">
-                            
-                            {/* Title */}
-                            <CustomFormField
-                                type="text"
-                                id="data.title"
-                                placeholder="Title"
-                                value={values.data.title}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                required
-                                styleClasses={styleClasses}
-                                error={getIn(errors, "data.title")}
-                                touched={getIn(touched, "data.title")}
-                            />
-
-                            {/* Sub Title */}
-                            <CustomFormField
-                                type="text"
-                                id="data.subTitle"
-                                placeholder="Sub Title"
-                                value={values.data.subTitle}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                required
-                                styleClasses={styleClasses}
-                                error={getIn(errors, "data.subTitle")}
-                                touched={getIn(touched, "data.subTitle")}
-                            />
 
                             {/* Padding Top */}
                             <CustomFormField
@@ -285,76 +233,6 @@ const AccordionForm = ({
                                 touched={touched.visibility}
                                 styleClasses={styleClasses}
                             />
-
-                            <FieldArray name="data.content">
-                                {({ push, remove}) => (
-                                    <div className="flex gap-4 px-3">
-                                        {/* LEFT SIDE: Label + Add Button */}
-                                        <div className="flex flex-col items-start w-42 gap-2 pt-2">
-                                            <span className="font-semibold text-gray-700">Directors</span>
-                                        </div>
-
-                                        {/* RIGHT SIDE: Content Cards */}
-                                        <div className="flex-1 flex flex-col gap-6">
-                                            {values.data.content.map((item, index) => (
-                                                <Card key={index} className="border shadow-sm p-4 relative">
-                                                    <div className="grid gap-4">
-
-                                                        {/* Content */}
-                                                        <CustomRichTextEditor
-                                                            id="content"
-                                                            placeholder="Content"
-                                                            required
-                                                            value={values.data.content![index].content}
-                                                            onChange={(e) => setFieldValue("data.content", e.target.value)}
-                                                            onBlur={handleBlur}
-                                                            styleClasses={styleClasses}
-                                                            error={getIn(errors,"data.content")}
-                                                            touched={getIn(touched,"data.content")}
-                                                        />
-
-                                                        {/* Name */}
-                                                        <CustomFormField
-                                                            type="text"
-                                                            id={`data.content.${index}.id`}
-                                                            placeholder="ID"
-                                                            value={item.id}
-                                                            onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                            required
-                                                            styleClasses={styleClasses}
-                                                            error={getIn(errors, `data.content.${index}.id`)}
-                                                            touched={getIn(touched, `data.content.${index}.id`)}
-                                                        />
-                                                    </div>
-                                                    {/* REMOVE BUTTON */}
-                                                    {values.data.content.length > 1 && (
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => remove(index)}
-                                                            className="px-2 py-1 bg-red-500 text-white rounded text-sm"
-                                                        >
-                                                            Remove
-                                                        </button>
-                                                    )}
-                                                </Card>
-                                            ))}
-                                            <button
-                                                type="button"
-                                                onClick={() =>
-                                                    push({
-                                                        id: "",
-                                                        content: "",
-                                                    })
-                                                }
-                                                className="px-3 py-1 bg-blue-500 text-white rounded text-sm"
-                                            >
-                                                + Add New
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-                            </FieldArray>
                                 
                             {/* Actions */}
                             <FormActionsBtns
@@ -373,7 +251,7 @@ const AccordionForm = ({
                 </Card>
             )}
         </Formik>
-    )                     
+    )
 }
 
-export default AccordionForm;
+export default VacancyTableForm;

@@ -46,6 +46,7 @@ import NTSApplicationForm from './forms/nts-application-form';
 import RmaSectionForm from './forms/RMA-section-form';
 import ContactDetailsForm from './forms/contact-details-section-form';
 import ConsultantForm from './forms/our-consultant-form';
+import VacancyTableForm from './forms/vacancy-table-form';
 
 type ContentTableProps = {
     currentPageId: string | undefined;
@@ -127,7 +128,8 @@ export default function ContentTable({
         'Contact Form',
         'NTSApplication Form',
         'RmaSection Form',
-        'PdfViwer'
+        'PdfViwer',
+        'Vacancy List'
     ];
 
     const handleSelectType = (type: string) => {
@@ -367,6 +369,15 @@ export default function ContentTable({
 
             case 'PdfViwer':
                 return <PdfViwerForm
+                    pageId={currentPageId || ''} 
+                    content={null}
+                    sessionRole={sessionRole}
+                    styleClasses={styleClasses}
+                    onUpdated={fetchData}
+                />
+            
+            case 'Vacancy List':
+                return <VacancyTableForm
                     pageId={currentPageId || ''} 
                     content={null}
                     sessionRole={sessionRole}
