@@ -4,6 +4,7 @@ import { createNewSection, getNextOrder, updateSection } from "@/app/actions/sec
 import CustomCheckedField from "@/components/common/custom-checked-field";
 import { FormActionsBtns } from "@/components/common/form-actions-btns";
 import CustomFormField from "@/components/common/form-field";
+import ImageInput from "@/components/common/image-input/ImageInput";
 import { useToast } from "@/components/hooks/use-toast";
 import { Card } from "@/components/ui/card";
 import { Section } from "@/types/section"
@@ -15,6 +16,7 @@ import * as Yup from "yup";
 
 type ContactSection = Omit<Section, ""> & {
     data: {
+        bgImage: string;
         paddingtop: number;
         paddingbottom: number;
     }
@@ -65,6 +67,7 @@ const ContactForm = ({
             layout: content?.layout || 1,
             order: content?.order || nextOrder,
             data: {
+                bgImage:content?.data.bgImage || "",
                 paddingtop:content?.data.paddingtop || 0,
                 paddingbottom:content?.data.paddingbottom || 0,
             },
@@ -95,11 +98,9 @@ const ContactForm = ({
                     layout: values.layout,
                     order: values.order,
                     data: {
-                        title: values.data.title,
-                        subTitle: values.data.subTitle,
+                        bgImage: values.data.bgImage,
                         paddingtop: values.data.paddingtop,
                         paddingbottem: values.data.paddingbottom,
-                        content: values.data.content,
                     },
                     visibility: values.visibility,
                     pageId: pageId || ""
@@ -176,6 +177,19 @@ const ContactForm = ({
                     <Card className="border shadow-sm">
                         <Form className="w-full">
                             <div className="grid gap-4 py-4">
+
+                                {/* Background Image */}
+                                <ImageInput
+                                    id={"data.bgImage"}
+                                    placeholder="Background Image"
+                                    url={values.data.bgImage as string}
+                                    required={false} 
+                                    setFieldValue={setFieldValue}
+                                    fieldName={"data.bgImage"}
+                                    styleClasses={styleClasses}
+                                    error={getIn(errors, "data.bgImage")}
+                                    touched={getIn(touched, "data.bgImage")}
+                                />
                                 
                                 {/* Padding Top */}
                                 <CustomFormField

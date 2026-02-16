@@ -37,6 +37,7 @@ import NTSApplicationForm from "./forms/nts-application-form";
 import RmaSectionForm from "./forms/RMA-section-form";
 import ContactDetailsForm from "./forms/contact-details-section-form";
 import ConsultantForm from "./forms/our-consultant-form";
+import VacancyTableForm from "./forms/vacancy-table-form";
 
 const sectionForms: Record<string, React.FC<any>> = {
     "Hero": HeroForm,
@@ -66,6 +67,7 @@ const sectionForms: Record<string, React.FC<any>> = {
     "NTSApplication Form" : NTSApplicationForm,
     "RmaSection Form" : RmaSectionForm,
     "Pdf Viwer" : PdfViwerForm,
+    "Vacancy List" : VacancyTableForm, 
 };
 
 
@@ -310,6 +312,15 @@ function ContentColumnsTitleCell({
 
             case 'PdfViwer':
                 return <PdfViwerForm
+                    pageId={currentPageId || ''} 
+                    content={content}
+                    sessionRole={sessionRole}
+                    styleClasses={styleClasses || defaultStyleClasses}
+                    onUpdated={onChange ?? (() => {})}
+                />
+
+            case 'Vacancy List':
+                return <VacancyTableForm
                     pageId={currentPageId || ''} 
                     content={content}
                     sessionRole={sessionRole}
