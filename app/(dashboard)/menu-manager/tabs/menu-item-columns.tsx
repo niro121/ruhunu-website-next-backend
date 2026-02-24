@@ -5,10 +5,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { MenuItem } from "@/types/menu-items";
 import { ColumnDef } from "@tanstack/react-table";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MenuItemRecordActions from "./menu-item-record-actions";
 import MenuItemForm from "./menu-item-form";
 import { CircleCorrect, CircleX } from "@/components/icons";
+import { getTitleById } from "@/app/actions/menuitem.actions";
 
 // ✅ Small helper component to handle hooks safely
 function MenuItemNameCell({
@@ -89,10 +90,50 @@ export const menuItemColumns = (props?: {
   {
     accessorKey: "url",
     header: "URL",
+    cell: ({ getValue }) => {
+      const value = getValue<string>() ?? "";
+      return (
+        <div
+          className="w-[200px] truncate text-ellipsis overflow-hidden"
+          title={value} // show full URL on hover
+        >
+          {value}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "parentId",
     header: "Parent",
+    cell: ({ getValue }) => {
+      const parentId = getValue<string>();
+      const [title, setTitle] = useState<string>("Loading...");
+
+      useEffect(() => {
+        let isMounted = true;
+
+        if (parentId && parentId !== "none") {
+          getTitleById(parentId).then((res) => {
+            if (isMounted) setTitle(res?.title ?? parentId);
+          });
+        } else {
+          setTitle("No Parent");
+        }
+
+        return () => {
+          isMounted = false;
+        };
+      }, [parentId]);
+
+      return (
+        <div
+          className="max-w-[200px] truncate overflow-hidden text-ellipsis"
+          title={title} // shows full title on hover
+        >
+          {title}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "order",

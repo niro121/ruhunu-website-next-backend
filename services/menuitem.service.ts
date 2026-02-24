@@ -203,3 +203,20 @@ export const getMenuItemOrder = async () => {
         throw new Error(error.message ?? "Get Menu Items Next Order Error")
     }
 }
+
+export const getOneTitleById = async (id: string) => {
+    try {
+        const selectTitle = await prisma.menuItem.findFirst({
+            select: {title : true},
+            where : {
+                id: id
+            }
+        })
+
+        return selectTitle;
+        
+    } catch (error: any) {
+        console.log("getOneTitleById error ==> ", error)
+        throw new Error(error.message ?? "Get Menu Items Next Order Error")
+    }
+}
