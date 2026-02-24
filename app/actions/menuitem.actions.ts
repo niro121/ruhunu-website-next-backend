@@ -1,6 +1,6 @@
 "use server"
 
-import { deleteMenuItems, deleteOneMenuItem, getMenuItemOrder, getMenuItems, getMenuItemsById, getMenuItemsNameAndId, saveMenuItems, updateOneMenuItem } from "@/services/menuitem.service";
+import { deleteMenuItems, deleteOneMenuItem, getMenuItemOrder, getMenuItems, getMenuItemsById, getMenuItemsNameAndId, getOneTitleById, saveMenuItems, updateOneMenuItem } from "@/services/menuitem.service";
 import { GetMenuItemsParams, GetMenuItemsQuery, MenuItem, UpdateMenuItemDTO } from "@/types/menu-items";
 import { revalidatePath } from "next/cache";
 
@@ -133,5 +133,15 @@ export const getNextMenuItemOrder = async () => {
     } catch (error: any) {
         console.log('getNextMenuItemOrder error ==>', error);
         throw new Error(error.message ?? "Error getting next MenuItem Order. please try again later")
+    }
+}
+
+export const getTitleById = async (id: string) => {
+    try {
+        const title = getOneTitleById(id);
+        return title;
+    } catch (error: any) {
+        console.log('getTitleById error ==>', error);
+        throw new Error(error.message ?? "Error getting get Title By Id. please try again later")
     }
 }
