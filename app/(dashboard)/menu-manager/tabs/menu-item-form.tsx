@@ -83,7 +83,7 @@ const MenuItemForm = ({
       title: menuItem?.title ?? "",
       url: menuItem?.url ?? "",
       menuId: menuItem?.menuId ?? "",
-      parentId: menuItem?.parentId ?? "none",
+      parentId: menuItem?.parentId ?? null,
       visible: menuItem?.visible ?? false,
       order: menuItem?.order ?? nextOrder,
     }),
@@ -108,7 +108,7 @@ const MenuItemForm = ({
         url: values.url,
         menuId: currentMenuId,
         order: values.order,
-        parentId: values.parentId,
+        parentId: values.parentId || null,
         visible: values.visible,
       };
 
@@ -241,7 +241,7 @@ const MenuItemForm = ({
 
                 {/* Parent Select */}
                 <CustomSelectField
-                    id="parent"
+                    id="parentId"
                     placeholder="Parent"
                     required={false}
                     value={values.parentId ?? "none"} 

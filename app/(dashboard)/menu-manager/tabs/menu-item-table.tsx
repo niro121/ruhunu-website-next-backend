@@ -1,52 +1,59 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { CustomDialog } from "@/components/common/custom-dialog";
 import { CustomDataTable } from "@/components/common/custom-data-table";
 import { menuItemColumns } from "./menu-item-columns";
-import { bulkDeleteMenuItems, getAllMenuItems, getNextMenuItemOrder } from "@/app/actions/menuitem.actions";
+import { bulkDeleteMenuItems, getAllMenuItems } from "@/app/actions/menuitem.actions";
 import { PlusCircle } from "@/components/icons";
 import MenuItemForm from "./menu-item-form";
 import Loading from "../../loading";
 import { MenuItem } from "@/types/menu-items";
-import { getNextOrder } from "@/lib/utils/totalRecordCount";
 
 type MenuItemTableProps = {
-  currentMenuId?: string | undefined;
-  searchParams?: {
-    page?: string;
-    limit?: string;
-    keyword?: string;
-  };
+  currentMenuId?: string;
   sessionRole: string | undefined;
 };
 
 export default function MenuItemTable({
   currentMenuId,
-  searchParams,
   sessionRole,
 }: MenuItemTableProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [data, setData] = useState<MenuItem[]>([]);
   const [totalRecords, setTotalRecords] = useState(0);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
+  // Parse page and limit from URL search params
+  const currentPage = Number(searchParams?.get("page") ?? 1);
+  const currentLimit = Number(searchParams?.get("limit") ?? 10);
+  const keyword = searchParams?.get("keyword") ?? "";
+
+  // Update URL when page/limit changes
+  const updateURL = (newPage: number, newLimit: number = currentLimit) => {
+    const params = new URLSearchParams(searchParams?.toString());
+    params.set("page", String(newPage));
+    params.set("limit", String(newLimit));
+    router.replace(`${window.location.pathname}?${params.toString()}`);
+  };
+
   const fetchData = async () => {
     if (!currentMenuId) return;
-
-    console.log({currentMenuId})
-
     setLoading(true);
+
     try {
       const res = await getAllMenuItems({
         currentMenuId,
-        page: searchParams?.page,
-        limit: searchParams?.limit,
-        keyword: searchParams?.keyword,
+        page: String(currentPage),
+        limit: String(currentLimit),
+        keyword,
       });
+
       setData(res.data ?? []);
       setTotalRecords(res.totalRecords ?? 0);
     } catch (error) {
@@ -58,10 +65,11 @@ export default function MenuItemTable({
 
   useEffect(() => {
     fetchData();
-  }, [currentMenuId, searchParams]);
+  }, [currentMenuId, currentPage, currentLimit, keyword]);
 
   return (
     <>
+      {/* Top Actions */}
       <div className="ml-auto flex justify-end items-center gap-4 mb-5">
         <Button
           size="sm"
@@ -73,6 +81,7 @@ export default function MenuItemTable({
         >
           Cancel
         </Button>
+
         <Button
           onClick={() => setOpen(true)}
           className="gap-1 px-8 text-white bg-[#01012A] border hover:text-[#01012A] hover:bg-white hover:border"
@@ -92,6 +101,7 @@ export default function MenuItemTable({
         </CustomDialog>
       </div>
 
+      {/* Data Table */}
       <div className="overflow-hidden">
         <Suspense fallback={<Loading />}>
           <CustomDataTable
@@ -99,13 +109,17 @@ export default function MenuItemTable({
             subHeading="Manage your menu items here."
             columns={menuItemColumns({
               onChange: fetchData,
-              sessionRole: sessionRole,
-              currentMenuId: currentMenuId
+              sessionRole,
+              currentMenuId,
             })}
             data={data}
             rowCount={totalRecords}
             deleteServerAction={bulkDeleteMenuItems}
-            page={searchParams?.page}
+            page={String(currentPage)}
+            limit={String(currentLimit)}
+            // Provide callbacks for table pagination
+            // onPageChange={(newPage) => updateURL(newPage)}
+            // onLimitChange={(newLimit) => updateURL(1, newLimit)}
           />
         </Suspense>
       </div>
